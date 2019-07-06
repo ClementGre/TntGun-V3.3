@@ -1,0 +1,80 @@
+grades:
+  Joueur:
+    gradecolor: §7
+    playercolor: §7
+    chatcolor: §7
+    perm: 1
+  YouTuber:
+    gradecolor: §c
+    playercolor: §7
+    chatcolor: §f
+    perm: 2
+  VIP:
+    gradecolor: §e
+    playercolor: §7
+    chatcolor: §f
+    perm: 2
+  IRL:
+    gradecolor: §5
+    playercolor: §7
+    chatcolor: §f
+    perm: 2
+  Modo:
+    gradecolor: §b
+    playercolor: §3
+    chatcolor: §b
+    perm: 3
+  Constructeur:
+    gradecolor: §a
+    playercolor: §2
+    chatcolor: §a
+    perm: 4
+  Super-Modo:
+    gradecolor: §c
+    playercolor: §4
+    chatcolor: §c
+    perm: 5
+  Dev-Web:
+    gradecolor: §6
+    playercolor: §6
+    chatcolor: §c
+    perm: 3
+  Dev-MC:
+    gradecolor: §6
+    playercolor: §6
+    chatcolor: §c
+    perm: 6
+  Admin:
+    gradecolor: §c
+    playercolor: §4
+    chatcolor: §c
+    perm: 6
+#
+#
+#
+punish:
+  Fly:
+    level: 5
+    item: ELYTRA
+  X-ray:
+    level: 5
+    item: DIAMOND_ORE
+  Cheat_combat:
+    level: 6
+    item: DIAMOND_SWORD
+  Anti-jeu:
+    level: 3
+    item: BARRIER
+  Spam:
+    level: 1
+    item: WATCH
+  Insulte:
+    level: 1
+    item: NAME_TAG
+  
+  
+  
+  
+  
+  
+  

@@ -1,0 +1,38 @@
+name: TntGun
+version: 3.3
+main: fr.themsou.main.main
+description: Plugin principal de TntGun
+author: themsou
+api-version: 1.13
+commands:
+  ?:
+  help:
+  spawn:
+  hub:
+  lobby:
+  l:
+  login:
+  reg:
+  register:
+  claim:
+  g:
+  money:
+  ent:
+  discord:
+  world:
+    permission: subgradevd.gestion.world
+  setmoney:
+    permission: subgradevd.setmoney
+  a:
+  grade:
+    permission: subgradevd.grade
+  config:
+    permission: subgradevd.config
+  tag:
+    permission: subgradevd.tag
+  boss:
+    permission: subgradevd.boss
+  loadSchematic:
+    permission: subgradevd.schematic
+  getstat:
+    permission: subgradevd.gestion.info
