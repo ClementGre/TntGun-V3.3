@@ -4,12 +4,11 @@ import java.awt.Color;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-
+import fr.themsou.commands.GradeCmd;
 import fr.themsou.diffusion.api.messages;
 import fr.themsou.diffusion.api.roles;
 import fr.themsou.diffusion.api.user;
 import fr.themsou.main.main;
-import fr.themsou.methodes.Grade;
 
 public class Chat {
 	
@@ -52,7 +51,7 @@ public class Chat {
 		
 		for(Player players : Bukkit.getOnlinePlayers()){
 			
-			if(new Grade().getPlayerPermition(players.getName()) >= 3) fr.themsou.nms.message.sendNmsMessage(players, prefix, overlay, message, chatColor);
+			if(new GradeCmd().getPlayerPermition(players.getName()) >= 3) fr.themsou.nms.message.sendNmsMessage(players, prefix, overlay, message, chatColor);
 				
 			else fr.themsou.nms.message.sendNmsMessage(players, prefix, "", message, chatColor);
 			

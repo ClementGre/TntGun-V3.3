@@ -1,4 +1,4 @@
-package fr.themsou.methodes;
+package fr.themsou.commands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -13,11 +13,8 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
-public class tpa implements Listener {
+public class TeleportCmd implements Listener{
 
-	
-	public tpa() {
-	}
 	
 //                                    TPA
 	@EventHandler
@@ -193,4 +190,6 @@ public class tpa implements Listener {
 			
 		}
 	}
+
+	
 }

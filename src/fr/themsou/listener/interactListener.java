@@ -3,7 +3,6 @@ package fr.themsou.listener;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 
 import org.bukkit.Bukkit;
@@ -37,7 +36,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.themsou.BedWars.getteam;
 import fr.themsou.BedWars.menu;
-import fr.themsou.inv.vip;
+import fr.themsou.inv.VipInv;
 import fr.themsou.main.main;
 import fr.themsou.methodes.realDate;
 import fr.themsou.nms.title;
@@ -69,13 +68,11 @@ public class interactListener implements Listener {
 	@EventHandler
 	public void onInteract(PlayerInteractEvent e){
 		
-		SignClick CSignClick = new SignClick();
-		CanBuild CCanBuild = new CanBuild();
-		vip Cvip = new vip();
-		
 		Player p = e.getPlayer();
 		
 		if(p.getWorld() == Bukkit.getWorld("world") || p.getWorld() == Bukkit.getWorld("world_nether") || p.getWorld() == Bukkit.getWorld("world_the_end")){
+			
+			CanBuild CCanBuild = new CanBuild();
 			
 			if(e.getAction() == Action.PHYSICAL){
 				
@@ -270,7 +267,7 @@ public class interactListener implements Listener {
 					}
 				}
 			}
-			CSignClick.signclick(e);
+			new SignClick().signclick(e);
 		}else if(p.getWorld() == Bukkit.getWorld("BedWars")){
 				
 			if(e.getClickedBlock() != null){
@@ -438,7 +435,7 @@ public class interactListener implements Listener {
 								if(p.getInventory().getItemInMainHand().getItemMeta().getDisplayName().equalsIgnoreCase("§3§lMENU")){
 									p.openInventory(main.menu);
 								}else if(p.getInventory().getItemInMainHand().getItemMeta().getDisplayName().equalsIgnoreCase("§3§lVIP")){
-									Cvip.openVipInventory(p);
+									new VipInv().openVipInventory(p);
 								}
 							}
 						}

@@ -19,20 +19,15 @@ commands:
   money:
   ent:
   discord:
-  world:
-    permission: subgradevd.gestion.world
-  setmoney:
-    permission: subgradevd.setmoney
   a:
+  pay:
+  world:
+    permission: tntgun.world
+  setmoney:
+    permission: tntgun.setmoney
   grade:
-    permission: subgradevd.grade
+    permission: tntgun.grade
   config:
-    permission: subgradevd.config
-  tag:
-    permission: subgradevd.tag
-  boss:
-    permission: subgradevd.boss
-  loadSchematic:
-    permission: subgradevd.schematic
-  getstat:
-    permission: subgradevd.gestion.info
+    permission: tntgun.config
+  misc:
+    permission: tntgun.mics

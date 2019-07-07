@@ -21,13 +21,13 @@ import fr.themsou.BedWars.getteam;
 import fr.themsou.BedWars.join;
 import fr.themsou.BedWars.menu;
 import fr.themsou.TntWars.RunParty;
+import fr.themsou.admin.AdminInv;
+import fr.themsou.admin.Punish;
+import fr.themsou.commands.GradeCmd;
 import fr.themsou.diffusion.api.roles;
-import fr.themsou.inv.admin;
-import fr.themsou.inv.vip;
+import fr.themsou.inv.VipInv;
 import fr.themsou.main.main;
-import fr.themsou.methodes.Grade;
 import fr.themsou.methodes.PInfos;
-import fr.themsou.methodes.Punish;
 import fr.themsou.methodes.realDate;
 import fr.themsou.nms.title;
 import fr.themsou.rp.claim.Spawns;
@@ -54,13 +54,6 @@ public class InventoryListener implements Listener {
 	public void onCliqueInventaire(InventoryClickEvent e){
 		
 		Player  p = (Player) e.getWhoClicked();
-		
-		shop Cshop = new shop();
-		admin CaAdmin = new admin();
-		vip CVip = new vip();
-		cmd Ccmd = new cmd();
-		crafts Ccrafts = new crafts();
-		
 		String titre = e.getView().getTitle();
 		
 		if(e.getCurrentItem() != null){
@@ -133,7 +126,7 @@ public class InventoryListener implements Listener {
 				
 					
 					p.closeInventory();
-					if(new Grade().getPlayerPermition(p.getName()) >= 2){
+					if(new GradeCmd().getPlayerPermition(p.getName()) >= 2){
 						
 						p.openInventory(main.TntWars);
 						
@@ -205,8 +198,7 @@ public class InventoryListener implements Listener {
 				}else if(e.getCurrentItem().getType() == Material.DIAMOND){
 					
 					p.closeInventory();
-					vip Cvip = new vip();
-					Cvip.openVipInventory(p);
+					new VipInv().openVipInventory(p);
 					
 				}
 				
@@ -520,11 +512,11 @@ public class InventoryListener implements Listener {
 					if(!PInfos.getGame(p).equalsIgnoreCase("RP")){
 						
 						if(main.config.getInt(p.getName() + ".points") >= 20000){
-							if(new Grade().getPlayerPermition(p.getName()) == 1){
+							if(new GradeCmd().getPlayerPermition(p.getName()) == 1){
 								
 								main.config.set(p.getName() + ".points", main.config.getInt(p.getName() + ".points") - 20000);
 								p.sendMessage("§bVous venez de dépencer §620 000 pts§b pour un garde §3VIP");
-								new Grade().changePlayerGradeWithConsole(p.getName(), "Vip");
+								new GradeCmd().changePlayerGradeWithConsole(p.getName(), "Vip");
 								
 							}else p.sendMessage("§cVous Avez déja un grade");
 						}else p.sendMessage("§cVous n'avez pas assez de points");
@@ -544,11 +536,11 @@ public class InventoryListener implements Listener {
 					
 					p.closeInventory();
 					if(main.config.getInt(p.getName() + ".points") >= 20000){
-						if(new Grade().getPlayerPermition(p.getName()) == 1){
+						if(new GradeCmd().getPlayerPermition(p.getName()) == 1){
 							
 							main.config.set(p.getName() + ".points", main.config.getInt(p.getName() + ".points") - 20000);
 							p.sendMessage("§bVous venez de dépencer §620 000 pts§b pour un garde §3VIP");
-							new Grade().changePlayerGradeWithConsole(p.getName(), "Vip");
+							new GradeCmd().changePlayerGradeWithConsole(p.getName(), "Vip");
 							
 						}else p.sendMessage("§cVous Avez déja un grade");
 					}else p.sendMessage("§cVous n'avez pas assez de points");
@@ -627,26 +619,26 @@ public class InventoryListener implements Listener {
 				if(e.getCurrentItem().getType() == Material.COMMAND_BLOCK){
 					p.closeInventory();
 					if(p.isOp()){
-						CaAdmin.oppenadmininventory(p);
+						new AdminInv().oppenadmininventory(p);
 					}else{
 						p.sendMessage("§cVous n'êtes pas administrateur");
 					}
 				}else if(e.getCurrentItem().getType() == Material.COMPARATOR){
 					p.closeInventory();
-					Ccmd.openCmdInventory(p);
+					new cmd().openCmdInventory(p);
 				}else if(e.getCurrentItem().getType() == Material.NETHER_STAR){
 					p.closeInventory();
 					new ShopPts().openInventory(p);
 				}else if(e.getCurrentItem().getType() == Material.EMERALD){
 					p.closeInventory();
-					Cshop.oppenshopinventory(p);
+					new shop().oppenshopinventory(p);
 				}else if(e.getCurrentItem().getType() == Material.DIAMOND_PICKAXE){
 					p.closeInventory();
 					metier Cmetier = new metier();
 					Cmetier.openMetierInv(p);
 				}else if(e.getCurrentItem().getType() == Material.DIAMOND){
 					p.closeInventory();
-					CVip.openVipInventory(p);
+					new VipInv().openVipInventory(p);
 					
 				}
 				
@@ -675,10 +667,7 @@ public class InventoryListener implements Listener {
 								if(e.getCurrentItem().getItemMeta().getLore().get(1) != null){
 									
 									String playerName = e.getCurrentItem().getItemMeta().getDisplayName().replace("§3§l", "");
-									
-									admin Cadmin = new admin();
-									Cadmin.openPlayerInventory(playerName, p);
-									
+									new AdminInv().openPlayerInventory(playerName, p);
 									
 								}
 							}
@@ -698,12 +687,9 @@ public class InventoryListener implements Listener {
 						
 						if(e.getCurrentItem().getType() == Material.MAGMA_CREAM){
 							
-							admin Cadmin = new admin();
-							Cadmin.openPunishInventory(playerName, p);
+							new AdminInv().openPunishInventory(playerName, p);
 							
-							
-						}
-						if(e.getCurrentItem().getType() == Material.NETHER_STAR){
+						}else if(e.getCurrentItem().getType() == Material.NETHER_STAR){
 							
 							Player player = Bukkit.getPlayerExact(playerName);
 							
@@ -755,23 +741,23 @@ public class InventoryListener implements Listener {
 				
 				if(e.getCurrentItem().getType() == Material.DIAMOND_PICKAXE){
 					if(main.config.getDouble(p.getName() + ".metier.mineur") >= 50.0){
-						Ccrafts.openInventoryToMineur(p);
+						new crafts().openInventoryToMineur(p);
 					}else p.sendMessage("§cVous devez etre à §450% §cde cette compétence pour avoir accés aux avantages !");
 				}else if(e.getCurrentItem().getType() == Material.DIAMOND_AXE){
 					if(main.config.getDouble(p.getName() + ".metier.bucheron") >= 50.0){
-						Ccrafts.openInventoryToBucheron(p);
+						new crafts().openInventoryToBucheron(p);
 					}else p.sendMessage("§cVous devez etre à §450% §cde cette compétence pour avoir accés aux avantages !");
 				}else if(e.getCurrentItem().getType() == Material.DIAMOND_HOE){
 					if(main.config.getDouble(p.getName() + ".metier.fermier") >= 50.0){
-						Ccrafts.openInventoryToFermier(p);
+						new crafts().openInventoryToFermier(p);
 					}else p.sendMessage("§cVous devez etre à §450% §cde cette compétence pour avoir accés aux avantages !");
 				}else if(e.getCurrentItem().getType() == Material.DIAMOND_SWORD){
 					if(main.config.getDouble(p.getName() + ".metier.chasseur") >= 50.0){
-						Ccrafts.openInventoryToChasseur(p);
+						new crafts().openInventoryToChasseur(p);
 					}else p.sendMessage("§cVous devez etre à §450% §cde cette compétence pour avoir accés aux avantages !");
 				}else if(e.getCurrentItem().getType() == Material.ENCHANTING_TABLE){
 					if(main.config.getDouble(p.getName() + ".metier.enchanteur") >= 50.0){
-						Ccrafts.openInventoryToEnchanteur(p);
+						new crafts().openInventoryToEnchanteur(p);
 					}else p.sendMessage("§cVous devez etre à §450% §cde cette compétence pour avoir accés aux avantages !");
 					
 				}else if(e.getCurrentItem().getType() == Material.ARROW){

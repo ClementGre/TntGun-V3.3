@@ -1,11 +1,12 @@
 package fr.themsou.main;
 
-import java.io.File;	
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Random;
+
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.WorldCreator;
@@ -20,18 +21,32 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.dynmap.DynmapAPI;
+
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
 import fr.themsou.BedWars.BedWars;
 import fr.themsou.BedWars.menu;
 import fr.themsou.TntWars.RunParty;
 import fr.themsou.TntWars.inv;
+import fr.themsou.commands.AdminCmd;
+import fr.themsou.commands.ClaimCmd;
+import fr.themsou.commands.CommandListener;
+import fr.themsou.commands.ConfigCmd;
+import fr.themsou.commands.EconomyCmd;
+import fr.themsou.commands.EntCmd;
+import fr.themsou.commands.GamemodeCmd;
+import fr.themsou.commands.GeneralCmd;
+import fr.themsou.commands.GradeCmd;
+import fr.themsou.commands.MiscCmd;
+import fr.themsou.commands.SpawnCmd;
+import fr.themsou.commands.TeleportCmd;
+import fr.themsou.commands.VipCmd;
 import fr.themsou.discord.vocal.VocalEvents;
+import fr.themsou.inv.HubInv;
 import fr.themsou.listener.BreakListener;
 import fr.themsou.listener.ChangeWorldListener;
 import fr.themsou.listener.ChatListener;
 import fr.themsou.listener.CloseInventory;
-import fr.themsou.listener.CommandListener;
 import fr.themsou.listener.CraftListener;
 import fr.themsou.listener.CustomEvent;
 import fr.themsou.listener.DamageListener;
@@ -44,16 +59,12 @@ import fr.themsou.listener.MobGriefListener;
 import fr.themsou.listener.MobSpawnListener;
 import fr.themsou.listener.MoveListener;
 import fr.themsou.listener.QuitListener;
-import fr.themsou.listener.TabCommandListener;
 import fr.themsou.listener.furnaceListener;
 import fr.themsou.listener.interactListener;
 import fr.themsou.methodes.Boss;
 import fr.themsou.methodes.PInfos;
 import fr.themsou.methodes.realDate;
 import fr.themsou.methodes.timer;
-import fr.themsou.methodes.tpa;
-import fr.themsou.methodes.vip;
-import fr.themsou.rp.ent.Commands;
 import fr.themsou.rp.tools.setcraft;
 import net.milkbowl.vault.economy.Economy;
 
@@ -62,6 +73,7 @@ public class main extends JavaPlugin implements Listener {
 	private FileConfiguration conf = getConfig();
 	public static FileConfiguration config;
 	public static FileConfiguration configuration;
+	public static FileConfiguration passwords;
 	public static WorldEditPlugin worldEditPlugin = (WorldEditPlugin)Bukkit.getPluginManager().getPlugin("WorldEdit");
 	public static DynmapAPI dynmap = ((DynmapAPI) Bukkit.getPluginManager().getPlugin("dynmap"));
 	public static Economy economy = null;
@@ -114,10 +126,15 @@ public class main extends JavaPlugin implements Listener {
 				configFile.createNewFile();
 			}catch(IOException e){ e.printStackTrace(); }
 		}
-        
-		
-		
 		configuration = YamlConfiguration.loadConfiguration(configFile);
+		
+		configFile = new File("plugins/TntGun/passwords.yml");
+		if(!configFile.exists()){
+			try{
+				configFile.createNewFile();
+			}catch(IOException e){ e.printStackTrace(); }
+		}
+		passwords = YamlConfiguration.loadConfiguration(configFile);
 		
 		
 		super.onEnable();
@@ -140,7 +157,7 @@ public class main extends JavaPlugin implements Listener {
 		
 		config = conf;
 		
-		CSQLConnexion = new SQLConnexion("jdbc:mysql://", "sql1.privateheberg.com", "SERVER5568MC", "SERVER5568MC", "h9KpbteB");
+		CSQLConnexion = new SQLConnexion("jdbc:mysql://", main.passwords.getString("mysql.url"), main.passwords.getString("mysql.user"), main.passwords.getString("mysql.user"), main.passwords.getString("mysql.mdp"));
 		
 		CSQLConnexion.connexion();
 		
@@ -152,48 +169,60 @@ public class main extends JavaPlugin implements Listener {
 			main.config.set("bedwars.list.status", 0);
 		}
 		
-		setcraft CSetcraft = new setcraft(this);
-		fr.themsou.inv.menu CMenu = new fr.themsou.inv.menu();
-		inv Cinv = new inv();
-		menu CLapmenu = new menu();
-		
-		CMenu.setMainInventory();
-		Cinv.setTntWarsInventory();
-		CLapmenu.setInventory(Lapmenu);
-		CLapmenu.setCmdInventory(LapMenuCmd);
+		new HubInv().setMainInventory();
+		new inv().setTntWarsInventory();
+		new menu().setInventory(Lapmenu);
+		new menu().setCmdInventory(LapMenuCmd);
 		
 		
 		
 		if(!setupEconomy()) Bukkit.shutdown();
 		
 		
-		getCommand("grade").setExecutor(new TabCommandListener(this));
-		getCommand("g").setExecutor(new TabCommandListener(this));
-		getCommand("setmoney").setExecutor(new TabCommandListener(this));
-		getCommand("loadSchematic").setExecutor(new TabCommandListener(this));
-		getCommand("config").setExecutor(new TabCommandListener(this));
-		getCommand("tag").setExecutor(new TabCommandListener(this));
-		getCommand("world").setExecutor(new TabCommandListener(this));
-		getCommand("boss").setExecutor(new TabCommandListener(this));
-		getCommand("getstat").setExecutor(new TabCommandListener(this));
+		getCommand("grade").setExecutor(new GradeCmd());
+		getCommand("grade").setTabCompleter(new GradeCmd());
 		
-		getCommand("discord").setExecutor(new TabCommandListener(this));
-		getCommand("a").setExecutor(new TabCommandListener(this));
-		getCommand("?").setExecutor(new TabCommandListener(this));
-		getCommand("help").setExecutor(new TabCommandListener(this));
-		getCommand("spawn").setExecutor(new TabCommandListener(this));
-		getCommand("hub").setExecutor(new TabCommandListener(this));
-		getCommand("lobby").setExecutor(new TabCommandListener(this));
-		getCommand("l").setExecutor(new TabCommandListener(this));
-		getCommand("login").setExecutor(new TabCommandListener(this));
-		getCommand("reg").setExecutor(new TabCommandListener(this));
-		getCommand("register").setExecutor(new TabCommandListener(this));
-		getCommand("money").setExecutor(new TabCommandListener(this));
+		getCommand("g").setExecutor(new GamemodeCmd());
 		
-		getCommand("ent").setExecutor(new TabCommandListener(this));
-		getCommand("ent").setTabCompleter(new Commands());
+		getCommand("setmoney").setExecutor(new EconomyCmd());
+		getCommand("setmoney").setTabCompleter(new EconomyCmd());
 		
-		getCommand("claim").setExecutor(new TabCommandListener(this));
+		getCommand("config").setExecutor(new ConfigCmd());
+		getCommand("config").setTabCompleter(new ConfigCmd());
+		
+		getCommand("misc").setExecutor(new MiscCmd());
+		getCommand("misc").setTabCompleter(new MiscCmd());
+		
+		getCommand("a").setExecutor(new AdminCmd());
+		getCommand("a").setTabCompleter(new AdminCmd());
+		
+		
+		getCommand("discord").setExecutor(new GeneralCmd());
+		getCommand("?").setExecutor(new GeneralCmd());
+		getCommand("help").setExecutor(new GeneralCmd());
+		getCommand("l").setExecutor(new GeneralCmd());
+		getCommand("login").setExecutor(new GeneralCmd());
+		getCommand("reg").setExecutor(new GeneralCmd());
+		getCommand("register").setExecutor(new GeneralCmd());
+		
+		getCommand("money").setExecutor(new EconomyCmd());
+		getCommand("money").setTabCompleter(new EconomyCmd());
+		getCommand("pay").setTabCompleter(new EconomyCmd());
+		
+		getCommand("spawn").setExecutor(new SpawnCmd());
+		getCommand("hub").setExecutor(new SpawnCmd());
+		getCommand("lobby").setExecutor(new SpawnCmd());
+		getCommand("spawn").setTabCompleter(new SpawnCmd());
+		getCommand("hub").setTabCompleter(new SpawnCmd());
+		getCommand("lobby").setTabCompleter(new SpawnCmd());
+		getCommand("world").setExecutor(new SpawnCmd());
+		getCommand("world").setExecutor(new SpawnCmd());
+		
+		getCommand("ent").setExecutor(new EntCmd());
+		getCommand("ent").setTabCompleter(new EntCmd());
+		
+		getCommand("claim").setExecutor(new ClaimCmd());
+		getCommand("claim").setTabCompleter(new ClaimCmd());
 		
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvents(new ListPingListener(), this);
@@ -211,14 +240,15 @@ public class main extends JavaPlugin implements Listener {
 		pm.registerEvents(new CraftListener(), this);
 		pm.registerEvents(new ChangeWorldListener(), this);
 		pm.registerEvents(new ChatListener(this), this);
-		pm.registerEvents(new tpa(), this);
-		pm.registerEvents(new vip(this), this);
 		pm.registerEvents(new interactListener(this), this);
 		pm.registerEvents(new MobSpawnListener(), this);
 		pm.registerEvents(new CloseInventory(), this);
 		
+		pm.registerEvents(new TeleportCmd(), this);
+		pm.registerEvents(new VipCmd(), this);
+		pm.registerEvents(new EconomyCmd(), this);
 		
-		CSetcraft.setcrafts();
+		new setcraft(this).setcrafts();
 		
 		
 		Date date = new realDate().getRealDate();

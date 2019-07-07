@@ -1,4 +1,4 @@
-package fr.themsou.methodes;
+package fr.themsou.admin;
 
 import java.util.List;
 

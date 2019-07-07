@@ -7,7 +7,7 @@ import fr.themsou.main.main;
 public class SendStat {
 	
 	@SuppressWarnings("deprecation")
-	public void sendDay(main pl){
+	public void sendDay(){
 		
 		Date Date = new realDate().getRealDate();
 		statLine Cstats = new statLine(1440, "h", true, false, "J", false, 24, 15);
@@ -63,7 +63,7 @@ public class SendStat {
 	}
 	
 	@SuppressWarnings("deprecation")
-	public void sendWeek(main pl){
+	public void sendWeek(){
 		
 		Date Date = new realDate().getRealDate();
 		stats Cstats = new stats(7, "", false, false, 30, "H", true);
@@ -92,7 +92,7 @@ public class SendStat {
 	}
 
 	@SuppressWarnings("deprecation")
-	public void sendDayNoClear(main pl) {
+	public void sendDayNoClear(){
 		
 		Date Date = new realDate().getRealDate();
 		statLine Cstats = new statLine(1440, "h", true, false, "J", false, 24, 15);

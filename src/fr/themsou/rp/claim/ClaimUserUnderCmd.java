@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 import fr.themsou.main.main;
 import fr.themsou.nms.message;
 
-public class UserCommand {
+public class ClaimUserUnderCmd {
 	
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

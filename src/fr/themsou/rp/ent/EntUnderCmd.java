@@ -1,8 +1,6 @@
 package fr.themsou.rp.ent;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
@@ -10,9 +8,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -22,16 +17,14 @@ import fr.themsou.main.main;
 import fr.themsou.nms.message;
 import fr.themsou.rp.claim.Spawns;
 
-public class Commands implements TabCompleter {
+public class EntUnderCmd {
 	
 	Player p;
 	String ent = null;
 	int role = 0;
 	
-	public Commands(){
-	}
 	
-	public Commands(Player p) {
+	public EntUnderCmd(Player p) {
 		this.p = p;
 		
 		if(main.config.contains(p.getName() + ".rp.ent.name")){
@@ -600,80 +593,6 @@ public class Commands implements TabCompleter {
 				
 			}
 		}
-	}
-
-	@Override
-	public List<String> onTabComplete(CommandSender sender, Command cmd, String arg1, String[] args){
-		
-		
-		if(cmd.getName().equalsIgnoreCase("ent") && sender instanceof Player){
-			Player p = (Player) sender;
-			
-			if(main.config.contains(p.getName() + ".rp.ent.name")){
-				ent = main.config.getString(p.getName() + ".rp.ent.name");
-			}
-			role = main.config.getInt(p.getName() + ".rp.ent.role");
-			
-			if(args.length == 1){
-				
-				if(ent == null || role == 0){
-					
-					return Arrays.asList("create","leave","info","money");
-					
-				}else if(role == 1){
-					
-					return Arrays.asList("create","leave","info","money","hire","pay","sign","src","log","buyers");
-					
-				}else if(role == 2){
-					
-					return Arrays.asList("create","leave","info","money","hire","pay","sign","src","log","buyers","rename");
-					
-				}
-				
-			}else if(args.length >= 2){
-				
-				if(args[0].equalsIgnoreCase("info") && args.length == 2){
-					
-					return new ArrayList<>(main.config.getConfigurationSection("ent.list").getKeys(false));
-					
-				}if(args[0].equalsIgnoreCase("create") && args.length == 2){
-					
-					return Arrays.asList("<nom>");
-					
-				}if(args[0].equalsIgnoreCase("rename") && args.length == 2){
-					
-					return Arrays.asList("<nouveau nom>");
-					
-				}if(args[0].equalsIgnoreCase("hire") && args.length == 3){
-					
-					return Arrays.asList("aucun","salarié","manager");
-					
-				}if(args[0].equalsIgnoreCase("sign") && args.length == 2){
-					
-					return Arrays.asList("<prix>");
-					
-				}if(args[0].equalsIgnoreCase("sign") && args.length == 3){
-					
-					return Arrays.asList("<description");
-					
-				}if(args[0].equalsIgnoreCase("src") && args.length == 2){
-					
-					return Arrays.asList("clear");
-					
-				}if(args[0].equalsIgnoreCase("log") && args.length == 2){
-					
-					if(main.config.contains("ent.list." + ent + ".log")){
-						return new ArrayList<>(main.config.getConfigurationSection("ent.list." + ent + ".log").getKeys(false));
-					}
-					return Arrays.asList("Vous n'avez","aucun log.");
-					
-				}
-				
-			}
-		}
-		
-		return null;
-		
 	}
 
 	

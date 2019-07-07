@@ -1,4 +1,4 @@
-package fr.themsou.inv;
+package fr.themsou.admin;
 
 import java.util.Arrays;
 import java.util.List;
@@ -13,7 +13,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import fr.themsou.main.main;
 import fr.themsou.methodes.PInfos;
 
-public class admin {
+public class AdminInv {
 	
 	@SuppressWarnings("deprecation")
 	public void oppenadmininventory(Player p){

@@ -173,8 +173,7 @@ public class timer {
 	@SuppressWarnings("deprecation")
 	public void pearDay(main mainclass){
 		
-		SendStat CSendStat = new SendStat();
-		CSendStat.sendDay(mainclass);
+		new SendStat().sendDay();
 		
 		try{
 			FileWriter writer = new FileWriter(main.logblock.getAbsoluteFile(), true);
@@ -259,11 +258,8 @@ public class timer {
 ////////////////////////////////////////////////////////////////////////////////////////
 	public void pearWeek(main mainclass){
 		
-		SendStat CSendStat = new SendStat();
-		CSendStat.sendWeek(mainclass);
-		
+		new SendStat().sendWeek();
 		new Utils().payEntreprises();
-		
 		new Roles().onWeek();
 		
 	}

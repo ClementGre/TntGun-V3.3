@@ -16,9 +16,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import fr.themsou.BedWars.getteam;
+import fr.themsou.commands.GradeCmd;
 import fr.themsou.diffusion.api.messages;
 import fr.themsou.main.main;
-import fr.themsou.methodes.Grade;
 import fr.themsou.methodes.PInfos;
 
 public class ChatListener implements Listener{
@@ -91,7 +91,7 @@ public class ChatListener implements Listener{
 		
 		// VARIABLES
 		
-		Grade CGrade = new Grade();
+		GradeCmd CGrade = new GradeCmd();
 		String pName = p.getName();
 		String game = PInfos.getGame(p);
 		String playerGrade = main.config.getString(pName + ".grade");

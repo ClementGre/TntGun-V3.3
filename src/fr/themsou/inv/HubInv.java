@@ -8,7 +8,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import fr.themsou.main.main;
 
-public class menu {
+public class HubInv {
 	
 	
 	public void setMainInventory(){

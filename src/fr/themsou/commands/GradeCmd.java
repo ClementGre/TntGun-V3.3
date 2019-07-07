@@ -1,14 +1,21 @@
-package fr.themsou.methodes;
+package fr.themsou.commands;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import fr.themsou.discord.Roles;
 import fr.themsou.main.main;
 
-public class Grade{
+public class GradeCmd implements TabCompleter, CommandExecutor{
 
 	
 	// 1 - Joueur
@@ -57,9 +64,6 @@ public class Grade{
 		}
 		
 		sender.sendMessage("§c/grade <Joueur> <" + grades + ">");
-		
-		
-		
 			
 	}
 	
@@ -107,6 +111,48 @@ public class Grade{
 		String playerGrade = main.config.getString(playerName + ".grade");
 		return main.configuration.getInt("grades." + playerGrade + ".perm");
 		
+	}
+	
+	@Override
+	public boolean onCommand(CommandSender sender, Command cmd, String arg1, String[] args) {
+		
+		if(sender instanceof Player){
+			Player p = (Player) sender;
+			
+			if(args.length ==  2){
+				changePlayerGrade(p, args[0], args[1]);
+			}else{
+				p.sendMessage("§c/grade <Joueur> <joueur,vip,youtuber,modo,Super-Modo,admin,developeur,fondateur>");
+			}
+			
+		}else{
+			
+			if(args.length ==  2){
+				changePlayerGradeWithConsole(args[0], args[1]);
+			}else{
+				sender.sendMessage("§c/grade <Joueur> <joueur,vip,youtuber,modo,builder,admin,developeur,fondateur>");
+			}
+			
+		}
+		return true;
+	}
+	
+	@Override
+	public List<String> onTabComplete(CommandSender sender, Command cmd, String arg, String[] args){
+		
+		
+		if(args.length == 1){
+			
+			return null;
+				
+		}else if(args.length == 2){
+			
+			return GeneralCmd.matchTab(new ArrayList<>(main.configuration.getConfigurationSection("grades").getKeys(false)), args[1]);
+			
+		}
+		
+		
+		return Arrays.asList("");
 	}
 	
 }

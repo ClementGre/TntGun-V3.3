@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 import fr.themsou.main.main;
 import fr.themsou.methodes.Schematics;
 
-public class AdminCommand {
+public class ClaimAdminUnderCmd {
 	
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

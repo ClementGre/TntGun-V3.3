@@ -1,4 +1,4 @@
-package fr.themsou.methodes;
+package fr.themsou.commands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -8,15 +8,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
-import fr.themsou.main.main;
 
-public class vip implements Listener {
+public class VipCmd implements Listener {
 
-	@SuppressWarnings("unused")
-	private main pl;
-	public vip(main pl){
-		this.pl = pl;
-	}
 	
 	@SuppressWarnings("deprecation")
 	@EventHandler
@@ -24,7 +18,7 @@ public class vip implements Listener {
 		Player p = e.getPlayer();
 		String msg = e.getMessage();
 		String[] args = msg.split(" ");
-		Grade CGrade = new Grade();
+		GradeCmd CGrade = new GradeCmd();
 		int i = CGrade.getPlayerPermition(p.getName());
 		
 		if(p.getWorld() == Bukkit.getWorld("world") || p.getWorld() == Bukkit.getWorld("world_nether") || p.getWorld() == Bukkit.getWorld("world_the_end")){
