@@ -80,7 +80,7 @@ public class BreakListener implements Listener{
 					
 					new Bucheron(p).addPCAuto();
 				
-				}else if(e.getBlock().getType() == Material.POTATO || e.getBlock().getType() == Material.CARROT || e.getBlock().getType() == Material.WHEAT_SEEDS){
+				}else if(e.getBlock().getType() == Material.POTATOES || e.getBlock().getType() == Material.CARROTS || e.getBlock().getType() == Material.WHEAT){
 					
 					if(e.getBlock().getData() == (byte) 7) new Fermier(p).addPCAuto();
 

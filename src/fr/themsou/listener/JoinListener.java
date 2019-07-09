@@ -27,12 +27,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import eu.blackfire62.myskin.bukkit.MySkin;
-import fr.themsou.commands.GradeCmd;
 import fr.themsou.diffusion.api.messages;
 import fr.themsou.diffusion.api.roles;
 import fr.themsou.discord.Counter;
 import fr.themsou.discord.Link;
 import fr.themsou.main.main;
+import fr.themsou.methodes.Inventory;
 import fr.themsou.methodes.Scoreboards;
 import fr.themsou.methodes.realDate;
 import fr.themsou.nms.title;
@@ -63,7 +63,7 @@ public class JoinListener implements Listener{
 				e.setResult(Result.KICK_OTHER);
 				return;
 			}
-			
+		
 		}
 		
 		
@@ -74,12 +74,6 @@ public class JoinListener implements Listener{
 	public void onPlayerLogin(PlayerLoginEvent e){
 	
 		Player p = e.getPlayer();
-		
-		if(new GradeCmd().getPlayerPermition(p.getName()) <= 2){
-			e.setKickMessage("§cLe serveur est en maintenance (Passage en 1.14)\n§3RDV sur discord pour plus d'infos");
-			e.setResult(PlayerLoginEvent.Result.KICK_OTHER);
-			return;
-		}
 		
 //-------------------- ALPHAN UMERIQUE --------------------
 		
@@ -297,7 +291,7 @@ public class JoinListener implements Listener{
 		pperms.setPermission("shopchest.sell", true);*/
 		
 /////////////////////////////////////////// TP / INV
-		
+		new Inventory().loadPlayerInventory(p, "rp");
 		p.teleport(new Location(Bukkit.getWorld("hub"), 0.5, 50, 0.5));
 		
 		p.getInventory().clear();

@@ -376,7 +376,6 @@ public class ConfigCmd implements TabCompleter, CommandExecutor{
 					}
 				}
 				
-				
 				if(main.config.contains(search)){
 					ArrayList<String> values = new ArrayList<>();
 					for(String value : main.config.getConfigurationSection(search).getKeys(false)){

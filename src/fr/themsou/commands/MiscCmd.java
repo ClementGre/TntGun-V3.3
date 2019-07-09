@@ -180,7 +180,7 @@ public class MiscCmd implements TabCompleter, CommandExecutor{
 						}else p.sendMessage("§c/misc boss add <nom> <blanc/bleu/vert/rose/violet/rouge/jaune/aléatoire> <6/10/12/20/none> <texte");
 					}else if(args[1].equals("remove")){	
 						if(args.length >= 2){
-							new Boss().removeBar(args[1], p);
+							new Boss().removeBar(args[2], p);
 						}else p.sendMessage("§c/misc boss remove <nom>");
 					}else if(args[1].equals("list")){
 						new Boss().list(p);

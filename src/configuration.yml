@@ -54,8 +54,14 @@ grades:
 #
 punish:
   Fly:
-    level: 5
+    level: 4
     item: ELYTRA
+  Speed_Hack:
+    level: 4
+    item: SADDLE
+  Cheat:
+    level: 5
+    item: SHEARS
   X-ray:
     level: 5
     item: DIAMOND_ORE
@@ -67,14 +73,414 @@ punish:
     item: BARRIER
   Spam:
     level: 1
-    item: WATCH
+    item: CLOCK
   Insulte:
     level: 1
     item: NAME_TAG
-  
-  
-  
-  
-  
-  
-  
+  PUB:
+    level: 1
+    item: NAME_TAG
+  Surnom_non_approprié:
+    level: 1
+    item: PLAYER_HEAD
+  Pseudo_non_approprié:
+    level: 3
+    item: PLAYER_HEAD
+#
+#
+#
+#
+stat:
+  Total:
+    stroke: 5
+    shift: -2
+    m1: true
+    color:
+      r: 30
+      g: 30
+      b: 240
+  Staff:
+    stroke: 2
+    shift: 0
+    m1: false
+    color:
+      r: 240
+      g: 0
+      b: 0
+  RolePlay:
+    stroke: 2
+    shift: 2
+    m1: false
+    color:
+      r: 220
+      g: 220
+      b: 0
+  BedWars:
+    stroke: 2
+    shift: 4
+    m1: false
+    color:
+      r: 0
+      g: 240
+      b: 240
+  TntWars:
+    stroke: 2
+    shift: 6
+    m1: false
+    color:
+      r: 0
+      g: 240
+      b: 0
+#
+#
+#
+info:
+  all:
+    0: Vous pouvez rejoindre notre discord ! https://discord.tntgun.fr/
+    1: Allez visiter notre site ! https://tntgun.fr/
+    2: besoin de nous contacter... contact@tntgun.fr
+    3: Faites /? pour ouvrir le menu dans les jeux.
+    4: Vous pouvez lier votre compte Discord et Minecraft avec /discord <pseudo Discord>
+    5: Vous pouvez gagner des points si vous etes actif et que vous participez aux différents jeux !
+    6: Vous avez 10 000 points ? Parfait, vous pouvez avoir un grade VIP gratuit en cliquant sur le diamand !
+  rp:
+    0: Faites /? pour ouvrir le menu et accéder au menu !
+    1: Vous pouvez gagner de l'argent tout les mois en fonction de la beauté de votre claim... Au travail !
+    2: Cliquez sur les pancartes pour acheter des terrains !
+    3: Vous voulez gagner de l'argent ? C'est l'émeraude dans le /?.
+    4: Éloignez vous de la ville pour pouvoir récupérer des ressources.
+    5: Il est interdit de créer des base en dehors des villes.
+    6: Vous pouvez farmer les métiers pour découvrir des outils ultra cheat !!!
+    7: Vous pouvez voir le shop entre joueurs avec /ah et vendre  l'item de votre main dans le shop entre joueurs avec /itemsell <prix>
+  bw:
+    0: Vous pouvez acheter des blocs ou faire des améliorations avec les vilageois.
+    1: Allez récupérer des diamants ou émeraudes sur les autres îles !
+    2: Essayez de casser le lit de vos adversaires.
+    3: Vous n'avez pas compris le but du jeu ? lisez attentivement le texte en orange ou allez sur https://tntgun.fr/jeux.php
+  tw:
+    0: Vous devez créer un canon à TNT pour casser le mur et ensuite tuer l'adversaire !
+    1: Vous ne savez pas faire des canon à TNT ? https://minecraft-fr.gamepedia.com/Tutoriels/Canons_%C3%A0_TNT
+#
+#
+#
+bedwars:
+  upgrades:
+    Protection:
+      item: DIAMOND_CHESTPLATE
+      levels:
+        Protection 1: 4
+        Protection 2: 6
+        Protection 3: 8
+        Protection 4: 16
+    Tranchant:
+      item: DIAMOND_SWORD
+      levels:
+        Tranchant 1: 8
+    Forge:
+      item: FURNACE
+      levels:
+        Forge x1'5: 4
+        Forge x2: 8
+        Forge x4: 16
+    Alerte:
+      item: TRIPWIRE_HOOK
+      levels:
+        Alerte: 1
+        Alerte + vitesse: 2
+    Efficacité:
+      item: IRON_PICKAXE
+      levels:
+        Efficacité 1: 4
+        Efficacité 2: 8
+        Efficacité 3: 16
+  teams:
+    1:
+      x: 49
+      z: -63
+      ori: 1
+    2:
+      x: -49
+      z: -63
+      ori: 1
+    3:
+      x: -49
+      z: 63
+      ori: 3
+    4:
+      x: 49
+      z: 63
+      ori: 3
+  diams:
+    1:
+      x: 0
+      z: -41
+    2:
+      x: 0
+      z: 41
+    3:
+      x: -41
+      z: 0
+    4:
+      x: 41
+      z: 0
+  shop:
+    Achat rapide:
+      item: NETHER_STAR
+      Armure en diamant:
+        item: DIAMOND_CHESTPLATE
+        price: 6
+        money: Emeraude
+        amount: 0
+      Armure en fer:
+        item: IRON_CHESTPLATE
+        price: 12
+        money: Or
+        amount: 0
+      Epée en diamant:
+        item: DIAMOND_SWORD
+        price: 4
+        money: Emeraude
+        amount: 1
+      Epée en fer:
+        item: IRON_SWORD
+        price: 7
+        money: Or
+        amount: 1
+      Pierre du néant:
+        item: END_STONE
+        price: 30
+        money: Fer
+        amount: 16
+      Laine:
+        item: WHITE_WOOL
+        price: 4
+        money: Fer
+        amount: 16
+      Hache en fer:
+        item: IRON_AXE
+        price: 30
+        money: Fer
+        amount: 1
+      Pioche en fer:
+        item: IRON_PICKAXE
+        price: 30
+        money: Fer
+        amount: 1
+      Créateur de pont:
+        item: EGG
+        price: 4
+        money: Or
+        amount: 1
+      Fire ball:
+        item: FIRE_CHARGE
+        price: 40
+        money: Fer
+        amount: 1
+    Armures:
+      item: DIAMOND_CHESTPLATE
+      Armure en chaîne:
+        item: CHAINMAIL_CHESTPLATE
+        price: 40
+        money: Fer
+        amount: 0
+      Armure en fer:
+        item: IRON_CHESTPLATE
+        price: 12
+        money: Or
+        amount: 0
+      Armure en diamant:
+        item: DIAMOND_CHESTPLATE
+        price: 6
+        money: Emeraude
+        amount: 0
+    Armes:
+      item: DIAMOND_SWORD
+      Epée en fer:
+        item: IRON_SWORD
+        price: 7
+        money: Or
+        amount: 1
+      Epée en diamant:
+        item: DIAMOND_SWORD
+        price: 4
+        money: Emeraude
+        amount: 1
+      Arc:
+        item: BOW
+        price: 12
+        money: Or
+        amount: 1
+      Arc enchantée:
+        item: BOW
+        price: 6
+        money: Emeraude
+        amount: 1
+        data: 1
+      Flèche:
+        item: ARROW 
+        price: 2
+        money: Or
+        amount: 8
+    Outils:
+      item: IRON_PICKAXE
+      Cisaille:
+        item: SHEARS
+        price: 20
+        money: Fer
+        amount: 1
+      Pioche en fer:
+        item: IRON_PICKAXE 
+        price: 30
+        money: Fer
+        amount: 1
+      Pioche en diamant:
+        item: DIAMOND_PICKAXE
+        price: 9
+        money: Or
+        amount: 1
+      Hache en fer:
+        item: IRON_AXE
+        price: 30
+        money: Fer
+        amount: 1
+      Hache en diamant:
+        item: DIAMOND_AXE
+        price: 9
+        money: Or
+        amount: 1
+    Blocs:
+      item: WHITE_WOOL
+      Laine:
+        item: WHITE_WOOL
+        price: 4
+        money: Fer
+        amount: 16
+      Planche:
+        item: OAK_PLANKS
+        price: 2
+        money: Or
+        amount: 16
+      Béton:
+        item: WHITE_CONCRETE
+        price: 10
+        money: Fer
+        amount: 16
+      Pierre du néant:
+        item: END_STONE
+        price: 30
+        money: Fer
+        amount: 16
+      Obsidien:
+        item: OBSIDIAN
+        price: 1
+        money: Emeraude
+        amount: 1
+    Potions:
+      item: POTION
+      Potion de rapidité:
+        item: POTION
+        price: 1
+        money: Emeraude
+        amount: 1
+        data: 1
+      potion de saut:
+        item: POTION
+        price: 1
+        money: Emeraude
+        amount: 1
+        data: 2
+      potion d'invisibilité:
+        item: POTION
+        price: 2
+        money: Emeraude
+        amount: 1
+    Autre:
+      item: TNT
+      Ender perle:
+        item: ENDER_PEARL
+        price: 3
+        money: Emeraude
+        amount: 1
+      Créateur de pont:
+        item: EGG
+        price: 4
+        money: Or
+        amount: 1
+      TNT:
+        item: TNT
+        price: 5
+        money: Or
+        amount: 1
+      Boule de feu:
+        item: FIRE_CHARGE
+        price: 40
+        money: Fer
+        amount: 1
+      Pomme en Or:
+        item: GOLDEN_APPLE
+        price: 2
+        money: Or
+        amount: 1
+discord:
+  tntplaylist:
+    Pop 2019: https://www.youtube.com/watch?v=QYh6mYIJG2Y&list=PLXjNP79_XCcjaIeC5kq-YWwSDK2xxzODC
+    Pop 2018: https://www.youtube.com/watch?v=QYh6mYIJG2Y&list=PLXjNP79_XCcjmHniGUi27ONqQASXl_4AP
+    Pop 2017: https://www.youtube.com/watch?v=aJOTlE1K90k&list=PLXjNP79_XCcjUtPwlMkxqARspDNBjei4-
+    Pop 2016: https://www.youtube.com/watch?v=3AtDnEC4zak&list=PLXjNP79_XCcjyZL_WR9goWWVuPfdfYoVb
+    Pop 2015: https://www.youtube.com/watch?v=lf_wVfwpfp8&list=PLXjNP79_XCcjDk3Bg5e1em1ra4_-cKEEx
+    Pop 2014: https://www.youtube.com/playlist?index=1&playnext=1&list=PLXjNP79_XCcgzXajzVsIhLbGjx2qB5s9n
+    Pop 2013: https://www.youtube.com/playlist?index=1&playnext=1&list=PLXjNP79_XCchcHZAb1K84lch08KT-zkh-
+    Pop 2012: https://www.youtube.com/playlist?index=1&playnext=1&list=PLXjNP79_XCcjgWjzTozxFTJkZCrkD-x_M
+    Pop 2011: https://www.youtube.com/playlist?index=1&playnext=1&list=PLXjNP79_XCcg3_jvhxUm7lmI6cFCspf2a
+    Pop 2010: https://www.youtube.com/playlist?index=1&playnext=1&list=PLXjNP79_XCcglbySOtfKeTthkkNef_9DX
+    Pop 2009: https://www.youtube.com/playlist?index=1&playnext=1&list=PLXjNP79_XCchyh1DDomw3DcjzPtLeiiQw
+    Pop 2008: https://www.youtube.com/watch?v=rMqayQ-U74s&list=PLXjNP79_XCchtVK3RpMsi_5RYWcsATCHB
+    Pop 2007: https://www.youtube.com/watch?v=7wtfhZwyrcc&list=PLXjNP79_XCchq4heRpB07PXQsK7Z-Glce
+    Pop 2006: https://www.youtube.com/playlist?index=1&playnext=1&list=PLXjNP79_XCchBWD4jdPqyV1Qo-6aowfwK
+    Pop 2005: https://www.youtube.com/playlist?index=1&playnext=1&list=PLXjNP79_XCchiihjTgTrvt8oD69ONkGlO
+    Pop 2004: https://www.youtube.com/playlist?index=1&playnext=1&list=PLXjNP79_XCchkPIxZMZqFNjhCKwJhIO4s
+    Pop 2003: https://www.youtube.com/watch?v=ViwtNLUqkMY&list=PLXjNP79_XCcihpiO6Y2QhntLFD6cryXaj
+    Pop 2002: https://www.youtube.com/playlist?index=1&playnext=1&list=PLXjNP79_XCciomLjGbBVZoARRYvZJ_EhF
+    Pop 2001: https://www.youtube.com/watch?v=Wmc8bQoL-J0&list=PLXjNP79_XCcjGow_l2s0LYBfszEtrmHhD
+    pop 2000: https://www.youtube.com/watch?v=TnOy6HEf7HU&list=PLXjNP79_XCcjmWVLTE8R8i7iOj2jLDfPD
+    Pop 1999: https://www.youtube.com/playlist?index=1&playnext=1&list=PLXjNP79_XCchA8O47cQZrFQYRYext4Ne7
+    Pop 1998: https://www.youtube.com/watch?v=C-u5WLJ9Yk4&list=PLXjNP79_XCcitB49myWn8vJEs_mZBVgpm
+    Pop 1997: https://www.youtube.com/watch?v=bQRzrnH6_HY&list=PLXjNP79_XCchwrQNvkPcMRsbYacdVP8Pd
+    Pop 1996: https://www.youtube.com/watch?v=gJLIiF15wjQ&list=PLXjNP79_XCcgKrHiryIgfdenKn7dME5V9
+    Pop 1995: https://www.youtube.com/playlist?index=1&playnext=1&list=PLXjNP79_XCchkrZJKp_vAHg-Ho2skMPma
+    Kpop mix: https://www.youtube.com/watch?v=BVwAVbKYYeM&list=PLXjNP79_XCciwKU8a7RoPKyOMnkZhhAS4
+    Rock mix: https://www.youtube.com/watch?v=fJ9rUzIMcZQ&list=PLXjNP79_XCchHwkjvpPIJaMsRjPV1baaC
+    Ambiance mix: https://www.youtube.com/watch?v=qeMFqkcPYcg&list=PLXjNP79_XCciyvVcPszIfcW45Z4bdLd6G
+    Dance mix: https://www.youtube.com/watch?v=eH3giaIzONA&list=PLXjNP79_XCcj9Oc7_eoE2ux3eytzZy14r
+  ytplaylist:
+    Britney Spears Toxic: https://www.youtube.com/watch?v=C-u5WLJ9Yk4&list=RDC-u5WLJ9Yk4&start_radio=1
+    Katy Perry CaliforniaGurls: https://www.youtube.com/watch?v=F57P9C4SAW4&list=RDF57P9C4SAW4&start_radio=1
+    Katy Perry HotNCold: https://www.youtube.com/watch?v=kTHNpusq654&list=RDkTHNpusq654&start_radio=1
+    Maroon 5 GirldLike: https://www.youtube.com/watch?v=aJOTlE1K90k&list=RDaJOTlE1K90k&start_radio=1
+    Anastacia I'mOuttaLove: https://www.youtube.com/watch?v=TnOy6HEf7HU&list=RDTnOy6HEf7HU&start_radio=1
+    Timeless pop song: https://www.youtube.com/watch?v=RBumgq5yVrA&list=PLMC9KNkIncKtPzgY-5rmhvj7fax8fdxoj
+    Pop: https://www.youtube.com/watch?v=F57P9C4SAW4&list=RDGMEMQ1dJ7wXfLlqCjwV0xfSNbA&start_radio=1
+    Pop 2019 1: https://www.youtube.com/watch?v=Tztc73r8348&list=PL4o29bINVT4EG_y-k5jGoOu3-Am8Nvi10
+    Pop 2019 2: https://www.youtube.com/watch?v=Bkm03KcnKHE&list=PLw-VjHDlEOgs6-KNB6I3xb6M2WfeH35mm
+    Pop 2019 3: https://www.youtube.com/watch?v=QYh6mYIJG2Y&list=PL55713C70BA91BD6E
+    Pop 2019 4: https://www.youtube.com/watch?v=aJOTlE1K90k&list=PLMC9KNkIncKtGvr2kFRuXBVmBev6cAJ2u
+  radio:
+    Fun radio: http://streaming.radio.funradio.fr/fun-1-24-24.aac
+    NRJ: http://cdn.nrjaudio.fm/audio1/fr/30001/mp3_128.mp3?origine=fluxradios
+    Virgin: http://vr-live-aac-64.scdn.arkena.com/virginradio.aac
+    SkyRock : http://www.skyrock.fm/stream.php/tunein16_32aac.aac
+    RTL2 : http://streaming.radio.rtl2.fr/rtl2-1-48-72.aac
+    Virage : http://broadcast.infomaniak.net/virageradio-high.aac
+    Chérie : http://cdn.nrjaudio.fm/audio1/fr/30201/mp3_128.mp3?origine=fluxradios
+    RMC: http://chai5she.cdn.dvmr.fr/rmcinfo
+    RFM : http://rfm-live-aac-64.scdn.arkena.com/rfm.aac
+    Europe 1 : http://e1-live-aac-64.scdn.arkena.com/europe1.aac
+    Nostalgie : http://cdn.nrjaudio.fm/audio1/fr/30601/mp3_128.mp3?origine=fluxradios
+    Alpes 1 : http://broadcast.infomaniak.ch/alpes1grenoble-high.aac
+    M Radio : http://broadcast.infomaniak.ch/mfm-64.aac
+    Rire & Chansons: http://cdn.nrjaudio.fm/audio1/fr/30401/mp3_128.mp3?origine=fluxradios
+    RTL : http://streaming.radio.rtl.fr/rtl-1-48-72.aac
+    France inter : http://direct.franceinter.fr/live/franceinter-lofi.mp3
+    France culture :  http://direct.franceculture.fr/live/franceculture-lofi.mp3
+    France info : http://direct.franceinfo.fr/live/franceinfo-lofi.mp3
+    France bleu Isère :  http://direct.francebleu.fr/live/fbisere-lofi.mp3
