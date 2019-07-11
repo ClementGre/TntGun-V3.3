@@ -11,6 +11,7 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffect;
 
 import fr.themsou.methodes.Inventory;
 import fr.themsou.methodes.PInfos;
@@ -83,6 +84,9 @@ public class ChangeWorldListener implements Listener{
 			
 			if(p.getGameMode() == GameMode.SURVIVAL){
 				new Inventory().savePlayerInventory(p, "rp");
+				for(PotionEffect potion : p.getActivePotionEffects()) p.removePotionEffect(potion.getType());
+				p.setHealth(20);
+				p.setFoodLevel(20);
 				p.getInventory().clear();
 			}
 			

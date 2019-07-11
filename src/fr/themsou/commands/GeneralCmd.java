@@ -63,7 +63,7 @@ public class GeneralCmd implements CommandExecutor {
 		ArrayList<String> matches = new ArrayList<>();
 		
 		for(int i = 0; i < tabs.size(); i++){
-			if(tabs.get(i).startsWith(toMatch)){
+			if(tabs.get(i).toLowerCase().startsWith(toMatch.toLowerCase())){
 				matches.add(tabs.get(i));
 			}
 		}

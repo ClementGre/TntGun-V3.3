@@ -7,6 +7,8 @@ import java.io.IOException;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.dynmap.snakeyaml.external.biz.base64Coder.Base64Coder;
@@ -23,7 +25,13 @@ public class Inventory {
 		main.config.set(player.getName() + ".inv." + key + ".items", toBase64(player.getInventory().getContents()));
 		main.config.set(player.getName() + ".inv." + key + ".health", player.getHealth());
 		main.config.set(player.getName() + ".inv." + key + ".food", player.getFoodLevel());
+		main.config.set(player.getName() + ".inv." + key + ".exp", player.getExp());
 		
+		for(PotionEffect potion : player.getActivePotionEffects()){
+			
+			main.config.set(player.getName() + ".inv." + key + ".potion." + potion.getType().getName().toUpperCase() + ".duration", potion.getDuration());
+			main.config.set(player.getName() + ".inv." + key + ".potion." + potion.getType().getName().toUpperCase() + ".amlifier", potion.getAmplifier());
+		}
 		
 	}
 	public void loadPlayerInventory(Player player, String key){
@@ -38,6 +46,18 @@ public class Inventory {
 			
 			player.setHealth(main.config.getInt(player.getName() + ".inv." + key + ".health"));
 			player.setFoodLevel(main.config.getInt(player.getName() + ".inv." + key + ".food"));
+			player.setExp(main.config.getInt(player.getName() + ".inv." + key + ".exp"));
+			
+			for(PotionEffect potion : player.getActivePotionEffects()) player.removePotionEffect(potion.getType());
+			
+			if(main.config.contains(player.getName() + ".inv." + key + ".potion")){
+	 			for(String potionName : main.config.getConfigurationSection(player.getName() + ".inv." + key + ".potion").getKeys(false)){
+					
+					player.addPotionEffect(PotionEffectType.getByName(potionName).createEffect(main.config.getInt(player.getName() + ".inv." + key + ".potion." + potionName + ".duration"), main.config.getInt(player.getName() + ".inv." + key + ".potion." + potionName + ".amplifier")));
+					
+				}
+			}
+			
 			
 		}else{
 			player.getInventory().clear();

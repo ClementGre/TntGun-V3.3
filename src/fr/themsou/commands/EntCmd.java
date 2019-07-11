@@ -154,10 +154,10 @@ public class EntCmd implements TabCompleter, CommandExecutor {
 					
 					ArrayList<String> returns = new ArrayList<>();
 					for(Player players : Bukkit.getOnlinePlayers()){
-						if(players.getName().startsWith(args[0])) returns.add(players.getName());
+						if(players.getName().toLowerCase().startsWith(args[1].toLowerCase())) returns.add(players.getName());
 					}
 					for(String ents : main.config.getConfigurationSection("ent.list").getKeys(false)){
-						if(("ent:" + ents).startsWith(args[0]) || ents.startsWith(args[0])) returns.add("ent:" + ents);
+						if(("ent:" + ents).toLowerCase().startsWith(args[1].toLowerCase()) || ents.toLowerCase().startsWith(args[1].toLowerCase())) returns.add("ent:" + ents);
 					}
 					return returns;
 					
@@ -168,6 +168,10 @@ public class EntCmd implements TabCompleter, CommandExecutor {
 				}if(args[0].equalsIgnoreCase("rename") && args.length == 2){
 					
 					return Arrays.asList("<nouveau nom>");
+					
+				}if(args[0].equalsIgnoreCase("hire") && args.length == 2){
+					
+					return null;
 					
 				}if(args[0].equalsIgnoreCase("hire") && args.length == 3){
 					

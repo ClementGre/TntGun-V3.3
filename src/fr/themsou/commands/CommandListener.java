@@ -66,6 +66,8 @@ public class CommandListener implements Listener{
 						args[0].equalsIgnoreCase("/reg") ||
 						args[0].equalsIgnoreCase("/register") ||
 						args[0].equalsIgnoreCase("/pay") ||
+						args[0].equalsIgnoreCase("/night") ||
+						args[0].equalsIgnoreCase("/feed") ||
 						args[0].equalsIgnoreCase("/ent")){}
 
 //								

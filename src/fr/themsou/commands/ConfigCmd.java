@@ -307,7 +307,7 @@ public class ConfigCmd implements TabCompleter, CommandExecutor{
 					ArrayList<String> values = new ArrayList<>();
 					for(String value : main.config.getConfigurationSection(search).getKeys(false)){
 						String section = search + value;
-						if(section.startsWith(args[0])){
+						if(section.toLowerCase().startsWith(args[0].toLowerCase())){
 							values.add(section);
 						}
 					}
@@ -336,7 +336,7 @@ public class ConfigCmd implements TabCompleter, CommandExecutor{
 				ArrayList<String> values = new ArrayList<>();
 				for(String value : main.config.getConfigurationSection(search).getKeys(false)){
 					String section = search + value;
-					if(section.startsWith(args[1])){
+					if(section.toLowerCase().startsWith(args[1].toLowerCase())){
 						values.add(section);
 					}
 				}
@@ -380,7 +380,7 @@ public class ConfigCmd implements TabCompleter, CommandExecutor{
 					ArrayList<String> values = new ArrayList<>();
 					for(String value : main.config.getConfigurationSection(search).getKeys(false)){
 						String section = search + value;
-						if(section.startsWith(arg0)){
+						if(section.toLowerCase().startsWith(arg0.toLowerCase())){
 							values.add(section);
 						}
 					}

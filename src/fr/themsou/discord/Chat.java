@@ -21,7 +21,6 @@ public class Chat {
 		messages Cmessages = new messages();
 		roles Croles = new roles();
 		
-		String role = Croles.getRoles(userName).get(0);
 		String prefix = ""; String chatColor = "§7"; String overlay = "";
 		
 		Cmessages.clearEmbed();
@@ -38,7 +37,7 @@ public class Chat {
 		}else{
 			for(String grade : main.configuration.getConfigurationSection("grades").getKeys(false)){
 				
-				if(role.equalsIgnoreCase(grade)){
+				if(Croles.getRoles(userName).contains(grade)){
 					chatColor = main.configuration.getString("grades." + grade + ".chatcolor");
 					prefix = "§f[Discord]" + main.configuration.getString("grades." + grade + ".gradecolor") + " [" + grade + "] "
 							+ main.configuration.getString("grades." + grade + ".playercolor") + userNick + " : " + chatColor;

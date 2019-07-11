@@ -21,11 +21,13 @@ public class shop {
 			
 			addItem(shop, Material.COBBLESTONE, 20);
 			
-			addItem(shop, Material.STONE, 300);
+			addItem(shop, Material.OBSIDIAN, 12800);
 			
-			addItem(shop, Material.STONE, 300);
+			addItem(shop, Material.GRANITE, 300);
 			
-			addItem(shop, Material.STONE, 300);
+			addItem(shop, Material.DIORITE, 300);
+			
+			addItem(shop, Material.ANDESITE, 300);
 			
 			addItem(shop, Material.DIRT, 15);
 			
@@ -33,7 +35,7 @@ public class shop {
 			
 			addItem(shop, Material.GRAVEL, 300);
 			
-			addItem(shop, Material.NETHERRACK, 25);
+			addItem(shop, Material.NETHERRACK, 70);
 			
 			addItem(shop, Material.WHITE_WOOL, 150);
 			
@@ -95,8 +97,6 @@ public class shop {
 			addItem(shop, Material.APPLE, 2000);
 			
 			addItem(shop, Material.BEETROOT, 100);
-			
-			addItem(shop, Material.NETHERRACK, 7500);
 			
 			addItem(shop, Material.SUGAR_CANE, 500);
 			

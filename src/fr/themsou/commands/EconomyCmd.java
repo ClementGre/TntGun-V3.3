@@ -83,7 +83,7 @@ public class EconomyCmd implements Listener, TabCompleter, CommandExecutor{
 							
 							main.economy.withdrawPlayer(p, prix);
 							main.config.set("ent.list." + args[1] + ".money", main.config.getInt("ent.list." + args[1] + ".money") + prix);
-							p.sendMessage("§c" + prix + "€a§6 ont bien été envoyés à l'entreprise §c" + args[1]);
+							p.sendMessage("§c" + prix + "€§6 ont bien été envoyés à l'entreprise §c" + args[1]);
 							
 							String pdg = main.config.getString("ent.list." + args[1] + ".pdg");
 							if(Bukkit.getOfflinePlayer(pdg).isOnline()) Bukkit.getPlayerExact(pdg).sendMessage("§c" + p.getName() + " §6a envoyé §c" + prix + "€§6 à votre entreprise");
@@ -120,12 +120,12 @@ public class EconomyCmd implements Listener, TabCompleter, CommandExecutor{
 					ArrayList<String> returns = new ArrayList<>();
 					
 					for(Player players : Bukkit.getOnlinePlayers()){
-						if(players.getName().startsWith(args[0])){
+						if(players.getName().toLowerCase().startsWith(args[0].toLowerCase())){
 							returns.add(players.getName());
 						}
 					}
 					for(String ent : main.config.getConfigurationSection("ent.list").getKeys(false)){
-						if(("ent:" + ent).startsWith(args[0]) || ent.startsWith(args[0])){
+						if(("ent:" + ent).toLowerCase().startsWith(args[0].toLowerCase()) || ent.toLowerCase().startsWith(args[0].toLowerCase())){
 							returns.add("ent:" + ent);
 						}
 					}

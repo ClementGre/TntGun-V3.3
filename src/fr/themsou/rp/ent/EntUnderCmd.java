@@ -475,34 +475,37 @@ public class EntUnderCmd {
 			
 			if(role >= 1){
 				
-				ConfigurationSection buyersSection = main.config.getConfigurationSection("ent.list." + ent + ".buyers");
+				if(main.config.contains("ent.list." + ent + ".buyers")){
+					
+					ConfigurationSection buyersSection = main.config.getConfigurationSection("ent.list." + ent + ".buyers");
+					
+					p.sendMessage("§c--- §6§l" + buyersSection.getKeys(false).size() + " ventes depuis la dernière récompense §r§c---");
 				
-				p.sendMessage("§c--- §6§l" + buyersSection.getKeys(false).size() + " ventes depuis la dernière récompense §r§c---");
-			
-				int[] buyersValue = new int[buyersSection.getKeys(false).size()];
-				int total = 0;
-				int i = 0;
-				for(String buyer : buyersSection.getKeys(false)){
-					p.sendMessage("§3" + buyer + " : §b" + main.config.getInt("ent.list." + ent + ".buyers." + buyer) + "€");
-					buyersValue[i] = main.config.getInt("ent.list." + ent + ".buyers." + buyer);
-					total += main.config.getInt("ent.list." + ent + ".buyers." + buyer);
-					i++;
-				}
-				
-				if(p.isOp()){
+					int[] buyersValue = new int[buyersSection.getKeys(false).size()];
+					int total = 0;
+					int i = 0;
+					for(String buyer : buyersSection.getKeys(false)){
+						p.sendMessage("§3" + buyer + " : §b" + main.config.getInt("ent.list." + ent + ".buyers." + buyer) + "€");
+						buyersValue[i] = main.config.getInt("ent.list." + ent + ".buyers." + buyer);
+						total += main.config.getInt("ent.list." + ent + ".buyers." + buyer);
+						i++;
+					}
 					
-					Arrays.sort(buyersValue);
-					int median = buyersValue[buyersValue.length / 2];
-					int totMedian = median * buyersSection.getKeys(false).size();
+					if(p.isOp()){
+						
+						Arrays.sort(buyersValue);
+						int median = buyersValue[buyersValue.length / 2];
+						int totMedian = median * buyersSection.getKeys(false).size();
+						
+						p.sendMessage("§6Médiane : §e" + median + "§6 = §e" + totMedian);
+						p.sendMessage("§6Moyenne : §e" + total / buyersValue.length);
+						p.sendMessage("§6Total : §e" + total);
+						
+						
+						
+					}
 					
-					p.sendMessage("§6Médiane : §e" + median + "§6 = §e" + totMedian);
-					p.sendMessage("§6Moyenne : §e" + total / buyersValue.length);
-					p.sendMessage("§6Total : §e" + total);
-					
-					
-					
-				}
-					
+				}else p.sendMessage("§cVous n'avez vendu aucun item.");
 				
 			}else p.sendMessage("§cVous devez être manager ou PDG pour consulter les logs l'entreprise.");
 			

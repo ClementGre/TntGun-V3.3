@@ -494,13 +494,12 @@ public class InventoryListener implements Listener {
 					p.sendMessage("§c    /ec §b> §3Ouvrir son enderchest");
 					p.sendMessage("§c    /craft §b> §3Ouvrir une table de craft virtuelle");
 					p.sendMessage("§c    /tete <pseudo> §b> §3Obtenir la tete d'un joueur");
+					p.sendMessage("§c    /feed §b> §3Se nourrir");
+					p.sendMessage("§c    /night §b> §3Désactiver ou activer la vision nocturne");
 					p.sendMessage("§b  TNTWARS :");
 					p.sendMessage("§3    Choix de la map");
-					p.sendMessage("§b  LAPWARS :");
-					p.sendMessage("§3    Choix de l'équipe");
+					p.sendMessage("§b  BedWARS :");
 					p.sendMessage("§c    /ec §b> §3Ouvrir son enderchest");
-					p.sendMessage("§c    /craft §b> §3Ouvrir une table de craft virtuelle");
-					p.sendMessage("§c    /tete <pseudo> §b> §3Obtenir la tete d'un joueur");
 					p.sendMessage("§b  SERVEUR :");
 					p.sendMessage("§c    /nick §b> §3Changer son pseudo");
 					

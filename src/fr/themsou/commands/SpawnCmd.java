@@ -152,7 +152,7 @@ public class SpawnCmd implements TabCompleter, CommandExecutor{
 					ArrayList<String> returns = new ArrayList<>();
 					
 					for(String city : main.config.getConfigurationSection("claim.list").getKeys(false)){
-						if(city.startsWith(args[0]) && main.config.contains("claim.list." + city + ".x")){
+						if(city.toLowerCase().startsWith(args[0].toLowerCase()) && main.config.contains("claim.list." + city + ".x")){
 							returns.add(city);
 						}
 					}
