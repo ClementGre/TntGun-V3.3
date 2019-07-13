@@ -118,7 +118,7 @@ public class ChatListener implements Listener{
 				+ "\n§6Date d'envoi : §3" + date
 				+ "\n§6Temps / Total : §3" + PInfos.getTimeMin(p.getName(), game) / 60 + "h/" + PInfos.getTotalTime(p.getName()) + "h";
 		
-		if(p.getGameMode() == GameMode.SURVIVAL && chatColor != "§7"){
+		if(p.getGameMode() == GameMode.SURVIVAL && !chatColor.equals("§7")){
 			chatColor = "§f";
 			playerColor = "§7";
 		}

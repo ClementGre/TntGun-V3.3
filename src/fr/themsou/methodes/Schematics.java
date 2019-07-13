@@ -56,6 +56,7 @@ public class Schematics {
     	set.add(new BlockPattern(BlockTypes.END_STONE.getDefaultState()).getBlock());
     	set.add(new BlockPattern(BlockTypes.OBSIDIAN.getDefaultState()).getBlock());
     	
+    	
         try{
         	
             es.replaceBlocks(region, set, new BlockPattern(BlockTypes.AIR.getDefaultState()));

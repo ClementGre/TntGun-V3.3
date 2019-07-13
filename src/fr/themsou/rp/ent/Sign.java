@@ -176,21 +176,14 @@ public class Sign {
 								return;
 							}
 							
-							
-							if(contains(chest.getInventory(), toSell)){
+							ItemStack removed = remove(chest.getInventory(), toSell);
+							if(removed != null){
 								
 								main.config.set("ent.list." + ent + ".money", main.config.getInt("ent.list." + ent + ".money") + price);
 								main.economy.withdrawPlayer(p, price);
 								p.sendMessage("§6Vous venez d'acheter §c" + amount + " " + desc + "§6 à §c" + ent + "§6 pour §c" + price + "€");
 								
-								if(toSell.getMaxStackSize() == 1 || toSell.getType() == Material.WRITTEN_BOOK){
-									int slot = chest.getInventory().first(toSell.getType());
-									p.getInventory().addItem(chest.getInventory().getItem(slot));
-									chest.getInventory().setItem(slot, null);
-								}else{
-									chest.getInventory().removeItem(toSell);
-									p.getInventory().addItem(toSell);
-								}
+								p.getInventory().addItem(removed);
 								
 								if(!main.config.contains(p.getName() + ".rp.ent.name")){
 									main.config.set("ent.list." + ent + ".buyers." + p.getName(), main.config.getInt("ent.list." + ent + ".buyers." + p.getName()) + price);
@@ -231,6 +224,41 @@ public class Sign {
 		}
 		
 		return false;
+		
+	}
+	public ItemStack remove(Inventory inv, ItemStack item){
+		
+		int removed = 0;
+		int toremove = item.getAmount();
+		
+		for(int i = 0; i < inv.getSize(); i++) {
+            
+			if(inv.getItem(i) == null) continue;
+			
+			if(inv.getItem(i).getType() == item.getType()){
+				
+				int stack = inv.getItem(i).getAmount();
+				
+				if(stack > (toremove - removed)){
+					ItemStack toreturn = inv.getItem(i).clone();
+					toreturn.setAmount(toremove);
+					inv.getItem(i).setAmount(inv.getItem(i).getAmount() - (toremove - removed));
+					return toreturn;
+				}else if(stack == (toremove - removed)){
+					ItemStack toreturn = inv.getItem(i).clone();
+					toreturn.setAmount(toremove);
+					inv.setItem(i, null);
+					return toreturn;
+				}else{
+					removed += inv.getItem(i).getAmount();
+					inv.setItem(i, null);
+				}
+				
+			}
+			
+		}
+		
+		return null;
 		
 	}
 	

@@ -11,6 +11,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.Chest;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarFlag;
@@ -170,29 +171,8 @@ public class BedWars {
 				if(timer <= 0){
 					main.config.set("bedwars.list.status", status);
 					if(status == 5){
-						for(Player players : Bukkit.getWorld("BedWars").getPlayers()){
-							
-							title.sendTitle(players, "§cÉgalité" , "§6+80 points", 100);
-							main.config.set(players.getName() + ".points", main.config.getInt(players.getName() + ".points") + 80);
-							
-							if(players.getGameMode() == GameMode.SPECTATOR) players.setGameMode(GameMode.SURVIVAL);
-							
-							players.teleport(new Location(Bukkit.getWorld("hub"), 0, 50, 0));
-							
-						}
-						main.config.set("bedwars.list.teams", null);
-						for(int i2 = 1; i2 <= 4; i2++){
-							
-							main.config.set("bedwars.list.teams." + i2 + ".bed", 1);
-							
-						}
-						
-						main.config.set("bedwars.list.status", 0);
-						new world().deleteFile(new File("plugins/MultiInv/UUIDGroups/BedWars"));
-						new world().copyworld("BedWars-save", "BedWars");
-					}
-					
-					if(status == 2){
+						endGame(0);
+					}else if(status == 2){
 						main.config.set("bedwars.list.timer", 600);
 					}else if(status == 3){
 						main.config.set("bedwars.list.timer", 600);
@@ -201,8 +181,6 @@ public class BedWars {
 					}else{
 						main.config.set("bedwars.list.timer", 1800);
 					}
-					
-					
 				}
 				
 ////////////////////////////////////////////////////////////////////////////////
@@ -413,56 +391,11 @@ public class BedWars {
 				
 				
 				String teamName = Cgetteam.getTeamChatColor(rstTeams.get(0)) + Cgetteam.getTeamStringColor(rstTeams.get(0));
-				for(Player players : Bukkit.getWorld("BedWars").getPlayers()){
-					
-					if(Cgetteam.getplayerteam(players) == rstTeams.get(0)){
-						title.sendTitle(players, "§cLes " + teamName + "§c ont gagnés !" , "§6+100 points", 100);
-						main.config.set(players.getName() + ".points", main.config.getInt(players.getName() + ".points") + 100);
-					}else{
-						title.sendTitle(players, "§cLes " + teamName + "§c ont gagnés !" , "§6+60 points", 60);
-						main.config.set(players.getName() + ".points", main.config.getInt(players.getName() + ".points") + 60);
-					}
-					
-					if(players.getGameMode() == GameMode.SPECTATOR) players.setGameMode(GameMode.SURVIVAL);
-					players.teleport(new Location(Bukkit.getWorld("hub"), 0, 50, 0));
-					
-				}
-				main.config.set("bedwars.list.teams", null);
-				for(int i2 = 1; i2 <= 4; i2++){
-					main.config.set("bedwars.list.teams." + i2 + ".bed", 1);
-				}
-				
-				main.config.set("bedwars.list.status", 0);
-				
-				
-				Location loc1 = new Location(Bukkit.getWorld("BedWars"), -125, 125, -125);
-				Location loc2 = new Location(Bukkit.getWorld("BedWars"), 125, 85, 125);
-				new Schematics().replaceBwBlocks(loc1, loc2);
-				for(String user : main.config.getConfigurationSection("").getKeys(false)){
-					main.config.set(user + ".inv.bw-ec", null);
-				}
+				endGame(rstTeams.get(0));
 				
 			}else if(rstTeams.size() == 0 && main.config.getInt("bedwars.list.status") != 0 && main.config.getInt("bedwars.list.status") != 5){
 				
-				for(Player players : Bukkit.getWorld("BedWars").getPlayers()){
-					if(players.getGameMode() == GameMode.SPECTATOR) players.setGameMode(GameMode.SURVIVAL);
-					players.teleport(new Location(Bukkit.getWorld("hub"), 0, 50, 0));
-					
-				}
-				
-				for(int i2 = 1; i2 <= 4; i2++){
-					main.config.set("bedwars.list.teams." + i2, null);
-					main.config.set("bedwars.list.teams." + i2 + ".bed", 1);
-				}
-				
-				main.config.set("bedwars.list.status", 0);
-				
-				Location loc1 = new Location(Bukkit.getWorld("BedWars"), -125, 125, -125);
-				Location loc2 = new Location(Bukkit.getWorld("BedWars"), 125, 85, 125);
-				new Schematics().replaceBwBlocks(loc1, loc2);
-				for(String user : main.config.getConfigurationSection("").getKeys(false)){
-					main.config.set(user + ".inv.bw-ec", null);
-				}
+				endGame(rstTeams.get(0));
 				
 			}else{
 			
@@ -635,6 +568,56 @@ public class BedWars {
 		}
 			
 			
+	}
+	
+	public void clearChests(){
+		
+		
+		for(String team : main.configuration.getConfigurationSection("bedwars.teams").getKeys(false)){
+			
+			int x = main.configuration.getInt("bedwars.teams." + team + ".chest.x");
+			int z = main.configuration.getInt("bedwars.teams." + team + ".chest.z");
+			
+			Chest chest = (Chest) Bukkit.getWorld("BedWars").getBlockAt(x, 100, z).getState();
+			chest.getInventory().clear();
+		}
+		
+	}
+		
+	public void endGame(int winTeam){
+		
+		getteam Cgetteam = new getteam();
+		for(Player players : Bukkit.getWorld("BedWars").getPlayers()){
+			
+			if(winTeam == 0){
+				title.sendTitle(players, "§cÉgalité" , "§6+80 points", 100);
+				main.config.set(players.getName() + ".points", main.config.getInt(players.getName() + ".points") + 80);
+			}else if(Cgetteam.getplayerteam(players) == winTeam){
+				title.sendTitle(players, "§cLes " + Cgetteam.getTeamStringColor(winTeam) + "§c ont gagnés !" , "§6+100 points", 100);
+				main.config.set(players.getName() + ".points", main.config.getInt(players.getName() + ".points") + 100);
+			}else{
+				title.sendTitle(players, "§cLes " + Cgetteam.getTeamStringColor(winTeam) + "§c ont gagnés !" , "§6+60 points", 60);
+				main.config.set(players.getName() + ".points", main.config.getInt(players.getName() + ".points") + 60);
+			}
+			
+			if(players.getGameMode() == GameMode.SPECTATOR) players.setGameMode(GameMode.SURVIVAL);
+			players.teleport(new Location(Bukkit.getWorld("hub"), 0, 50, 0));
+			
+		}
+		main.config.set("bedwars.list.teams", null);
+		main.config.set("bedwars.list.status", 0);
+		for(int i2 = 1; i2 <= 4; i2++){
+			main.config.set("bedwars.list.teams." + i2 + ".bed", 1);
+		}
+		
+		Location loc1 = new Location(Bukkit.getWorld("BedWars"), -125, 125, -125);
+		Location loc2 = new Location(Bukkit.getWorld("BedWars"), 125, 85, 125);
+		new Schematics().replaceBwBlocks(loc1, loc2);
+		for(String user : main.config.getConfigurationSection("").getKeys(false)){
+			main.config.set(user + ".inv.bw-ec", null);
+		}
+		clearChests();
+		
 	}
 	
 	

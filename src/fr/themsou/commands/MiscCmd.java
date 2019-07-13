@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
 import org.bukkit.command.Command;
@@ -19,9 +18,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.Villager.Profession;
 import org.bukkit.inventory.meta.ItemMeta;
-
+import fr.themsou.BedWars.BedWars;
 import fr.themsou.discord.Roles;
-import fr.themsou.main.main;
 import fr.themsou.methodes.Boss;
 import fr.themsou.methodes.Schematics;
 import fr.themsou.methodes.SendStat;
@@ -85,19 +83,7 @@ public class MiscCmd implements TabCompleter, CommandExecutor{
 					
 					if(args[1].equalsIgnoreCase("newgame")){
 						
-						main.config.set("bedwars.list.teams", null);
-						for(int i2 = 1; i2 <= 4; i2++){
-							
-							main.config.set("bedwars.list.teams." + i2 + ".bed", 1);
-							
-						}
-						main.config.set("bedwars.list.status", 0);
-						Location loc1 = new Location(Bukkit.getWorld("BedWars"), -125, 130, -125);
-						Location loc2 = new Location(Bukkit.getWorld("BedWars"), 125, 80, 125);
-						new Schematics().replaceBwBlocks(loc1, loc2);
-						for(String user : main.config.getConfigurationSection("").getKeys(false)){
-							main.config.set(user + ".inv.bw-ec", null);
-						}
+						new BedWars().endGame(0);
 					
 					}else if(args[1].equalsIgnoreCase("pnjupgrade")){
 						
