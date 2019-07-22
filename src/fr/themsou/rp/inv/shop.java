@@ -35,7 +35,7 @@ public class shop {
 			
 			addItem(shop, Material.GRAVEL, 300);
 			
-			addItem(shop, Material.NETHERRACK, 70);
+			addItem(shop, Material.NETHERRACK, 50);
 			
 			addItem(shop, Material.WHITE_WOOL, 150);
 			

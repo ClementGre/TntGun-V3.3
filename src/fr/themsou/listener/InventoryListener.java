@@ -433,12 +433,12 @@ public class InventoryListener implements Listener {
 					
 				}else if(e.getCurrentItem().getType() == Material.SHULKER_SHELL){
 					
-					p.performCommand("ent");
+					p.performCommand("claim");
 					p.closeInventory();
 					
 				}else if(e.getCurrentItem().getType() == Material.NETHER_STAR){
 					
-					p.performCommand("claim");
+					p.performCommand("ent");
 					p.closeInventory();
 					
 				}else if(e.getCurrentItem().getType() == Material.ARROW){

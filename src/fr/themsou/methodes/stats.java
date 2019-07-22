@@ -148,7 +148,7 @@ public class stats {			// 560 / 400
 		
 		messages Cmessages = new messages();
 		
-		File f = new File("plugins/tntgun/statistiques/" + name + ".png");
+		File f = new File("plugins/TntGun/statistiques/" + name + ".png");
 		Cmessages.sendFile(f, message, channelId);
 		
 		

@@ -224,7 +224,7 @@ public class JoinListener implements Listener{
 		
 		
 		
-		p.sendMessage("§6Bienvenue sur §3TntGun V3.3 §bServeur §3Role Play, TntWars et LapWars");
+		p.sendMessage("§6Bienvenue sur §3TntGun V3.3 §bServeur §3Role Play §bet §3Mini-Jeux");
 		Scoreboards CScoreboards = new Scoreboards();
 		CScoreboards.sendPlayersScoreboard();
 		

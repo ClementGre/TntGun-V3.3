@@ -243,6 +243,7 @@ public class BreakListener implements Listener{
 				CreatureSpawner spawner = (CreatureSpawner) e.getBlock().getState();
 				
 				spawner.setSpawnedType(EntityType.fromName(type));
+				spawner.update();
 			}else{
 				e.getPlayer().sendMessage("§cVeuillez crafter un spawner avec la cage du spawner");
 				e.setCancelled(true);

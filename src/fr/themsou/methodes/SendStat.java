@@ -15,8 +15,10 @@ public class SendStat {
 		
 		String PlayersStats = "";
 		for(String Pname : main.config.getString("stat.list.day.players").split(",")){
-			PlayersStats = PlayersStats + Pname + ": ." + Cmath.getTimestampWithMinutes(main.config.getInt(Pname + ".stat.daytime"), "H") + "\n";
-			main.config.set(Pname + ".stat.daytime", 0);
+			if(main.config.getInt(Pname + ".stat.daytime") >= 5){
+				PlayersStats = PlayersStats + Pname + ": ." + Cmath.getTimestampWithMinutes(main.config.getInt(Pname + ".stat.daytime"), "H") + "\n";
+				main.config.set(Pname + ".stat.daytime", 0);
+			}
 		}
 		PlayersStats = PlayersStats + "\nTOTAL: ." + Cmath.getTimestampWithMinutes(main.config.getInt("stat.list.day.time"), "H") + "\n";
 		
@@ -55,7 +57,7 @@ public class SendStat {
 		Cstats.setLegend(names, colors);
 		
 		Cstats.save("DayStat-" + Date.getDate() + "-" + Date.getMonth());
-		Cstats.send("DayStat-" + Date.getDate() + "-" + Date.getMonth(), 487911374274428929L, "**```css\n[Nombre de joueurs qui ont rejoins le serveur pour chaque heure d'Hier]\n\n" + PlayersStats + "```**");
+		Cstats.send("DayStat-" + Date.getDate() + "-" + Date.getMonth(), 487911374274428929L, "**```css\n[Nombre de joueurs connectés pour chaque quart d'heure d'Hier]\n\n" + PlayersStats + "```**");
 		
 		
 		main.config.set("stat.list.day.time", null);
@@ -66,14 +68,17 @@ public class SendStat {
 	public void sendWeek(){
 		
 		Date Date = new realDate().getRealDate();
-		stats Cstats = new stats(7, "", false, false, 30, "H", true);
+		stats Cstats = new stats(7, "", false, false, 40, "H", true);
 		math Cmath = new math();
 		
 		
 		String PlayersStats = "";
 		for(String Pname : main.config.getString("stat.list.week.players").split(",")){
-			PlayersStats = PlayersStats + Pname + ": ." + Cmath.getTimestampWithMinutes(main.config.getInt(Pname + ".stat.weektime"), "H") + "\n";
-			main.config.set(Pname + ".stat.weektime", 0);
+			if(main.config.getInt(Pname + ".stat.weektime") >= 60){
+				PlayersStats = PlayersStats + Pname + ": ." + Cmath.getTimestampWithMinutes(main.config.getInt(Pname + ".stat.weektime"), "H") + "\n";
+				main.config.set(Pname + ".stat.weektime", 0);
+			}
+			
 		}
 		PlayersStats = PlayersStats + "\nTOTAL: ." + Cmath.getTimestampWithMinutes(main.config.getInt("stat.list.week.time"), "H") + "\n";
 		
@@ -100,7 +105,9 @@ public class SendStat {
 		
 		String PlayersStats = "";
 		for(String Pname : main.config.getString("stat.list.day.players").split(",")){
-			PlayersStats = PlayersStats + Pname + ": ." + Cmath.getTimestampWithMinutes(main.config.getInt(Pname + ".stat.daytime"), "H") + "\n";
+			if(main.config.getInt(Pname + ".stat.daytime") >= 5){
+				PlayersStats = PlayersStats + Pname + ": ." + Cmath.getTimestampWithMinutes(main.config.getInt(Pname + ".stat.daytime"), "H") + "\n";
+			}
 		}
 		PlayersStats = PlayersStats + "\nTOTAL: ." + Cmath.getTimestampWithMinutes(main.config.getInt("stat.list.day.time"), "H") + "\n";
 		
@@ -137,7 +144,7 @@ public class SendStat {
 		Cstats.setLegend(names, colors);
 		
 		Cstats.save("DayStat-" + Date.getDate() + "-" + Date.getMonth());
-		Cstats.send("DayStat-" + Date.getDate() + "-" + Date.getMonth(), 487911374274428929L, "**```css\n[Nombre de joueurs qui ont rejoins le serveur pour chaque heure d'Hier]\n\n" + PlayersStats + "```**");
+		Cstats.send("DayStat-" + Date.getDate() + "-" + Date.getMonth(), 487911374274428929L, "**```css\n[Nombre de joueurs connectés pour chaque quart d'heure d'Hier]\n\n" + PlayersStats + "```**");
 		
 		
 	}

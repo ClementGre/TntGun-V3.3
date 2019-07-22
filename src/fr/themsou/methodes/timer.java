@@ -14,6 +14,7 @@ import fr.themsou.diffusion.api.roles;
 import fr.themsou.discord.Counter;
 import fr.themsou.discord.Roles;
 import fr.themsou.main.main;
+import fr.themsou.rp.claim.dynmap;
 import fr.themsou.rp.ent.Utils;
 
 public class timer {
@@ -156,6 +157,8 @@ public class timer {
 				CInventory.savePlayerInventory(p, "rp");
 			}
 		}
+		
+		new dynmap().refreshMarkerArea();
 		
 	}
 ////////////////////////////////////////////////////////////////////////////////////////

@@ -15,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 
 import fr.themsou.main.main;
 import fr.themsou.nms.message;
+import fr.themsou.rp.claim.CanBuild;
 import fr.themsou.rp.claim.Spawns;
 
 public class EntUnderCmd {
@@ -103,6 +104,7 @@ public class EntUnderCmd {
 						}
 						
 						main.config.set("claim.list." + new Spawns().getSpawnNameWithId(Integer.parseInt(id)) + "." + id + ".owner", "l'etat");
+						main.config.set("claim.list." + new Spawns().getSpawnNameWithId(Integer.parseInt(id)) + "." + id + ".needsetup", true);
 					}
 				}
 				
@@ -416,13 +418,17 @@ public class EntUnderCmd {
 				
 				if(src != null){
 					
-					int id = new Random().nextInt(1000);
-					
-					main.config.set("ent.list." + ent + ".src." + id + ".x", src.getBlockX());
-					main.config.set("ent.list." + ent + ".src." + id + ".y", src.getBlockY());
-					main.config.set("ent.list." + ent + ".src." + id + ".z", src.getBlockZ());
-					
-					p.sendMessage("§6Un coffre de ressource vient d'être ajouté.");
+					if(new CanBuild().canBuild(p, src)){
+						
+						int id = new Random().nextInt(1000);
+						
+						main.config.set("ent.list." + ent + ".src." + id + ".x", src.getBlockX());
+						main.config.set("ent.list." + ent + ".src." + id + ".y", src.getBlockY());
+						main.config.set("ent.list." + ent + ".src." + id + ".z", src.getBlockZ());
+						
+						p.sendMessage("§6Un coffre de ressource vient d'être ajouté.");
+						
+					}else p.sendMessage("§cLe coffre désigné n'est pas dans un de vos claims.");
 					
 				}else p.sendMessage("§cIl n'y a aucun coffre a coté de vous.");
 				
@@ -539,6 +545,12 @@ public class EntUnderCmd {
 							}
 							
 							main.config.set("ent.list." + ent, null);
+							ent = entName;
+							
+							if(main.config.contains("ent.list." + ent + ".claim")){
+								for(String id : main.config.getString("ent.list." + ent + ".claim").split(","))
+									main.config.set("claim.list." + new Spawns().getSpawnNameWithId(Integer.parseInt(id)) + "." + id + ".owner", ent);
+							}
 							
 							p.sendMessage("§6Votre entreprise a bien été renomé en §c" + entName);
 							
