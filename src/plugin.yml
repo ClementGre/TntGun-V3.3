@@ -5,6 +5,7 @@ description: Plugin principal de TntGun
 author: themsou
 api-version: 1.13
 commands:
+  sc:
   ?:
   help:
   spawn:
