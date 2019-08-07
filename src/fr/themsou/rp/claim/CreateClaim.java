@@ -63,7 +63,7 @@ public class CreateClaim {
 		if(prix == -1){
 			if(type.equals("agr")) prix = CalculSuperficie * 10;
 			else if(loc1.getBlockY() != 0) prix = CalculSuperficie * (loc2.getBlockY() - loc1.getBlockY() + 1) * 5;
-			else prix = CalculSuperficie * 40;
+			else prix = CalculSuperficie * 80;
 		}
 		
 		main.config.set("claim.list." + ville + "." + id + ".defprice", prix);

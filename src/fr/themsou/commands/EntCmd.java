@@ -43,6 +43,14 @@ public class EntCmd implements TabCompleter, CommandExecutor {
 						CEntUnderCmd.info(args[1]);
 					}else p.sendMessage("§c/ent info <entreprise>");
 					
+				}else if(args[0].equalsIgnoreCase("spawn")){ // List
+					if(args.length == 2){
+						CEntUnderCmd.spawnTp(args[1]);
+					}else p.sendMessage("§c/ent spawn <entreprise>");
+					
+				}else if(args[0].equalsIgnoreCase("setspawn")){ // List
+					CEntUnderCmd.setSpawn();
+					
 				}else if(args[0].equalsIgnoreCase("join")){ // Join
 					CEntUnderCmd.join();
 					
@@ -128,15 +136,15 @@ public class EntCmd implements TabCompleter, CommandExecutor {
 				
 				if(ent == null || role == 0){
 					
-					return GeneralCmd.matchTab(Arrays.asList("create","leave","info","money"), args[0]);
+					return GeneralCmd.matchTab(Arrays.asList("create","leave","info","list","spawn"), args[0]);
 					
 				}else if(role == 1){
 					
-					return GeneralCmd.matchTab(Arrays.asList("create","leave","info","money","hire","pay","sign","src","log","buyers"), args[0]);
+					return GeneralCmd.matchTab(Arrays.asList("create","leave","info","list","spawn","setspawn","money","hire","pay","sign","src","log","buyers"), args[0]);
 					
 				}else if(role == 2){
 					
-					return GeneralCmd.matchTab(Arrays.asList("create","leave","info","money","hire","pay","sign","src","log","buyers","rename"), args[0]);
+					return GeneralCmd.matchTab(Arrays.asList("create","leave","info","list","spawn","setspawn","money","hire","pay","sign","src","log","buyers","rename"), args[0]);
 					
 				}
 				
@@ -144,7 +152,17 @@ public class EntCmd implements TabCompleter, CommandExecutor {
 				
 				if(args[0].equalsIgnoreCase("info") && args.length == 2){
 					
-					return new ArrayList<>(main.config.getConfigurationSection("ent.list").getKeys(false));
+					return GeneralCmd.matchTab(new ArrayList<>(main.config.getConfigurationSection("ent.list").getKeys(false)), args[1]);
+					
+				}if(args[0].equalsIgnoreCase("spawn") && args.length == 2){
+					
+					ArrayList<String> returns = new ArrayList<>();
+					for(String ents : main.config.getConfigurationSection("ent.list").getKeys(false)){
+						if(ents.toLowerCase().startsWith(args[1].toLowerCase()) && main.config.contains("ent.list." + ents + ".spawn.x"))
+							returns.add(ents);
+					}
+					
+					return returns;
 					
 				}if(args[0].equalsIgnoreCase("create") && args.length == 2){
 					

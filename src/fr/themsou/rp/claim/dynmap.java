@@ -18,6 +18,10 @@ public class dynmap {
 		
 		CalculSuperficie CCalculSuperficie = new CalculSuperficie();
 		int layer = 100;
+		for(MarkerSet marker : main.dynmap.getMarkerAPI().getMarkerSets()){
+			marker.deleteMarkerSet();
+		}
+		
 		
 		for(String spawn : main.config.getConfigurationSection("claim.list").getKeys(false)){
 			layer --;

@@ -21,6 +21,7 @@ commands:
   discord:
   a:
   pay:
+  rtp:
   world:
     permission: tntgun.world
   setmoney:

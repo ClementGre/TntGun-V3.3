@@ -37,25 +37,29 @@ public class ChatListener implements Listener{
 		Player p = e.getPlayer();
 		String message = "";
 		
-		if(e.getMessage().contains("joined from my android device")) return;
+		if(e.getMessage().contains("I joined using ChatCraft")) e.setMessage("J'ai rejoins depuis mon téléphone");
 		if(main.config.getInt(p.getName() + ".status") == 0) return;
 		if(main.config.getDouble(p.getName() + ".punish.mute.minutes") > 0){
 			p.sendMessage("§cVous etes mute, il vous reste §6" + main.config.getInt(p.getName() + ".punish.mute.minutes") + "§c Minutes de mute !"); return;
 		}
 		
+		if(new GradeCmd().getPlayerPermition(p.getName()) <= 2){
+			if(e.getMessage().equalsIgnoreCase(main.config.getString(p.getName() + ".chat.lastmsg.content"))
+					|| System.currentTimeMillis()-main.config.getInt(p.getName() + ".chat.lastmsg.time") < 2000){
+				
+				p.sendMessage("§4Veuillez éviter de spam !");
+				return;
+			}
+			if(e.getMessage().chars().filter((s)->Character.isUpperCase(s)).count() > e.getMessage().length()/2 && e.getMessage().chars().filter((s)->Character.isUpperCase(s)).count() >= 5){
+				e.setMessage(e.getMessage().toLowerCase());
+			}
+		}
+		main.config.set(p.getName() + ".chat.lastmsg.time", System.currentTimeMillis());
+		main.config.set(p.getName() + ".chat.lastmsg.content", e.getMessage());
+		
 		for(String word : e.getMessage().split(" ")){
 			
-			if(word.equals("pute")){
-				message += "**** ";
-			}else if(word.equals("salope")){
-				message += "****** ";
-			}else if(word.equals("enculé")){
-				message += "****** ";
-			}else if(word.equals("ntm")){
-				message += "*** ";
-			}else if(word.equals("ftg")){
-				message += "*** ";
-			}else if(word.equals("ez")){
+			if(word.equals("ez")){
 				message += "gg ";
 			}else{
 				

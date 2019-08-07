@@ -61,28 +61,10 @@ public class shop {
 			
 			addItem(shop, Material.OAK_LEAVES, 200);
 			
+			
 			addItem(shop, Material.PUMPKIN, 750);
 			
 			addItem(shop, Material.CACTUS, 800);
-			
-			
-			addItem(shop, Material.DIAMOND, 51000);
-			
-			addItem(shop, Material.GOLD_INGOT, 8000);
-			
-			addItem(shop, Material.IRON_INGOT, 5000);
-			
-			addItem(shop, Material.REDSTONE, 500);
-			
-			addItem(shop, Material.LAPIS_LAZULI, 100);
-			
-			addItem(shop, Material.COAL, 500);
-			
-			addItem(shop, Material.EMERALD, 100000);
-			
-			
-			
-			
 			
 			addItem(shop, Material.MELON, 250);
 			
@@ -99,6 +81,25 @@ public class shop {
 			addItem(shop, Material.BEETROOT, 100);
 			
 			addItem(shop, Material.SUGAR_CANE, 500);
+			
+			addItem(shop, Material.BAMBOO, 500);
+			
+			addItem(shop, Material.KELP, 500);
+			
+			
+			addItem(shop, Material.DIAMOND, 51000);
+			
+			addItem(shop, Material.GOLD_INGOT, 8000);
+			
+			addItem(shop, Material.IRON_INGOT, 5000);
+			
+			addItem(shop, Material.REDSTONE, 500);
+			
+			addItem(shop, Material.LAPIS_LAZULI, 100);
+			
+			addItem(shop, Material.COAL, 500);
+			
+			addItem(shop, Material.EMERALD, 100000);
 			
 			
 			
@@ -128,6 +129,10 @@ public class shop {
 			addItem(shop, Material.STRING, 500);
 			
 			addItem(shop, Material.BLAZE_ROD, 1000);
+			
+			addItem(shop, Material.GUNPOWDER, 1000);
+			
+			addItem(shop, Material.SLIME_BALL, 1000);
 			
 		}
 		

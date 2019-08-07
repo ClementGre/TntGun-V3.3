@@ -1,6 +1,13 @@
 package fr.themsou.commands;
 
+import java.util.Random;
+
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -8,12 +15,13 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import fr.themsou.main.main;
 import fr.themsou.nms.message;
+import fr.themsou.rp.claim.Spawns;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
-public class TeleportCmd implements Listener{
+public class TeleportCmd implements Listener, CommandExecutor{
 
 	
 //                                    TPA
@@ -94,33 +102,6 @@ public class TeleportCmd implements Listener{
 				}
 				
 				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
 //	                                        TPHERE
 				
 			}if(args[0].equalsIgnoreCase("/tphere")){
@@ -189,6 +170,40 @@ public class TeleportCmd implements Listener{
 			
 			
 		}
+	}
+
+	@Override
+	public boolean onCommand(CommandSender sender, Command cmd, String arg0, String[] args) {
+		
+		if(sender instanceof Player){
+			Player p = (Player) sender;
+			
+			if(cmd.getName().equalsIgnoreCase("rtp")){
+				
+				Location loc = null;
+				Random r = new Random();
+				
+				while(loc == null){
+					
+					int x = r.nextInt(2000) - 1000; int z = r.nextInt(2000) - 1000; int y = Bukkit.getWorld("world").getHighestBlockYAt(x, z);
+					Location tempLoc = new Location(Bukkit.getWorld("world"), x, y, z);
+					
+					if(tempLoc.getBlock().getType() != Material.WATER && tempLoc.getBlock().getType() != Material.LAVA){
+						if(!new Spawns().isInSpawn(tempLoc)){
+							tempLoc.setY(tempLoc.getY() + 2);
+							loc = tempLoc;
+						}
+					}
+					
+				}
+				
+				p.sendMessage("§bTéléportation à une localisation aléatoire (dans 1000 blocs de rayon)");
+				p.teleport(loc);
+			}
+			
+		}
+		
+		return false;
 	}
 
 	

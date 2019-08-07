@@ -70,7 +70,7 @@ import net.milkbowl.vault.economy.Economy;
 
 public class main extends JavaPlugin implements Listener {
 	
-	private FileConfiguration conf = getConfig();
+	public FileConfiguration conf = getConfig();
 	public static FileConfiguration config;
 	public static FileConfiguration configuration;
 	public static FileConfiguration passwords;
@@ -205,6 +205,8 @@ public class main extends JavaPlugin implements Listener {
 		getCommand("reg").setExecutor(new GeneralCmd());
 		getCommand("register").setExecutor(new GeneralCmd());
 		
+		getCommand("rtp").setExecutor(new TeleportCmd());
+		
 		getCommand("money").setExecutor(new EconomyCmd());
 		getCommand("money").setTabCompleter(new EconomyCmd());
 		getCommand("pay").setTabCompleter(new EconomyCmd());
@@ -286,19 +288,6 @@ public class main extends JavaPlugin implements Listener {
 		Bukkit.broadcastMessage("§6Le serveur est en train de redémarer !");
 		Bukkit.broadcastMessage("§cIl se peut que vous ayez un \"RollBack\"");
 		
-		
-		new VocalEvents().playlistEnd();
-		
-		CSQLConnexion.disconect();
-		
-		conf = config;
-		saveConfig();
-		
-		new Boss().removeAll();
-		
-		System.out.println("Plugin TntGun Désactivé !");
-		super.onDisable();
-		
 		fr.themsou.methodes.Inventory CInventory = new fr.themsou.methodes.Inventory();
 		for(Player p : Bukkit.getOnlinePlayers()){
 			if(PInfos.getGame(p).equals("RP") && p.getGameMode() == GameMode.SURVIVAL){
@@ -306,6 +295,16 @@ public class main extends JavaPlugin implements Listener {
 			}
 		}
 		
+		
+		conf = config;
+		saveConfig();
+		
+		new Boss().removeAll();
+		new VocalEvents().playlistEnd();
+		CSQLConnexion.disconect();
+		
+		System.out.println("Plugin TntGun Désactivé !");
+		super.onDisable();
 		
 	}
 	

@@ -182,6 +182,44 @@ public class EntUnderCmd {
 		
 	}
 	
+	/*     SPAWNS     */
+	
+	public void setSpawn(){
+		
+		if(ent != null){
+			if(role >= 1){
+				if(new CanBuild().canBuild(p, p.getLocation()) && new Spawns().isInSpawn(p.getLocation())){
+					
+					main.config.set("ent.list." + ent + ".spawn.x", p.getLocation().getX());
+					main.config.set("ent.list." + ent + ".spawn.y", p.getLocation().getY());
+					main.config.set("ent.list." + ent + ".spawn.z", p.getLocation().getZ());
+					main.config.set("ent.list." + ent + ".spawn.yaw", p.getLocation().getYaw());
+					main.config.set("ent.list." + ent + ".spawn.pitch", p.getLocation().getPitch());
+					
+					p.sendMessage("§bLe point de spawn de votre entreprise a bien été définis, faites §3/ent spawn <nom> §bpour vous y téléporter.");
+					
+				}else p.sendMessage("§cVous devez définire le point de spawn dans le claim de votre entreprise.");
+			}else p.sendMessage("§cVous devez être manager ou PDG pour définire le point de spawn.");
+		}else p.sendMessage("§cVous devez être dans une entreprise.");
+	}
+
+	public void spawnTp(String entName) {
+		
+		if(main.config.contains("ent.list." + entName + ".spawn.x")){
+			
+			double x = main.config.getDouble("ent.list." + entName + ".spawn.x");
+			double y = main.config.getDouble("ent.list." + entName + ".spawn.y");
+			double z = main.config.getDouble("ent.list." + entName + ".spawn.z");
+			float yaw = (float) main.config.getDouble("ent.list." + entName + ".spawn.yaw");
+			float pitch = (float) main.config.getDouble("ent.list." + entName + ".spawn.pitch");
+			
+			p.sendMessage("§bTéléportation au spawn de l'entreprise §3" + entName + "§b...");
+			p.teleport(new Location(Bukkit.getWorld("world"), x, y, z, yaw, pitch));
+			
+		}else p.sendMessage("§cCette entreprise ne possède pas de point de spawn.");
+		
+	}
+	
 /*     JOIN     */
 	
 	public void join(){
@@ -418,7 +456,7 @@ public class EntUnderCmd {
 				
 				if(src != null){
 					
-					if(new CanBuild().canBuild(p, src)){
+					if(new CanBuild().canBuild(p, src) && new Spawns().isInSpawn(src)){
 						
 						int id = new Random().nextInt(1000);
 						

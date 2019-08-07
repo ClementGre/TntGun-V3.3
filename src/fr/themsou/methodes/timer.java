@@ -149,6 +149,9 @@ public class timer {
 
 	public void pearQuart(main mainclass){
 	
+		mainclass.conf = main.config;
+		mainclass.saveConfig();
+		
 		PInfos.putStats();
 		
 		fr.themsou.methodes.Inventory CInventory = new fr.themsou.methodes.Inventory();
