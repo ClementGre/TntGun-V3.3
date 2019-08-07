@@ -24,7 +24,7 @@ public class AdminCmd implements TabCompleter, CommandExecutor{
 				
 				Punish CPunish = new Punish();
 				
-				if(args.length == 0) new AdminInv().oppenadmininventory(p);
+				if(args.length == 0) new AdminInv().oppenMainInv(p);
 				else{
 					if(perm == 3 || perm == 4){ // MODO - BUILDER
 							
@@ -43,7 +43,7 @@ public class AdminCmd implements TabCompleter, CommandExecutor{
 							if(args.length == 3) CPunish.punishPlayer(args[1], p.getName(), "kick", 0, args[2]);
 							else p.sendMessage("§c/a kick <Joueur> <Raison>");
 							
-						}else if(args[0].equalsIgnoreCase("all")) new AdminInv().oppenadminallinventory(p);
+						}else if(args[0].equalsIgnoreCase("all")) new AdminInv().oppenMainAllInv(p);
 							
 						else p.sendMessage("§c/a [mute/unmute/kick/all]");
 						
@@ -75,7 +75,7 @@ public class AdminCmd implements TabCompleter, CommandExecutor{
 							else p.sendMessage("§c/a kick <Joueur> <Raison>");
 							
 						}else if(args[0].equalsIgnoreCase("all")){
-							new AdminInv().oppenadminallinventory(p);
+							new AdminInv().oppenMainAllInv(p);
 						
 						}else p.sendMessage("§c/a [ban/mute/unban/unmute/kick/all]");
 					}

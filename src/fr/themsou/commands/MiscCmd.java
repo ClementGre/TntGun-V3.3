@@ -24,6 +24,7 @@ import fr.themsou.methodes.Boss;
 import fr.themsou.methodes.Schematics;
 import fr.themsou.methodes.SendStat;
 import fr.themsou.methodes.realDate;
+import fr.themsou.rp.ent.Utils;
 
 public class MiscCmd implements TabCompleter, CommandExecutor{
 	
@@ -127,6 +128,9 @@ public class MiscCmd implements TabCompleter, CommandExecutor{
 			}else if(args[0].equalsIgnoreCase("discordweek")){
 				new Roles().onWeek();
 				
+			}else if(args[0].equalsIgnoreCase("entweek")){
+				new Utils().payEntreprises();
+				
 			}else if(args[0].equalsIgnoreCase("tag")){
 				if(args.length != 1){
 					if(args[1].equals("remove")){
@@ -189,7 +193,7 @@ public class MiscCmd implements TabCompleter, CommandExecutor{
 			
 			if(args.length == 1){
 				
-				return GeneralCmd.matchTab(Arrays.asList("getstat","loadschematic","date","sendstats","bedwars","renameitem","discordweek","tag","boss"), args[0]);
+				return GeneralCmd.matchTab(Arrays.asList("getstat","entweek","loadschematic","date","sendstats","bedwars","renameitem","discordweek","tag","boss"), args[0]);
 				
 			}else if(args.length == 2){
 				

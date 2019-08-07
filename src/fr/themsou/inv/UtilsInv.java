@@ -1,14 +1,31 @@
 package fr.themsou.inv;
 
+import java.util.List;
+
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class setwalls {
+public class UtilsInv {
 	
-	public void setWalls(Inventory inv, int rangées){
+	public static ItemStack makeItem(Material type, String name, List<String> lore){
 		
+		ItemStack item = new ItemStack(type, 1);
+		
+		ItemMeta itemMeta = item.getItemMeta();
+		if(name != null)
+			itemMeta.setDisplayName(name);
+		if(lore != null)
+			itemMeta.setLore(lore);
+		item.setItemMeta(itemMeta);	
+		
+		return item;
+		
+	}
+	
+	
+	public void setWalls(Inventory inv, int lines){
 		
 		ItemStack u = new ItemStack(Material.WHITE_STAINED_GLASS_PANE, 1);
 		ItemMeta uM = u.getItemMeta();
@@ -25,7 +42,7 @@ public class setwalls {
 		inv.setItem(7, u);
 		inv.setItem(8, u);
 		
-		if(rangées == 5){
+		if(lines == 5){
 			
 			inv.setItem(9, u);
 			inv.setItem(17, u);
@@ -46,7 +63,7 @@ public class setwalls {
 			inv.setItem(43, u);
 			inv.setItem(44, u);
 			
-		}if(rangées == 6){
+		}if(lines == 6){
 			
 			inv.setItem(9, u);
 			inv.setItem(17, u);

@@ -163,6 +163,65 @@ info:
 #
 #
 #
+roleplay:
+  shop:
+    COBBLESTONE: 20
+    OBSIDIAN: 12800
+    GRANITE: 300
+    DIORITE: 300
+    ANDESITE: 300
+    DIRT: 15
+    SAND: 20
+    GRAVEL: 300
+    NETHERRACK: 50
+    WHITE_WOOL: 150
+    QUARTZ_BLOCK: 750
+    CLAY: 450
+    SEA_LANTERN: 5000
+    OAK_LOG: 700
+    SPRUCE_LOG: 750
+    BIRCH_LOG: 750
+    JUNGLE_LOG: 750
+    ACACIA_LOG: 750
+    DARK_OAK_LOG: 750
+    OAK_LEAVES: 200
+    PUMPKIN: 750
+    CACTUS: 800
+    MELON: 250
+    CARROT: 1000
+    POTATO: 1000
+    WHEAT_SEEDS: 800
+    WHEAT: 1000
+    APPLE: 2000
+    BEETROOT: 100
+    SUGAR_CANE: 500
+    BAMBOO: 500
+    KELP: 500
+    DIAMOND: 51000
+    GOLD_INGOT: 8000
+    IRON_INGOT: 5000
+    REDSTONE: 500
+    LAPIS_LAZULI: 100
+    COAL: 500
+    EMERALD: 100000
+    LEATHER: 400
+    EGG: 400
+    INK_SAC: 500
+    COOKED_BEEF: 400
+    COOKED_MUTTON: 400
+    COOKED_PORKCHOP: 400
+    COOKED_CHICKEN: 400
+    ARROW: 500
+    BONE: 500
+    ROTTEN_FLESH: 500
+    SPIDER_EYE: 500
+    STRING: 500
+    BLAZE_ROD: 1000
+    GUNPOWDER: 1000
+    SLIME_BALL: 1000
+#
+#
+#
 bedwars:
   upgrades:
     Protection:
@@ -198,18 +257,30 @@ bedwars:
       x: 49
       z: -63
       ori: 1
+      chest:
+        x: 52
+        z: -66
     2:
       x: -49
       z: -63
       ori: 1
+      chest:
+        x: -46
+        z: -66
     3:
       x: -49
       z: 63
       ori: 3
+      chest:
+        x: -52
+        z: 66
     4:
       x: 49
       z: 63
       ori: 3
+      chest:
+        x: 46
+        z: 66
   diams:
     1:
       x: 0

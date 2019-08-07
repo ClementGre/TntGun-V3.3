@@ -15,7 +15,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -25,9 +24,7 @@ import org.dynmap.DynmapAPI;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
 import fr.themsou.BedWars.BedWars;
-import fr.themsou.BedWars.menu;
 import fr.themsou.TntWars.RunParty;
-import fr.themsou.TntWars.inv;
 import fr.themsou.commands.AdminCmd;
 import fr.themsou.commands.ClaimCmd;
 import fr.themsou.commands.CommandListener;
@@ -42,7 +39,6 @@ import fr.themsou.commands.SpawnCmd;
 import fr.themsou.commands.TeleportCmd;
 import fr.themsou.commands.VipCmd;
 import fr.themsou.discord.vocal.VocalEvents;
-import fr.themsou.inv.HubInv;
 import fr.themsou.listener.BreakListener;
 import fr.themsou.listener.ChangeWorldListener;
 import fr.themsou.listener.ChatListener;
@@ -77,13 +73,6 @@ public class main extends JavaPlugin implements Listener {
 	public static WorldEditPlugin worldEditPlugin = (WorldEditPlugin)Bukkit.getPluginManager().getPlugin("WorldEdit");
 	public static DynmapAPI dynmap = ((DynmapAPI) Bukkit.getPluginManager().getPlugin("dynmap"));
 	public static Economy economy = null;
-	public static Inventory menu = Bukkit.createInventory(null, 5*9, "§4MODES DE JEUX");
-	public static Inventory Lapmenu = Bukkit.createInventory(null, 6*9, "§4BedWars - Menu");
-	public static Inventory rpmenu = Bukkit.createInventory(null, 6*9, "§4MENU");
-	public static Inventory rpshop = Bukkit.createInventory(null, 6*9, "§4SHOP");
-	public static Inventory admin = Bukkit.createInventory(null, 6*9, "§4ADMIN");
-	public static Inventory TntWars = Bukkit.createInventory(null, 3*9, "§4TntWars - Séléction de map §eVIP");
-	public static Inventory LapMenuCmd = Bukkit.createInventory(null, 6*9, "§4COMMANDES");
 	public static SQLConnexion CSQLConnexion;
 	public static ArrayList<Player> TntWarsFille = new ArrayList<>();
 	public static ArrayList<Player> TntWarsFillea = new ArrayList<>();
@@ -168,13 +157,6 @@ public class main extends JavaPlugin implements Listener {
 		if(main.config.getInt("bedwars.list.status") == 2){
 			main.config.set("bedwars.list.status", 0);
 		}
-		
-		new HubInv().setMainInventory();
-		new inv().setTntWarsInventory();
-		new menu().setInventory(Lapmenu);
-		new menu().setCmdInventory(LapMenuCmd);
-		
-		
 		
 		if(!setupEconomy()) Bukkit.shutdown();
 		

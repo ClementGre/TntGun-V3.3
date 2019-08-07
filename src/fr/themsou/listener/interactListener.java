@@ -34,8 +34,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import fr.themsou.BedWars.BedWarsPNJInv;
 import fr.themsou.BedWars.getteam;
-import fr.themsou.BedWars.menu;
+import fr.themsou.inv.HubInv;
 import fr.themsou.inv.VipInv;
 import fr.themsou.main.main;
 import fr.themsou.methodes.realDate;
@@ -433,9 +434,9 @@ public class interactListener implements Listener {
 						if(p.getInventory().getItemInMainHand().getItemMeta() != null){
 							if(p.getInventory().getItemInMainHand().getItemMeta().getDisplayName() != null){
 								if(p.getInventory().getItemInMainHand().getItemMeta().getDisplayName().equalsIgnoreCase("§3§lMENU")){
-									p.openInventory(main.menu);
+									new HubInv().openInv(p);
 								}else if(p.getInventory().getItemInMainHand().getItemMeta().getDisplayName().equalsIgnoreCase("§3§lVIP")){
-									new VipInv().openVipInventory(p);
+									new VipInv().openInv(p);
 								}
 							}
 						}
@@ -481,12 +482,12 @@ public class interactListener implements Listener {
 					if(e.getRightClicked().getCustomName().equals("§cAMELIORATIONS")){
 						
 						e.setCancelled(true);
-						p.openInventory(new menu().getUpgradesInventory(p));
+						new BedWarsPNJInv().openUpgradesInv(p);
 						
 					}else if(e.getRightClicked().getCustomName().equals("§cBOUTIQUE")){
 						
 						e.setCancelled(true);
-						p.openInventory(new menu().getShopInventory(p, 0));
+						new BedWarsPNJInv().openShopInv(p, 0);
 						
 					}
 					

@@ -8,10 +8,12 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import fr.themsou.BedWars.BedWarsInv;
 import fr.themsou.discord.Link;
-import fr.themsou.main.main;
+import fr.themsou.inv.HubInv;
 import fr.themsou.methodes.login;
-import fr.themsou.rp.inv.Inventory;
+import fr.themsou.rp.inv.RolePlayMainInv;
 
 public class GeneralCmd implements CommandExecutor {
 
@@ -37,11 +39,11 @@ public class GeneralCmd implements CommandExecutor {
 			else if(cmd.getName().equalsIgnoreCase("?") || cmd.getName().equalsIgnoreCase("help")){
 				
 				if(p.getWorld() == Bukkit.getWorld("world") || p.getWorld() == Bukkit.getWorld("world_nether") || p.getWorld() == Bukkit.getWorld("world_the_end")){
-					new Inventory().openMainInventory(p);
+					new RolePlayMainInv().openInv(p);
 				}else if(p.getWorld() == Bukkit.getWorld("BedWars") || p.getWorld() == Bukkit.getWorld("BedWars-ressources")){
-					p.openInventory(main.Lapmenu);
+					new BedWarsInv().openMainInv(p);
 				}else{
-					p.openInventory(main.menu);
+					new HubInv().openInv(p);
 				}
 				
 			}

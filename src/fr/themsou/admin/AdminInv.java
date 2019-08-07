@@ -6,20 +6,21 @@ import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import fr.themsou.main.main;
 import fr.themsou.methodes.PInfos;
+import fr.themsou.nms.title;
 
 public class AdminInv {
 	
 	@SuppressWarnings("deprecation")
-	public void oppenadmininventory(Player p){
+	public void oppenMainInv(Player p){
 			
-		Inventory admin = main.admin;
-		admin = Bukkit.createInventory(null, 6*9, "§cADMIN - §6" + Bukkit.getOnlinePlayers().size() + "/" + main.config.getConfigurationSection("").getKeys(false).size());
+		Inventory inv = Bukkit.createInventory(null, 6*9, "§cADMIN - §6" + Bukkit.getOnlinePlayers().size() + "/" + main.config.getConfigurationSection("").getKeys(false).size());
 		
 		for(Player p2 : Bukkit.getOnlinePlayers()){
 			
@@ -42,20 +43,18 @@ public class AdminInv {
 					"§6Jeux : §b" + PInfos.getGame(p2),
 					timeInfo));
 			a.setItemMeta(aM);
-			admin.addItem(a);
+			inv.addItem(a);
 			
 		}
 		
 		
-		p.openInventory(admin);
+		p.openInventory(inv);
 		
 	}
-	
 	@SuppressWarnings("deprecation")
-	public void oppenadminallinventory(Player p){
+	public void oppenMainAllInv(Player p){
 		
-		Inventory admin = main.admin;
-		admin = Bukkit.createInventory(null, 6*9, "§cADMIN - §6" + Bukkit.getOnlinePlayers().size() + "/" + main.config.getConfigurationSection("").getKeys(false).size());
+		Inventory inv = Bukkit.createInventory(null, 6*9, "§cADMIN - §6" + Bukkit.getOnlinePlayers().size() + "/" + main.config.getConfigurationSection("").getKeys(false).size());
 		
 		for(String pName : main.config.getConfigurationSection("").getKeys(false)){
 			
@@ -78,17 +77,36 @@ public class AdminInv {
 						"§6Temps de jeu : §3" + PInfos.getTotalTime(pName) + "h",
 						timeInfo));
 				a.setItemMeta(aM);
-				admin.addItem(a);
+				inv.addItem(a);
 				
 			}
 		}
 		
 		
-		p.openInventory(admin);
+		p.openInventory(inv);
 		
 	}
+	public void itemMainClicked(InventoryClickEvent e){
+		
+		Player p = (Player) e.getWhoClicked();
+		
+		if(e.getCurrentItem().getItemMeta() != null){
+			if(e.getCurrentItem().getItemMeta().getDisplayName() != null){
+				if(e.getCurrentItem().getItemMeta().getLore() != null){
+					if(e.getCurrentItem().getItemMeta().getLore().get(1) != null){
+						
+						String playerName = e.getCurrentItem().getItemMeta().getDisplayName().replace("§3§l", "");
+						openPlayerInv(playerName, p);
+						
+					}
+				}
+			}
+		}
+		
+	}
+	
 	@SuppressWarnings("deprecation")
-	public void openPlayerInventory(String pName, Player admin){
+	public void openPlayerInv(String pName, Player admin){
 		
 		Inventory inv = Bukkit.createInventory(null, 3*9, "§cADMIN - Joueur §l§c" + pName);
 		
@@ -127,12 +145,40 @@ public class AdminInv {
 		admin.openInventory(inv);
 		
 	}
+	public void itemPlayerClicked(InventoryClickEvent e){
+		
+		Player p = (Player) e.getWhoClicked();
+		
+		String playerName = e.getView().getTitle().replace("§cADMIN - Joueur §l§c", "");
+		
+		
+		if(e.getCurrentItem().getType() == Material.MAGMA_CREAM){
+			
+			openPunishInv(playerName, p);
+			
+		}else if(e.getCurrentItem().getType() == Material.NETHER_STAR){
+			
+			Player player = Bukkit.getPlayerExact(playerName);
+			
+			if(player != null){
+				
+				title.sendTitle(player, "§cVotre comportement est inadapté !", "§6Vous risquez un ban...", 60);
+				
+				p.sendMessage("§c" + playerName + "§6 a été avertis");
+				p.closeInventory();
+			
+			}else{
+				p.sendMessage("§c" + playerName + "§6 n'est pas connecté");
+				p.closeInventory();
+			}
+		}
+		
+	}
 	
-	public void openPunishInventory(String p, Player admin){
+	public void openPunishInv(String p, Player admin){
 		
 		Inventory inv = Bukkit.createInventory(null, 3*9, "§4ADMIN - Sanctioner §l§c" + p);
 		
-			
 		Set<String> section = main.configuration.getConfigurationSection("punish").getKeys(false);	
 		String item[] = section.toString().replace("[", "").replace("]", "").replace(" ", "").split(",");
 		for(int i = 1; i <= section.size(); i++){
@@ -172,5 +218,23 @@ public class AdminInv {
 		
 		
 	}
-
+	public void itemPunishClicked(InventoryClickEvent e){
+		
+		Player p = (Player) e.getWhoClicked();
+		
+		if(e.getCurrentItem().getItemMeta() != null){
+			if(e.getCurrentItem().getItemMeta().getDisplayName() != null){
+				
+				Punish CPunish = new Punish();
+				String playerName = e.getView().getTitle().replace("§4ADMIN - Sanctioner §l§c", "");
+				String punishName = e.getCurrentItem().getItemMeta().getDisplayName().replace("§c", "");
+				List<String> lore = e.getCurrentItem().getItemMeta().getLore();
+				
+				CPunish.punishPlayerProgress(playerName, p.getName(), punishName, lore);
+				p.closeInventory();
+				
+			}
+		}
+		
+	}
 }
