@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.InventoryType.SlotType;
 
@@ -28,6 +29,18 @@ public class InventoryListener implements Listener {
 	
 	public InventoryListener(main pl) {
 		this.pl = pl;
+	}
+	
+	@EventHandler
+	public void onCloseInventaire(InventoryCloseEvent e){
+		
+		String titre = e.getView().getTitle();
+		
+		if(titre.startsWith("§4TntWars - Séléction de l'équipe §7id: ")){
+			new TntWarsInv(pl).invListPlayersClosed(e);
+			
+		}
+		
 	}
 	
 	@EventHandler
@@ -74,9 +87,17 @@ public class InventoryListener implements Listener {
 			new BedWarsPNJInv().itemShopClicked(e);
 		}
 ////////////////////////////////////// TNTWARS
-		else if(titre.equalsIgnoreCase("§4TntWars - Séléction de map §eVIP")){
+		else if(titre.equalsIgnoreCase("§4TntWars - Liste des games")){
 			e.setCancelled(true);
-			new TntWarsInv().itemJoinClicked(e);
+			new TntWarsInv(pl).itemListGamesClicked(e);
+			
+		}else if(titre.equalsIgnoreCase("§4TntWars - Création d'une game")){
+			e.setCancelled(true);
+			new TntWarsInv(pl).itemMakeGamesClicked(e);
+			
+		}else if(titre.startsWith("§4TntWars - Séléction de l'équipe §7id: ")){
+			e.setCancelled(true);
+			new TntWarsInv(pl).itemListPlayersClicked(e);
 		}
 ////////////////////////////////////// COMMANDES
 		else if(titre.equalsIgnoreCase("§4COMMANDES")){

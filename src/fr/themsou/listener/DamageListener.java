@@ -22,7 +22,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.themsou.BedWars.getteam;
-import fr.themsou.TntWars.RunParty;
+import fr.themsou.TntWars.TntWarsGameEvents;
 import fr.themsou.main.main;
 import fr.themsou.nms.title;
 import fr.themsou.rp.claim.CanBuild;
@@ -234,11 +234,20 @@ public class DamageListener implements Listener{
 				Player p = (Player) victim;
 				if(p.getHealth() <= e.getDamage()){
 					
+					p.getInventory().clear();
 					e.setCancelled(true);
 					p.setHealth(20);
+					p.setFoodLevel(20);
+					p.setGameMode(GameMode.SURVIVAL);
 					
-					RunParty CRunParty = new RunParty();
-					CRunParty.Playerquit(p);
+					Bukkit.getScheduler().runTaskLater(pl, new Runnable(){
+						@Override
+						public void run(){
+							new TntWarsGameEvents().PlayerLeave(p);
+						}
+					}, 10);
+					
+					
 				}
 				
 			}

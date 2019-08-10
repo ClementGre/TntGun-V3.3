@@ -17,7 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import fr.themsou.TntWars.RunParty;
+import fr.themsou.TntWars.TntWarsGameEvents;
 import fr.themsou.main.main;
 import fr.themsou.nms.title;
 import fr.themsou.rp.claim.Spawns;
@@ -79,7 +79,6 @@ public class SpawnCmd implements TabCompleter, CommandExecutor{
 				}
 				
 				p.teleport(new Location(Bukkit.getWorld("hub"), 0, 50, 0));
-				
 				p.setGameMode(GameMode.SURVIVAL);
 				
 				p.getInventory().clear();
@@ -100,8 +99,7 @@ public class SpawnCmd implements TabCompleter, CommandExecutor{
 				
 				title.sendTitle(p, "§cChoissez votre mode de jeu,", "§cavec la bousole", 60);
 				
-				RunParty CRunParty = new RunParty();
-				CRunParty.Playerquit(p);
+				new TntWarsGameEvents().PlayerLeave(p);
 				
 			}else if(cmd.getName().equalsIgnoreCase("world")){
 				

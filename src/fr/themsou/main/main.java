@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Random;
-
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.WorldCreator;
@@ -24,7 +22,6 @@ import org.dynmap.DynmapAPI;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
 import fr.themsou.BedWars.BedWars;
-import fr.themsou.TntWars.RunParty;
 import fr.themsou.commands.AdminCmd;
 import fr.themsou.commands.ClaimCmd;
 import fr.themsou.commands.CommandListener;
@@ -35,6 +32,7 @@ import fr.themsou.commands.GamemodeCmd;
 import fr.themsou.commands.GeneralCmd;
 import fr.themsou.commands.GradeCmd;
 import fr.themsou.commands.MiscCmd;
+import fr.themsou.commands.OtherCmd;
 import fr.themsou.commands.SpawnCmd;
 import fr.themsou.commands.TeleportCmd;
 import fr.themsou.commands.VipCmd;
@@ -208,6 +206,9 @@ public class main extends JavaPlugin implements Listener {
 		getCommand("claim").setExecutor(new ClaimCmd());
 		getCommand("claim").setTabCompleter(new ClaimCmd());
 		
+		getCommand("pack").setExecutor(new OtherCmd());
+		getCommand("pack").setTabCompleter(new OtherCmd());
+		
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvents(new ListPingListener(), this);
 		pm.registerEvents(new JoinListener(this), this);
@@ -373,46 +374,6 @@ public class main extends JavaPlugin implements Listener {
 			    BedWars CBedWars = new BedWars();
 			    CBedWars.run(getinstance());
 			    
-			    if(TntWarsFille.size() >= 1){
-			    	if(TntWarsFillea.size() == 1){
-			    		TntWarsFillea.add(TntWarsFille.get(0));
-						TntWarsFille.remove(0);
-					}else if(TntWarsFilleb.size() == 1){
-			    		TntWarsFilleb.add(TntWarsFille.get(0));
-						TntWarsFille.remove(0);
-					}
-				}
-			    
-			    
-				if(TntWarsFille.size() >= 2){
-					RunParty CRunParty = new RunParty();
-					if(new Random().nextBoolean() == true){
-						
-						TntWarsFillea.add(TntWarsFille.get(0));
-						TntWarsFille.remove(0);
-						TntWarsFillea.add(TntWarsFille.get(0));
-						TntWarsFille.remove(0);
-						
-						CRunParty.startpartya(mainclass);
-					}else{
-						
-						TntWarsFilleb.add(TntWarsFille.get(0));
-						TntWarsFille.remove(0);
-						TntWarsFilleb.add(TntWarsFille.get(0));
-						TntWarsFille.remove(0);
-						
-						CRunParty.startpartyb(mainclass);
-					}
-					
-				}
-				if(TntWarsFillea.size() >= 2){
-					RunParty CRunParty = new RunParty();
-					CRunParty.startpartya(mainclass);
-				}
-				if(TntWarsFilleb.size() >= 2){
-					RunParty CRunParty = new RunParty();
-					CRunParty.startpartyb(mainclass);
-				}
 				
 				
 			}

@@ -15,7 +15,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import fr.themsou.BedWars.getteam;
 import fr.themsou.BedWars.join;
-import fr.themsou.TntWars.RunParty;
+import fr.themsou.TntWars.TntWarsGameEvents;
 import fr.themsou.diffusion.api.messages;
 import fr.themsou.discord.Counter;
 import fr.themsou.main.main;
@@ -44,7 +44,7 @@ public class QuitListener implements Listener{
 			PInfos.putStat(PInfos.getOnlineOperators(), "admin");
 			PInfos.putStat(PInfos.getOnlineOperators() - 1, "admin");
 		}*/
-		
+		new TntWarsGameEvents().PlayerLeave(p);
 		
 		main.config.set(p.getName() + ".time.connect", 0);
 		
@@ -100,8 +100,6 @@ public class QuitListener implements Listener{
 			System.out.println(p.getName() + " quitte la fille d'attente du TntWars");
 		}
 		
-		RunParty CRunParty = new RunParty();
-		CRunParty.Playerquit(p);
 		
 		if(new getteam().getplayerteam(p) != 0) new join().leaveBedWars(p);
 		

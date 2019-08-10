@@ -22,6 +22,7 @@ commands:
   a:
   pay:
   rtp:
+  pack:
   world:
     permission: tntgun.world
   setmoney:

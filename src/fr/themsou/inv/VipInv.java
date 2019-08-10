@@ -78,6 +78,7 @@ public class VipInv {
 			p.sendMessage("§c    /night §b> §3Désactiver ou activer la vision nocturne");
 			p.sendMessage("§b  TNTWARS :");
 			p.sendMessage("§3    Choix de la map");
+			p.sendMessage("§3    Inventaire pré-remplis");
 			p.sendMessage("§b  BedWARS :");
 			p.sendMessage("§c    /ec §b> §3Ouvrir son enderchest");
 			p.sendMessage("§b  SERVEUR :");

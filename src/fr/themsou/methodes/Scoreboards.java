@@ -9,6 +9,7 @@ import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 
 import fr.themsou.BedWars.getteam;
+import fr.themsou.TntWars.TntWarsGame;
 import fr.themsou.main.main;
 import fr.themsou.rp.claim.GetZoneId;
 import fr.themsou.rp.claim.Spawns;
@@ -41,7 +42,7 @@ public class Scoreboards {
 			space.setScore(13);
 			
 			if(!PInfos.getGame(p).equals("HUB")){
-				Score timeo = obj.getScore("§bPrésence : §3" + PInfos.getTotalTime(p.getName()));
+				Score timeo = obj.getScore("§bPrésence : §3" + PInfos.getTime(p.getName(), PInfos.getGame(p)));
 				timeo.setScore(12);
 			}
 			
@@ -136,6 +137,47 @@ public class Scoreboards {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 			else if(PInfos.getGame(p).equals("TntWars")){
 
+				
+				TntWarsGame game = TntWarsGame.getInstanceViaPlayer(p);
+				if(game != null){
+					
+					Score map = obj.getScore("§bmap : §3" + game.getMapName());
+					map.setScore(11);
+					Score esp = obj.getScore("§e");
+					esp.setScore(10);
+					
+					if(game.isDouble){
+						
+						String team1Players = game.team1Player1.getName() + " & " + game.team1Player2.getName();
+						if(team1Players.length() > 20)
+							team1Players = team1Players.substring(0, 20) + "...";
+						
+						Score team1 = obj.getScore("§3Bleu : §7" + team1Players);
+						team1.setScore(9);
+						
+						String team2Players = game.team2Player1.getName() + " & " + game.team2Player2.getName();
+						if(team2Players.length() > 20)
+							team2Players = team1Players.substring(0, 20) + "...";
+						
+						Score team2 = obj.getScore("§cRouge : §7" + team2Players);
+						team2.setScore(8);
+						
+					}else{
+						
+						Score team1 = obj.getScore("§3Bleu : §7" + game.team1Player1.getName());
+						team1.setScore(9);
+						
+						Score team2 = obj.getScore("§cRouge : §7" + game.team2Player1.getName());
+						team2.setScore(8);
+						
+					}
+					
+					
+					
+				}
+				
+				
+				
 				
 			}
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -291,8 +333,44 @@ public class Scoreboards {
 					}
 				
 				}else if(PInfos.getGame(players).equals("TntWars")){
-					board.getTeam(players.getName()).setPrefix(playercolor);
-					players.setPlayerListName("[TntWars] " + gradecolor + "[" + grade + "] " + playercolor + players.getDisplayName());
+					
+					if(players.getGameMode() != GameMode.SURVIVAL && players.isOp()){
+						
+						board.getTeam(players.getName()).setPrefix("§6[STAFF] §8- " + playercolor);
+						players.setPlayerListName("[TntWars] §7[SPECTATEUR] " + playercolor + players.getDisplayName());
+						
+					}else{
+						
+						TntWarsGame game = TntWarsGame.getInstanceViaPlayer(players);
+						if(game != null){
+							
+							if(game.getPlayerTeam(players) == 1){
+								
+								board.getTeam(players.getName()).setPrefix("§3[BLEU] " + playercolor);
+								players.setPlayerListName("[TntWars] §7<" + game.id + "> §3[BLEU] " + playercolor + players.getDisplayName());
+								
+							}else{
+								
+								board.getTeam(players.getName()).setPrefix("§c[ROUGE] " + playercolor);
+								players.setPlayerListName("[TntWars] §7<" + game.id + "> §c[ROUGE] " + playercolor + players.getDisplayName());
+								
+							}
+							
+						}else{
+							board.getTeam(players.getName()).setPrefix(playercolor);
+							players.setPlayerListName("[TntWars] §7[SPECTATEUR] " + playercolor + players.getDisplayName());
+						}
+						
+						
+						
+					}
+					
+						
+						
+						
+					
+					
+					
 					
 				}else{
 					board.getTeam(players.getName()).setPrefix(playercolor);

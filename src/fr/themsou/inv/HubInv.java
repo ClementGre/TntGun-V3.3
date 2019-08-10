@@ -13,9 +13,8 @@ import org.bukkit.inventory.Inventory;
 import fr.themsou.BedWars.BedWarsInv;
 import fr.themsou.BedWars.getteam;
 import fr.themsou.BedWars.join;
-import fr.themsou.TntWars.RunParty;
+import fr.themsou.TntWars.TntWarsGameEvents;
 import fr.themsou.TntWars.TntWarsInv;
-import fr.themsou.commands.GradeCmd;
 import fr.themsou.diffusion.api.roles;
 import fr.themsou.main.main;
 import fr.themsou.methodes.realDate;
@@ -51,22 +50,7 @@ public class HubInv {
 			
 			p.sendMessage("§6Bienvenue en RolePlay, ici, vous devrez trouver des ressources pour ensuite les vendre dans le menu principal (/?) ou les donner à votre patron pour les vendre via votre entreprise (/ent). Vous pourrez ensuite acheter des claims en cliquant sur les pancartes [Acheter] des spawn. Vous avez aussi comme défi d'arriver à 100% dans chacune des compétences afin de débloquer des outils spéciaux qui vous seront nécessaires.");
 			
-			if(main.TntWarsFillea.contains(p)){
-				main.TntWarsFillea.remove(p);
-				p.sendMessage("§cVous venez de quitter la fille d'atende tu TntWars");
-				System.out.println(p.getName() + " quitte la fille d'attente du TntWars");
-			}
-			if(main.TntWarsFilleb.contains(p)){
-				main.TntWarsFilleb.remove(p);
-				p.sendMessage("§cVous venez de quitter la fille d'atende tu TntWars");
-				System.out.println(p.getName() + " quitte la fille d'attente du TntWars");
-			}
-			if(main.TntWarsFille.contains(p)){
-				main.TntWarsFille.remove(p);
-				p.sendMessage("§cVous venez de quitter la fille d'atende tu TntWars");
-				System.out.println(p.getName() + " quitte la fille d'attente du TntWars");
-			}
-			
+			new TntWarsGameEvents().PlayerLeave(p);
 			if(new getteam().getplayerteam(p) != 0) new join().leaveBedWars(p);
 			
 			p.closeInventory();
@@ -78,8 +62,6 @@ public class HubInv {
 			p.sendMessage("§6Vous pouvez aussi vous téléporter aux autres villes avec §c/spawn <" + new Spawns().getSpawns() + ">");
 			title.sendTitle(p, "§bBienvenue en§3 Role Play", "§6Faites /? pour ouvrir le menu", 60);
 			
-			RunParty CRunParty = new RunParty();
-			CRunParty.Playerquit(p);
 			
 			p.setBedSpawnLocation(p.getLocation());
 		
@@ -87,46 +69,13 @@ public class HubInv {
 		
 			
 			p.closeInventory();
-			if(new GradeCmd().getPlayerPermition(p.getName()) >= 2){
+			new TntWarsInv(pl).openListGamesInv(p);
 				
-				new TntWarsInv().openJoinInv(p);
-				
-			}else{
-				
-				if(!main.TntWarsCurrent.contains(p)){
-					if(!main.TntWarsFille.contains(p) && !main.TntWarsFillea.contains(p) && !main.TntWarsFilleb.contains(p)){
-						main.TntWarsFille.add(p);
-						System.out.println(p.getName() + " rejoint la fille d'attente du TntWars - r");
-						p.sendMessage("§6Vous venez de rejoindre la fille d'attente du §eTntWars");
-					}else p.sendMessage("§cVous etes déja dans la fille d'atente");
-				}else p.sendMessage("§cVous etes déja dans une partie");
-			}
-			
 			if(new getteam().getplayerteam(p) != 0) new join().leaveBedWars(p);
 			
 		}if(e.getCurrentItem().getType() == Material.WHITE_BED){
 			
-			
-			
-			if(main.TntWarsFillea.contains(p)){
-				main.TntWarsFillea.remove(p);
-				p.sendMessage("§cVous venez de quitter la fille d'atende tu TntWars");
-				System.out.println(p.getName() + " quitte la fille d'attente du TntWars");
-			}
-			if(main.TntWarsFilleb.contains(p)){
-				main.TntWarsFilleb.remove(p);
-				p.sendMessage("§cVous venez de quitter la fille d'atende tu TntWars");
-				System.out.println(p.getName() + " quitte la fille d'attente du TntWars");
-			}
-			if(main.TntWarsFille.contains(p)){
-				main.TntWarsFille.remove(p);
-				p.sendMessage("§cVous venez de quitter la fille d'atende tu TntWars");
-				System.out.println(p.getName() + " quitte la fille d'attente du TntWars");
-			}
-			
-			RunParty CRunParty = new RunParty();
-			CRunParty.Playerquit(p);
-			
+			new TntWarsGameEvents().PlayerLeave(p);
 			
 			getteam CGetteam = new getteam();
 			join Cjoin = new join();

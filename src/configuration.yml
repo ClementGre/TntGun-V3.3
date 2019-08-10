@@ -163,6 +163,26 @@ info:
 #
 #
 #
+tntwars:
+  maps:
+    0:
+      name: Militaire
+      item: COBWEB
+      redspawn: 62
+      wall: Toiles, Gravier, EndStone
+    1:
+      name: Desert
+      item: SAND
+      redspawn: 62
+      wall: SandStone, Sable, EndStone
+    2:
+      name: Jungle
+      item: VINE
+      redspawn: 62
+      wall: Sablex2, EndStone
+#
+#
+#
 roleplay:
   shop:
     COBBLESTONE: 20

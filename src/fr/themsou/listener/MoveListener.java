@@ -17,7 +17,8 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 import fr.themsou.BedWars.getteam;
-import fr.themsou.TntWars.RunParty;
+import fr.themsou.TntWars.TntWarsGame;
+import fr.themsou.TntWars.TntWarsGameEvents;
 import fr.themsou.main.main;
 import fr.themsou.nms.title;
 
@@ -134,40 +135,30 @@ public class MoveListener implements Listener{
 				
 			}else if(p.getWorld() == Bukkit.getWorld("TntWars")){
 				
-				if(main.TntWarsCurrent.contains(p)){
+				TntWarsGame game = TntWarsGame.getInstanceViaPlayer(p);
+				if(game != null){
 					
-					String team = main.config.getString(p.getName() + ".tntwars.team");
-					
-					int x = main.config.getInt(p.getName() + ".tntwars.loc.x");
-					int z = main.config.getInt(p.getName() + ".tntwars.loc.z");
-					
-					int xl = x;
-					int zl;
-					if(team.equals("red")){
-						zl = z + 15;
-					}else{
-						zl = z - 15;
+					int xl = game.team1Spawn.getBlockX();
+					int zl = game.team1Spawn.getBlockZ();
+					if(game.getPlayerTeam(p) == 2){
+						xl = game.team2Spawn.getBlockX();
+						zl = game.team2Spawn.getBlockZ();
 					}
-					
 					
 					int px = p.getLocation().getBlockX();
 					int pz = p.getLocation().getBlockZ();
 					
-					
-					
-					if(px - xl <= 31 && px - xl >= -31 && pz - zl <= 26 && pz - zl >= -26){
+					if(px - xl <= 30 && px - xl >= -30 && pz - zl <= 25 && pz - zl >= -25){
 						
 					}else{
 						
-						p.teleport(new Location(Bukkit.getWorld("TntWars"), x, 100, z));
-						p.sendMessage("§cveuillez ne pas vous éloigner trop loin !");
+						p.teleport(new Location(Bukkit.getWorld("TntWars"), xl, 100, zl));
+						p.sendMessage("§cVeuillez ne pas vous éloigner trop loin !");
 						
 					}
 					
 					if(p.getLocation().getBlockY() <= 80){
-						RunParty CRunParty = new RunParty();
-						CRunParty.Playerquit(p);
-						
+						new TntWarsGameEvents().PlayerLeave(p);
 					}
 				}
 			}else if(p.getWorld() == Bukkit.getWorld("world")){

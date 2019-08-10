@@ -67,7 +67,7 @@ public class Schematics {
 	}
 	
 	
-	public void loadSchematic(Location loc, String name){
+	public boolean loadSchematic(Location loc, String name){
 		
 	    
 	    File file = new File("plugins" + File.separator + "TntGun" + File.separator + "schematics" + File.separator + name + ".schem");
@@ -92,7 +92,10 @@ public class Schematics {
 	    }catch(IOException | WorldEditException e){
 	    	Bukkit.broadcastMessage("§cUne erreur est survenue lors du chargement de la map...");
 	    	e.printStackTrace();
+	    	return false;
 		}
+	    
+	    return true;
 	    
 	}
 	
