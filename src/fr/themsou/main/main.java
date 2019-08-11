@@ -265,6 +265,11 @@ public class main extends JavaPlugin implements Listener {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onDisable() {
+		
+				getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "[SC] Arret!");
+		
+		getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "[SC] Merci D'avoir Utiliser SC!");
+		
 		Date date = new realDate().getRealDate();
 		
 		main.config.set("stat.list.server.stoptime", date.getDate() + "-" + date.getHours() + ":" + date.getMinutes());
