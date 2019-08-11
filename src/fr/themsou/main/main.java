@@ -100,7 +100,19 @@ public class main extends JavaPlugin implements Listener {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onEnable(){
+		getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "[SC] Starting");
+		getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "[SC] Chargement...");
 		
+		getConfig().addDefault("Version", "1.0");
+		getConfig().addDefault("Prefix", "&7[&4SC&7] ");
+		getConfig().addDefault("No Permission", "&4ERROR: Cette Commande N'existe Pas ou Vous N'etes pas autorisé(e)!");
+		
+		getConfig().options().copyDefaults(true);
+		saveConfig();
+		
+		getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "[SC] Successfully loaded config.");
+		
+		getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "[SC] Unreal StaffChat !");
 		if(!logblock.exists()){
 			try{
 				logblock.createNewFile();
