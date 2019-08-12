@@ -96,7 +96,9 @@ public class DamageListener implements Listener{
 		getteam Cgetteam = new getteam();
 		Location loc = victim.getLocation();
 		
-		if(killer.getLocation().getWorld() == Bukkit.getWorld("world") || killer.getLocation().getWorld() == Bukkit.getWorld("world_nether") || killer.getLocation().getWorld() == Bukkit.getWorld("world_the_end")){
+		if(killer.getLocation().getWorld() == Bukkit.getWorld("world_nether") || killer.getLocation().getWorld() == Bukkit.getWorld("world_the_end")){
+			
+		}else if(killer.getLocation().getWorld() == Bukkit.getWorld("world")){
 			
 			if(loc.getX() >= -231 && loc.getX() <= -206 && loc.getZ() >= -1026 && loc.getZ() <= -1003 && loc.getY() >= 33 && loc.getY() <= 36) return;
 			// Quoted_sand
@@ -215,7 +217,9 @@ public class DamageListener implements Listener{
 		getteam Cgetteam = new getteam();
 		Location loc = victim.getLocation();
 		
-		if(victim.getLocation().getWorld() == Bukkit.getWorld("world") || victim.getLocation().getWorld() == Bukkit.getWorld("world_nether") || victim.getLocation().getWorld() == Bukkit.getWorld("world_the_end")){
+		if(victim.getLocation().getWorld() == Bukkit.getWorld("world_nether") || victim.getLocation().getWorld() == Bukkit.getWorld("world_the_end")){
+			
+		}else if(victim.getLocation().getWorld() == Bukkit.getWorld("world")){
 			
 			if(loc.getX() >= -231 && loc.getX() <= -206 && loc.getZ() >= -1026 && loc.getZ() <= -1003 && loc.getY() >= 33 && loc.getY() <= 36) return;
 			// Quoted_sand

@@ -36,8 +36,6 @@ public class MoveListener implements Listener{
 		Player p = e.getPlayer();
 		
 		
-		
-		
 		if(main.config.getInt(p.getName() + ".status") == 0){
 			
 			Location loc = new Location(Bukkit.getWorld("hub"), 0.5, 50, 0.5);
@@ -152,7 +150,7 @@ public class MoveListener implements Listener{
 						
 					}else{
 						
-						p.teleport(new Location(Bukkit.getWorld("TntWars"), xl, 100, zl));
+						p.teleport(new Location(Bukkit.getWorld("TntWars"), xl, 100 + 2, zl));
 						p.sendMessage("§cVeuillez ne pas vous éloigner trop loin !");
 						
 					}

@@ -45,7 +45,10 @@ public class MobGriefListener implements Listener{
 					it.remove();
 				}
 		    }
-		}	
+		}else if(loc.getWorld() == Bukkit.getWorld("TntWars")){
+			
+			e.setYield(0.05F);
+		}
 	}
 	
 	@EventHandler
@@ -57,6 +60,11 @@ public class MobGriefListener implements Listener{
 		if(loc.getWorld() == Bukkit.getWorld("BedWars")){
 			
 			e.setRadius(2);
+			e.setFire(false);
+			
+		}if(loc.getWorld() == Bukkit.getWorld("TntWars")){
+			
+			e.setRadius(4);
 			e.setFire(false);
 			
 		}

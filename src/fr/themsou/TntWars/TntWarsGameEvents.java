@@ -28,7 +28,8 @@ public class TntWarsGameEvents {
 		int y = 100;
 		int z = r.nextInt(1000000);
 		
-		game.team1Spawn =  new Location(Bukkit.getWorld("TntWars"), x, y + 2, z + 0.5);
+		Location loc = new Location(Bukkit.getWorld("TntWars"), x, y, z);
+		game.team1Spawn =  new Location(Bukkit.getWorld("TntWars"), x, y + 1, z + 0.5);
 		game.team2Spawn = new Location(Bukkit.getWorld("TntWars"), x, y + 2, z - 0.5 + main.configuration.getInt("tntwars.maps." + game.map + ".redspawn"));
 		
 		new BukkitRunnable(){
@@ -46,19 +47,19 @@ public class TntWarsGameEvents {
 				    }
 				    
 				    if(i == 15){
-				    	if(!new Schematics().loadSchematic(game.team1Spawn, "TntWars-" + game.getMapName() + "_1")){
+				    	if(!new Schematics().loadSchematic(loc, "TntWars-" + game.getMapName() + "_1")){
 				    		this.cancel();
 				    		return;
 				    	}
 				    	
 				    }if(i == 10){
-				    	if(!new Schematics().loadSchematic(game.team1Spawn, "TntWars-" + game.getMapName() + "_2")){
+				    	if(!new Schematics().loadSchematic(loc, "TntWars-" + game.getMapName() + "_2")){
 				    		this.cancel();
 				    		return;
 				    	}
 				    	
 				    }if(i == 5){
-				    	if(!new Schematics().loadSchematic(game.team1Spawn, "TntWars-" + game.getMapName() + "_3")){
+				    	if(!new Schematics().loadSchematic(loc, "TntWars-" + game.getMapName() + "_3")){
 				    		this.cancel();
 				    		return;
 				    	}

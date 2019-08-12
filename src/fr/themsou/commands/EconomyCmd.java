@@ -2,8 +2,9 @@ package fr.themsou.commands;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -39,7 +40,37 @@ public class EconomyCmd implements Listener, TabCompleter, CommandExecutor{
 			}else if(cmd.getName().equalsIgnoreCase("money")){
 				
 				if(args.length == 1){
-					p.sendMessage("§3" + args[0] + "§b a §3" + main.economy.getBalance(args[0]) + " €");
+					
+					if(args[0].equalsIgnoreCase("top")){
+						
+						HashMap<Integer, String> players = new HashMap<>();
+						List<Integer> moneys = new ArrayList<>();
+						for(String player : main.config.getConfigurationSection("").getKeys(false)){
+							if(!main.config.contains(player + ".list")){
+								int money = (int) main.economy.getBalance(player);
+								if(money > 10000){
+									players.put(money, player);
+									moneys.add(money);
+								}
+							}
+						}
+						Collections.sort(moneys);
+						
+						int iterations = moneys.size() - 20;
+						if(iterations < 0){
+							iterations = 0;
+						}
+						for(int i = (moneys.size()-1); i >= iterations; i--){
+							String player = players.get(moneys.get(i));
+							p.sendMessage("§c" + (moneys.size() - i) + "> §6" + player + " : " + moneys.get(i) + "€");
+						}
+						
+					}else if(main.config.contains(args[0] + ".mdp")){
+						p.sendMessage("§3" + args[0] + "§b a §3" + main.economy.getBalance(args[0]) + " €");
+					}else{
+						p.sendMessage("§cAucun joueur trouvé avec le nom §6" + args[0]);
+					}
+					
 				}else{
 					p.sendMessage("§bVous avez §3" + main.economy.getBalance(p.getName()) + " §3€");
 				}
@@ -137,22 +168,23 @@ public class EconomyCmd implements Listener, TabCompleter, CommandExecutor{
 					return Arrays.asList("<prix>");
 					
 				}
-			}else if(cmd.getName().equalsIgnoreCase("pay")){
+			}else if(cmd.getName().equalsIgnoreCase("money")){
 				
 				if(args.length == 1){
 					
-					return null;
+					ArrayList<String> returns = new ArrayList<>();
+					
+					for(Player players : Bukkit.getOnlinePlayers()){
+						if(players.getName().toLowerCase().startsWith(args[0].toLowerCase())){
+							returns.add(players.getName());
+						}
+					}
+					returns.add("top");
+					return returns;
 						
-					
-				}else if(args.length == 2){
-					
-					return Arrays.asList("<prix>");
-					
 				}
 				
 			}
-			
-			
 		}
 		
 		return Arrays.asList("");

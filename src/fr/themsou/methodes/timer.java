@@ -275,33 +275,19 @@ public class timer {
 	@SuppressWarnings("deprecation")
 	public void pearMounth(main mainclass){
 		
-		Set<String> section = main.config.getConfigurationSection("").getKeys(false);	
-		String items = section.toString().replace("[", "").replace("]", "").replace(" ", "");
-		String[] item = items.split(",");
-
-		for(int i = 1; i <= section.size(); i++){
-			int number = i - 1;
+		for(String player : main.config.getConfigurationSection("").getKeys(false)){
 			
-			if(main.config.contains(item[number] + ".claim.note")){
+			if(main.config.contains(player + ".claim.note")){
 				
-				int money = main.config.getInt(item[number] + ".claim.note");
-				money = money * 1000;
-				
-				
+				int money = main.config.getInt(player + ".claim.note") * 1000;
 				if(money != 0){
-					System.out.println("Deposit player: +"+ money);
-					main.economy.depositPlayer(item[number], money);
-					main.config.set(item[number] + ".claim.note", null);
+					main.economy.depositPlayer(player, money);
+					main.config.set(player + ".claim.note", null);
 					
-					String notifs = main.config.getString(item[number] + ".notifs");
-					notifs = notifs + "," + "§6Vous avez gagné §c" + money + "€ §6pour vous récompenser de vos builds.";
-					main.config.set(item[number] + ".notifs", notifs);
-					
+					String notifs = main.config.getString(player + ".notifs") + "," + "§6Vous avez gagné §c" + money + "€ §6pour vous récompenser de vos builds.";
+					main.config.set(player + ".notifs", notifs);
 				}
 			}
-			
-			
-			
 		}
 		
 	}

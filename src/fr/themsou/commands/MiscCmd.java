@@ -20,6 +20,7 @@ import org.bukkit.entity.Villager.Profession;
 import org.bukkit.inventory.meta.ItemMeta;
 import fr.themsou.BedWars.BedWars;
 import fr.themsou.discord.Roles;
+import fr.themsou.main.main;
 import fr.themsou.methodes.Boss;
 import fr.themsou.methodes.Schematics;
 import fr.themsou.methodes.SendStat;
@@ -127,9 +128,29 @@ public class MiscCmd implements TabCompleter, CommandExecutor{
 				
 			}else if(args[0].equalsIgnoreCase("discordweek")){
 				new Roles().onWeek();
+				p.sendMessage("§6Le code qui s'éxécute toutes les semaines pour discord viens d'être exécuté.");
 				
 			}else if(args[0].equalsIgnoreCase("entweek")){
 				new Utils().payEntreprises();
+				p.sendMessage("§6Le code qui s'éxécute toutes les semaines pour les entreprises viens d'être exécuté.");
+				
+			}else if(args[0].equalsIgnoreCase("notemounth")){
+				
+				for(String player : main.config.getConfigurationSection("").getKeys(false)){
+					
+					if(main.config.contains(player + ".claim.note")){
+						
+						int money = main.config.getInt(player + ".claim.note") * 1000;
+						if(money != 0){
+							main.economy.depositPlayer(player, money);
+							main.config.set(player + ".claim.note", null);
+							
+							String notifs = main.config.getString(player + ".notifs") + "," + "§6Vous avez gagné §c" + money + "€ §6pour vous récompenser de vos builds.";
+							main.config.set(player + ".notifs", notifs);
+						}
+					}
+				}
+				p.sendMessage("§6Le code qui s'éxécute tous les mois pour noter les claims viens d'être exécuté.");
 				
 			}else if(args[0].equalsIgnoreCase("tag")){
 				if(args.length != 1){
@@ -193,7 +214,7 @@ public class MiscCmd implements TabCompleter, CommandExecutor{
 			
 			if(args.length == 1){
 				
-				return GeneralCmd.matchTab(Arrays.asList("getstat","entweek","loadschematic","date","sendstats","bedwars","renameitem","discordweek","tag","boss"), args[0]);
+				return GeneralCmd.matchTab(Arrays.asList("getstat","entweek","loadschematic","date","sendstats","bedwars","renameitem","discordweek","notemounth","tag","boss"), args[0]);
 				
 			}else if(args.length == 2){
 				
