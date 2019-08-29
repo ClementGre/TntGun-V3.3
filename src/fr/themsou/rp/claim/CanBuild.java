@@ -104,7 +104,6 @@ public class CanBuild {
 				return false;
 				
 			}else{
-				title.sendActionBar(p, "§c");
 				return true;
 			}
 		}
@@ -137,7 +136,6 @@ public class CanBuild {
 				
 				return false;
 			}else{
-				title.sendActionBar(p, "§c");
 				return true;
 			}
 		}else{
@@ -161,7 +159,6 @@ public class CanBuild {
 					return false;
 				}
 			}else{
-				title.sendActionBar(p, "§c");
 				return true;
 			}
 		}

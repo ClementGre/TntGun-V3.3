@@ -15,6 +15,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockFadeEvent;
 import org.bukkit.event.block.BlockFormEvent;
@@ -25,8 +26,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import fr.themsou.BedWars.getteam;
 import fr.themsou.main.main;
+import fr.themsou.methodes.PInfos;
 import fr.themsou.nms.title;
 import fr.themsou.rp.claim.GetZoneId;
+import fr.themsou.rp.claim.RPInteractListener;
 import fr.themsou.rp.claim.Spawns;
 import fr.themsou.rp.tools.Bucheron;
 import fr.themsou.rp.tools.Fermier;
@@ -204,10 +207,17 @@ public class BreakListener implements Listener{
 	public void onplace(BlockPlaceEvent e){
 		
 		Player p = e.getPlayer();
+		Location loc = e.getBlockPlaced().getLocation();
 		
-		if(p.getWorld() == Bukkit.getWorld("BedWars")){
+		if(PInfos.getGame(p).equals("RP")){
 			
-			Location loc = e.getBlock().getLocation();
+			if(!new RPInteractListener().canGeneralInteract(p, e.getBlockPlaced(), Action.RIGHT_CLICK_BLOCK)){
+				e.setBuild(false);
+				e.setCancelled(true);
+			}
+			
+			
+		}else if(p.getWorld() == Bukkit.getWorld("BedWars")){
 			
 			if(loc.getBlockY() <= 85 || loc.getBlockY() >= 125){
 				e.setCancelled(true);
@@ -221,7 +231,6 @@ public class BreakListener implements Listener{
 				loc.setX(loc.getX() + 0.5);
 				loc.setZ(loc.getZ() + 0.5);
 				loc.getWorld().spawnEntity(loc, EntityType.PRIMED_TNT);
-				
 				
 			}
 			
@@ -251,31 +260,10 @@ public class BreakListener implements Listener{
 		}
 		
 	}
-	@EventHandler
-	public void blockForm(BlockFormEvent e){
-		
-		if(e.getBlock().getType() == Material.WATER){
-			
-			if(new Spawns().isInSpawn(e.getBlock().getLocation())){
-				e.setCancelled(true);
-			}
-			
-		}
-		
-	}
+	
 	
 	@EventHandler
-	public void onFade(BlockFadeEvent e){
-		
-		Spawns CSpawns = new Spawns();
-		
-		if(CSpawns.isInSpawn(e.getBlock().getLocation())){
-			e.setCancelled(true);
-		}
-		
-	}
-	@EventHandler
-	public void onGrow(StructureGrowEvent e){
+	public void onGrow(StructureGrowEvent e){ // TREE GROWING
 		
 		if(e.getWorld() == Bukkit.getWorld("world") || e.getWorld() == Bukkit.getWorld("world_nether") || e.getWorld() == Bukkit.getWorld("world_the_end")){
 
@@ -297,12 +285,8 @@ public class BreakListener implements Listener{
 	}
 	
 	@EventHandler
-	public void onBlockFromTo(BlockFromToEvent e) {
+	public void onBlockFromTo(BlockFromToEvent e) { // WATTER MOVE
 		
-		
-		//Material block = e.getBlock().getType();
-		
-			
 		GetZoneId CGetZoneId = new GetZoneId();
 		
 		int id = CGetZoneId.getIdOfPlayerZone(e.getBlock().getLocation());
@@ -315,8 +299,24 @@ public class BreakListener implements Listener{
 		
 	}
 	
-	
-
+	@EventHandler
+	public void blockForm(BlockFormEvent e){ // GEL WATTER
+		
+		if(e.getBlock().getType() == Material.WATER){
+			if(new Spawns().isInSpawn(e.getBlock().getLocation())){
+				e.setCancelled(true);
+			}
+		}
+	}
+	@EventHandler
+	public void onFade(BlockFadeEvent e){ // DEGEL WATER
+		
+		Spawns CSpawns = new Spawns();
+		
+		if(CSpawns.isInSpawn(e.getBlock().getLocation())){
+			e.setCancelled(true);
+		}
+	}
 }
 
 

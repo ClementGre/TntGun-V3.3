@@ -52,7 +52,10 @@ public class SQLConnexion {
 	
 	public void refreshPlayer(String playerName, int status){ // 1 = connecté    2 = Hors Ligne    3 = Bannis
 		
-		if(!isConnected()) return;
+		if(!isConnected()){
+			connexion();
+			return;
+		}
 		
 		String password = main.config.getString(playerName + ".mdp");
 		String role = main.config.getString(playerName + ".grade");
@@ -117,7 +120,10 @@ public class SQLConnexion {
 	
 	public void sendPost(String name, String message, boolean verify){
 		
-		if(!isConnected()) return;
+		if(!isConnected()){
+			connexion();
+			return;
+		}
 		
 		try {
 			PreparedStatement q = connexion.prepareStatement("DELETE FROM post WHERE date NOT IN (SELECT date FROM (SELECT date FROM post ORDER BY date DESC LIMIT 50) AS V2)");
@@ -147,7 +153,10 @@ public class SQLConnexion {
 	
 	public void updatePost(){
 		
-		if(!isConnected()) return;
+		if(!isConnected()){
+			connexion();
+			return;
+		}
 		
 		try {
 			
@@ -159,10 +168,7 @@ public class SQLConnexion {
 				
 				new Support().sendMessage(rs.getString("joueur"), rs.getString("text"));
 				
-				
-				
 			}
-			
 			q.close();
 			
 			

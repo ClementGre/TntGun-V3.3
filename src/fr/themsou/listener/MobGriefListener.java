@@ -32,7 +32,7 @@ public class MobGriefListener implements Listener{
 			
 		}else if(loc.getWorld() == Bukkit.getWorld("BedWars")){
 			
-			e.setYield(0.1F);
+			e.setYield(0.0F);
 			List destroyed = e.blockList();
 		    Iterator it = destroyed.iterator();
 		    while (it.hasNext()) {
@@ -45,9 +45,6 @@ public class MobGriefListener implements Listener{
 					it.remove();
 				}
 		    }
-		}else if(loc.getWorld() == Bukkit.getWorld("TntWars")){
-			
-			e.setYield(0.05F);
 		}
 	}
 	

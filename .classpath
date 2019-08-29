@@ -2,11 +2,11 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/home/clement/Minecraft/Developement.plugin/diffusion.jar"/>
-	<classpathentry kind="lib" path="/home/clement/Minecraft/Developement.plugin/Dynmap-3.0-beta-4-spigot.jar"/>
-	<classpathentry kind="lib" path="/home/clement/Minecraft/Developement.plugin/MySkin.jar"/>
-	<classpathentry kind="lib" path="/home/clement/Minecraft/Developement.plugin/Paper-1.14.3.jar"/>
-	<classpathentry kind="lib" path="/home/clement/Minecraft/Developement.plugin/Vault.jar"/>
-	<classpathentry kind="lib" path="/home/clement/Minecraft/Developement.plugin/worldedit-bukkit-7.0.0.jar"/>
+	<classpathentry kind="lib" path="/home/clement/Développement/JavaPlugins/Libs/Dynmap-3.0-beta-4-spigot.jar"/>
+	<classpathentry kind="lib" path="/home/clement/Développement/JavaPlugins/Libs/MySkin.jar"/>
+	<classpathentry kind="lib" path="/home/clement/Développement/JavaPlugins/Libs/Paper-1.14.3.jar"/>
+	<classpathentry kind="lib" path="/home/clement/Développement/JavaPlugins/Libs/Vault.jar"/>
+	<classpathentry kind="lib" path="/home/clement/Développement/JavaPlugins/Libs/worldedit-bukkit-7.0.0.jar"/>
+	<classpathentry kind="lib" path="/home/clement/Développement/JavaPlugins/diffusion.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

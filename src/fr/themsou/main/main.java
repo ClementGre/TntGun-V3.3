@@ -133,7 +133,6 @@ public class main extends JavaPlugin implements Listener {
 		
 		if(Bukkit.getOnlinePlayers().size() == 0){
 			new WorldCreator("BedWars").createWorld();
-			new WorldCreator("BedWars-save").createWorld();
 			new WorldCreator("hub").createWorld();
 			new WorldCreator("TntWars").createWorld();
 			Bukkit.getServer().getWorlds().add(Bukkit.getWorld("BedWars"));

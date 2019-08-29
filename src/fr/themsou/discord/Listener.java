@@ -22,7 +22,7 @@ public class Listener{
 			
 			if(!new roles().getRoles(userName).contains("Membre")){
 				new roles().addRole("Membre", userName);
-				new messages().sendFile(new File("plugins/tntgun/files/bienvenue.gif"), ":gift: Bienvenue <@" + new user().getIdByPlayer(userName) + "> sur TntGun !", 414143183996452864L);
+				new messages().sendFile(new File("plugins/TntGun/files/bienvenue.gif"), ":gift: Bienvenue <@" + new user().getIdByPlayer(userName) + "> sur TntGun !", 414143183996452864L);
 				new Counter().refreshCounters();
 			}
 			

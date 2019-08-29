@@ -1,17 +1,10 @@
 package fr.themsou.listener;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Date;
-
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.Chest;
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Fireball;
@@ -29,7 +22,6 @@ import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -39,13 +31,12 @@ import fr.themsou.BedWars.getteam;
 import fr.themsou.inv.HubInv;
 import fr.themsou.inv.VipInv;
 import fr.themsou.main.main;
-import fr.themsou.methodes.realDate;
+import fr.themsou.methodes.PInfos;
 import fr.themsou.nms.title;
 import fr.themsou.rp.claim.CanBuild;
 import fr.themsou.rp.claim.GetZoneId;
+import fr.themsou.rp.claim.RPInteractListener;
 import fr.themsou.rp.claim.SignClick;
-import fr.themsou.rp.claim.Spawns;
-import fr.themsou.rp.ent.Sign;
 import fr.themsou.rp.tools.Tools;
 
 public class interactListener implements Listener {
@@ -64,211 +55,41 @@ public class interactListener implements Listener {
 		}
 		
 	}
-	
-	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onInteract(PlayerInteractEvent e){
 		
 		Player p = e.getPlayer();
 		
-		if(p.getWorld() == Bukkit.getWorld("world") || p.getWorld() == Bukkit.getWorld("world_nether") || p.getWorld() == Bukkit.getWorld("world_the_end")){
+		if(PInfos.getGame(p).equals("RP")){
 			
-			CanBuild CCanBuild = new CanBuild();
+			boolean cancel = false;
 			
 			if(e.getAction() == Action.PHYSICAL){
 				
-				if(!CCanBuild.canBuildMessagewithEmployees(p, p.getLocation())){
-					if(e.getPlayer().getLocation().getBlock().getType() == Material.OAK_PRESSURE_PLATE) return;
-					if(p.getGameMode() != GameMode.CREATIVE){
-						e.setCancelled(true);
-					}
+				if(!new RPInteractListener().canPlayerDoPhysical(p)){
+					e.setCancelled(true);
+				}
+				
+			}else if(e.getClickedBlock() != null && e.getAction() == Action.LEFT_CLICK_BLOCK){
+				
+				if(!new RPInteractListener().canGeneralInteract(p, e.getClickedBlock(), e.getAction())){
+					e.setCancelled(true);
+				}
+				
+			}else if(e.getClickedBlock() != null && e.getAction() == Action.RIGHT_CLICK_BLOCK){
+				
+				if(!new RPInteractListener().canInteractPlace(p, e.getClickedBlock(), e.getBlockFace())){
+					e.setCancelled(true);
 				}
 			}
-			
-			if(e.getClickedBlock() != null){
-				if(e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.LEFT_CLICK_BLOCK){
-					Material material = e.getClickedBlock().getType();
-					Location loc = e.getClickedBlock().getLocation();
-					
-					if(e.getAction() == Action.RIGHT_CLICK_BLOCK){
-						
-						// CIRCUIT BOURG_PALETTE
-						
-						if(material == Material.PACKED_ICE && p.getInventory().getItemInMainHand() != null){
-							if(loc.getBlockY() == 67){
-								if(new GetZoneId().getIdOfPlayerZone(loc) == 0 && new Spawns().isInSpawn(loc)){
-									Material mainMaterial = p.getInventory().getItemInMainHand().getType();
-									if(mainMaterial == Material.OAK_BOAT || mainMaterial == Material.ACACIA_BOAT || mainMaterial == Material.BIRCH_BOAT || mainMaterial == Material.DARK_OAK_BOAT || mainMaterial == Material.JUNGLE_BOAT || mainMaterial == Material.SPRUCE_BOAT){
-										return;
-									}
-								}
-							}
-						}
-						
-						// MINECART
-						if((material == Material.RAIL || material == Material.ACTIVATOR_RAIL || material == Material.POWERED_RAIL || material == Material.DETECTOR_RAIL) && p.getInventory().getItemInMainHand() != null){
-							Material mainMaterial = p.getInventory().getItemInMainHand().getType();
-							if(mainMaterial == Material.MINECART){
-								return;
-							}
-						}
-						
-						// DÉCALAGE PORTES
-							
-						if((!p.isSneaking()) && (!CCanBuild.canBuild(p, loc)) && (material == Material.SPRUCE_DOOR || material == Material.BIRCH_DOOR || material == Material.JUNGLE_DOOR || material == Material.ACACIA_DOOR || material == Material.DARK_OAK_DOOR || material == Material.OAK_DOOR || material == Material.SPRUCE_FENCE_GATE || material == Material.BIRCH_DOOR || material == Material.JUNGLE_FENCE_GATE || material == Material.ACACIA_FENCE_GATE || material == Material.DARK_OAK_DOOR || material == Material.OAK_FENCE_GATE)){
-							
-							loc.setX(loc.getX() + 1);
-							if(CCanBuild.canBuild(p, loc)){}
-								
-							else{
-								
-								loc.setX(loc.getX() - 2);
-								if(CCanBuild.canBuild(p, loc)){}
-									
-								else{
-									
-									loc.setX(loc.getX() + 1);
-									loc.setZ(loc.getZ() + 1);
-									if(CCanBuild.canBuild(p, loc)){
-									}else{
-										
-										loc.setZ(loc.getZ() - 2);
-										if(CCanBuild.canBuild(p, loc)){
-										}else{
-											loc.setZ(loc.getZ() + 1);
-										}
-									}
-								}
-							}
-						
-						// DÉCALAGE POUR POSER
-							
-						}else if(!(material == Material.SPRUCE_DOOR || material == Material.BIRCH_DOOR || material == Material.JUNGLE_DOOR || material == Material.ACACIA_DOOR || material == Material.DARK_OAK_DOOR || material == Material.OAK_DOOR || material == Material.SPRUCE_FENCE_GATE || material == Material.BIRCH_DOOR || material == Material.JUNGLE_FENCE_GATE || material == Material.ACACIA_FENCE_GATE || material == Material.DARK_OAK_DOOR || material == Material.OAK_FENCE_GATE)){
-							
-							if(e.getBlockFace() == BlockFace.DOWN) loc.setY(loc.getY() - 1);
-							if(e.getBlockFace() == BlockFace.UP) loc.setY(loc.getY() + 1);
-							
-							if(e.getBlockFace() == BlockFace.NORTH) loc.setZ(loc.getZ() - 1);
-							if(e.getBlockFace() == BlockFace.SOUTH) loc.setZ(loc.getZ() + 1);
-							
-							if(e.getBlockFace() == BlockFace.EAST) loc.setX(loc.getX() + 1);
-							if(e.getBlockFace() == BlockFace.WEST) loc.setX(loc.getX() - 1);
-							
-						}
-					}
-					if(CCanBuild.canBuildMessage(p, loc) && e.getAction() == Action.RIGHT_CLICK_BLOCK){
-						new Tools().playerInteract(p, e.getClickedBlock().getLocation(), p.getInventory().getItemInMainHand());
-					}
-					new Tools().defineFace(p, e.getBlockFace());
-					
-					// CALCUL FINAL
-					
-					if(!CCanBuild.canBuild(p, loc)){ // Peut pas build
-						
-						if(e.getClickedBlock().getType() == Material.OAK_BUTTON && e.getAction() == Action.RIGHT_CLICK_BLOCK) return;
-						
-						if((!p.isSneaking()) && e.getAction() == Action.RIGHT_CLICK_BLOCK && (material == Material.CHEST || material == Material.TRAPPED_CHEST ||
-								material == Material.SPRUCE_DOOR || material == Material.BIRCH_DOOR || material == Material.JUNGLE_DOOR || material == Material.ACACIA_DOOR || material == Material.DARK_OAK_DOOR || material == Material.OAK_DOOR ||
-								material == Material.SPRUCE_FENCE_GATE || material == Material.BIRCH_DOOR || material == Material.JUNGLE_FENCE_GATE || material == Material.ACACIA_FENCE_GATE || material == Material.DARK_OAK_FENCE_GATE || material == Material.OAK_FENCE_GATE ||
-								material == Material.FURNACE || material == Material.ENCHANTING_TABLE || material == Material.ANVIL || material == Material.CRAFTING_TABLE)){
-							
-							
-							if(!CCanBuild.canBuildMessagewithEmployees(p, loc)){
-								if(p.getGameMode() != GameMode.CREATIVE){
-									e.setCancelled(true);
-								}
-							}else{
-								if(material == Material.CHEST || material == Material.TRAPPED_CHEST){
-									Inventory inv = ((Chest) e.getClickedBlock().getState()).getInventory();
-									ItemStack[] lastContents = inv.getContents();
-									ItemStack[] newContents = new ItemStack[lastContents.length];
-									
-									int i = 0;
-									for(ItemStack item : lastContents){
-										if(item != null){
-											if(item.getType() != Material.AIR){
-												newContents[i] = item.clone();
-												i++;
-											}
-										}
-									}
-									
-									
-									main.entLog.put(p.getName(), newContents);
-								}
-								
-							}
-							
-						}else{
-							CCanBuild.canBuildMessage(p, loc);
-							if(p.getGameMode() != GameMode.CREATIVE){
-								e.setCancelled(true);
-							}else{
-								
-								String debug = CCanBuild.canBuildDebug(p, loc);
-								
-								
-								if(!debug.equals("Spawn")){
-									
-									Date rd = new realDate().getRealDate();
-									String date = "[" + rd.getMonth() + "/" + rd.getDay() + " " + rd.getHours() + ":" + rd.getMinutes() + "] ";
-									String block = "";
-									if(e.getAction() == Action.RIGHT_CLICK_BLOCK){
-										
-										if(p.getInventory().getItemInMainHand().getType().toString().equals("AIR")) return;
-										
-										block = "posé le bloc \"" + p.getInventory().getItemInMainHand().getType().toString();
-										
-									}else{
-										
-										block = "cassé le bloc \"" + material.toString();
-										
-									}
-										
-									try{
-										FileWriter writer = new FileWriter(main.logblock.getAbsoluteFile(), true);
-										BufferedWriter out = new BufferedWriter(writer);
-										out.write(date + p.getName() + " a " + block + "\" dans le claim de " + debug);
-										out.newLine();
-										out.close();
-									}catch(IOException e1){
-										e1.printStackTrace();
-									}
-									
-								}
-								
-							}
-							
-						}
-					}else{  // Peut 
-						if(e.getAction() == Action.RIGHT_CLICK_BLOCK){
-							if(p.getInventory().getItemInMainHand() != null){
-								
-								if(p.getInventory().getItemInMainHand().getType() == Material.OAK_SIGN){
-									
-									ItemStack item = p.getInventory().getItemInMainHand().clone();
-									
-									if(item.getItemMeta() != null){
-										if(item.getItemMeta().getDisplayName() != null){
-											if(item.getItemMeta().getDisplayName().contains("§r§bPancarte de vente (")){
-												
-												if(e.getBlockFace() == BlockFace.UP){ // normal sign
-													new Sign().placeSign(e.getClickedBlock().getRelative(e.getBlockFace()), item, false, getDirection(p));
-												}else if(e.getBlockFace() != BlockFace.DOWN){ // Wall sign
-													new Sign().placeSign(e.getClickedBlock().getRelative(e.getBlockFace()), item, true, e.getBlockFace());
-												}
-												e.setCancelled(true);
-												
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
+				
+			//Tools
+			if(!cancel && e.getAction() == Action.RIGHT_CLICK_BLOCK){
+				new Tools().playerInteract(p, e.getClickedBlock().getLocation(), p.getInventory().getItemInMainHand());
 			}
+			new Tools().defineFace(p, e.getBlockFace());
 			new SignClick().signclick(e);
+		
 		}else if(p.getWorld() == Bukkit.getWorld("BedWars")){
 				
 			if(e.getClickedBlock() != null){
@@ -453,7 +274,7 @@ public class interactListener implements Listener {
 	public void onInteractEntity(PlayerInteractEntityEvent e){
 		
 		Player p = e.getPlayer();
-		if(p.getWorld() == Bukkit.getWorld("world") || p.getWorld() == Bukkit.getWorld("world_nether") || p.getWorld() == Bukkit.getWorld("world_the_end")){
+		if(PInfos.getGame(p).equals("RP")){
 
 			Location loc = e.getRightClicked().getLocation();
 			if((!new CanBuild().canBuild(p, loc))){
@@ -505,7 +326,7 @@ public class interactListener implements Listener {
 		
 		Player p = e.getPlayer();
 		
-		if(p.getWorld() == Bukkit.getWorld("world") || p.getWorld() == Bukkit.getWorld("world_nether") || p.getWorld() == Bukkit.getWorld("world_the_end")){
+		if(PInfos.getGame(p).equals("RP")){
 
 			Location loc = e.getRightClicked().getLocation();
 			if((!new CanBuild().canBuild(p, loc))){
@@ -541,15 +362,13 @@ public class interactListener implements Listener {
 	}
 	
 	@EventHandler
-	public void playerARmorStand(PlayerArmorStandManipulateEvent e){
+	public void playerArmorStand(PlayerArmorStandManipulateEvent e){
 	
 		if(!new CanBuild().canBuildMessagewithEmployees(e.getPlayer(), e.getRightClicked().getLocation())){
 			if(e.getPlayer().getGameMode() != GameMode.CREATIVE){
 				e.setCancelled(true);
 			}
 		}
-		
-		
 	}
 	
 	@EventHandler
@@ -561,7 +380,9 @@ public class interactListener implements Listener {
 			int id = CGetZoneId.getIdOfPlayerZone(e.getBlock().getLocation());
 			for(Block block : e.getBlocks()){
 				
-				if(CGetZoneId.getIdOfPlayerZone(block.getLocation()) != id){
+				Location blockLoc = block.getRelative(e.getDirection()).getLocation();
+				
+				if(CGetZoneId.getIdOfPlayerZone(blockLoc) != id){
 					e.setCancelled(true);
 					return;
 				}
@@ -594,25 +415,5 @@ public class interactListener implements Listener {
     		e.setDamage(0);
 			e.setCancelled(true);
 		}
-        
-    }
-    
-    private BlockFace getDirection(Player player) {
-    	
-    	
-    	double rot = player.getLocation().getYaw();
-    	
-    	if(rot <= 22.5) return BlockFace.SOUTH;
-    	if(rot <= 67.5) return BlockFace.SOUTH_WEST;
-        else if (rot <= 112.5) return BlockFace.WEST;
-    	if(rot <= 157.5) return BlockFace.NORTH_WEST;
-        else if (rot <= 202.5) return BlockFace.NORTH;
-    	if(rot <= 247.5) return BlockFace.NORTH_EAST;
-        else if (rot <= 292.5) return BlockFace.EAST;
-    	if(rot <= 337.5) return BlockFace.SOUTH_EAST;
-        else if (rot <= 360) return BlockFace.SOUTH;
-        
-        else return null;
-        
     }
 }
