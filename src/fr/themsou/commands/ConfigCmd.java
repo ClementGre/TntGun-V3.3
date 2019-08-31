@@ -120,7 +120,7 @@ public class ConfigCmd implements TabCompleter, CommandExecutor{
 					double space = new realDate().getMinutesSpace(main.config.getString(item[number] + ".stat.last"));
 					if(time == 0) time = 1;
 					
-					if((space / 60.0 / 24.0) / (time / 60.0) > 10){
+					if((space / 60.0 / 24.0) / (time / 60.0) > 10){ // Jours / Heures
 				
 					
 						Bukkit.broadcastMessage("§cSupression du compte : §6" + item[number] + "§e (innactivitée)");

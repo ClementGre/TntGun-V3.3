@@ -1,10 +1,14 @@
 package fr.themsou.methodes;
 
 import java.util.Date;
+
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import fr.themsou.main.main;
+import fr.themsou.rp.games.DuelGame;
 
 public class PInfos {
 	
@@ -17,12 +21,36 @@ public class PInfos {
 		return (main.config.getInt(p.getName() + ".metier.mineur") + main.config.getInt(p.getName() + ".metier.bucheron") + main.config.getInt(p.getName() + ".metier.fermier") + main.config.getInt(p.getName() + ".metier.enchanteur") + main.config.getInt(p.getName() + ".metier.chasseur")) / 5;
 	}
 	
-	
-	public static String getGame(Player p){
+	public static String getGame(Entity p){
 		
 		if(p.getWorld() == Bukkit.getWorld("BedWars") || p.getWorld() == Bukkit.getWorld("BedWars-ressources")) return "BedWars";
 		else if(p.getWorld() == Bukkit.getWorld("World") || p.getWorld() == Bukkit.getWorld("World_nether") || p.getWorld() == Bukkit.getWorld("World_the_end")) return "RP";
 		else if(p.getWorld() == Bukkit.getWorld("TntWars")) return "TntWars";
+		else return "HUB";
+	}
+	
+	public static String getPreciseGame(Entity e){
+		
+		if(e.getWorld() == Bukkit.getWorld("BedWars") || e.getWorld() == Bukkit.getWorld("BedWars-ressources")) return "BedWars";
+		else if(e.getWorld() == Bukkit.getWorld("World") || e.getWorld() == Bukkit.getWorld("World_nether") || e.getWorld() == Bukkit.getWorld("World_the_end")){
+			if(e instanceof Player){
+				if(DuelGame.getStartedInstanceViaPlayer((Player) e) != null){
+					return "Duel";
+				}
+			}
+			
+			if(e instanceof Arrow){
+				if(((Arrow) e).getShooter() instanceof Player){
+					if(DuelGame.getStartedInstanceViaPlayer((Player) ((Arrow) e).getShooter()) != null){
+						return "Duel";
+					}
+				}
+				
+			}
+			
+			return "RP";
+		}
+		else if(e.getWorld() == Bukkit.getWorld("TntWars")) return "TntWars";
 		else return "HUB";
 	}
 	

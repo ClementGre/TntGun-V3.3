@@ -69,7 +69,7 @@ public class TntWarsGameEvents {
 					if(i <= 0){
 						game.isStarted = true;
 						new TntWarsGameEvents().updateBar();
-						System.out.println("La game n°" + game.id + " viens de démarer.");
+						System.out.println("La game de TntWars n°" + game.id + " viens de démarer.");
 						
 						for(Player p : game.getPlayersTeam1()){
 							p.teleport(game.team1Spawn);

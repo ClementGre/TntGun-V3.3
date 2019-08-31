@@ -43,8 +43,6 @@ public class TntWarsGame {
 		
 		String toReturn = "";
 		
-		
-			
 		if(team == 1){
 			
 			if(team1Player1 == null){
@@ -58,7 +56,6 @@ public class TntWarsGame {
 					toReturn += "§7Aucun joueur";
 				}else toReturn += "§c" + team1Player2.getName();
 			}
-			
 			
 		}else{
 			
@@ -74,13 +71,7 @@ public class TntWarsGame {
 				}else toReturn += "§c" + team2Player2.getName();
 			}
 			
-			
 		}
-			
-		
-		
-		
-		
 		return toReturn;
 		
 	}

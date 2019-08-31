@@ -19,6 +19,9 @@ import fr.themsou.inv.CmdInv;
 import fr.themsou.inv.HubInv;
 import fr.themsou.inv.VipInv;
 import fr.themsou.main.main;
+import fr.themsou.rp.inv.RolePlayGameDuelInv;
+import fr.themsou.rp.inv.RolePlayGamePvpBoxInv;
+import fr.themsou.rp.inv.RolePlayGamesInv;
 import fr.themsou.rp.inv.RolePlayMainInv;
 import fr.themsou.rp.inv.RolePlayMetiersInv;
 import fr.themsou.rp.inv.RolePlayShopInv;
@@ -145,6 +148,21 @@ public class InventoryListener implements Listener {
 		}else if(titre.equalsIgnoreCase("§4SHOP DE POINTS")){
 			e.setCancelled(true);
 			new RolePlayShopInv().itemPtsClicked(e);
+		}
+//////////////////////////////////////RP GAMES
+		else if(titre.equalsIgnoreCase("§4MINI-JEUX")){
+			e.setCancelled(true);
+			new RolePlayGamesInv().itemClicked(e);
+		}
+//////////////////////////////////////RP GAMES - PVP BOX
+		else if(titre.equalsIgnoreCase("§4MINI-JEUX - PVP Box")){
+			e.setCancelled(true);
+			new RolePlayGamePvpBoxInv().itemClicked(e);
+		}
+//////////////////////////////////////RP GAMES - DUEL
+		else if(titre.equalsIgnoreCase("§4MINI-JEUX - Duel")){
+			e.setCancelled(true);
+			new RolePlayGameDuelInv().itemClicked(pl, e);
 		}
 		
 		

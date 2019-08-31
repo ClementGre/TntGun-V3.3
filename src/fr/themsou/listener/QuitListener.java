@@ -22,8 +22,14 @@ import fr.themsou.main.main;
 import fr.themsou.methodes.Inventory;
 import fr.themsou.methodes.PInfos;
 import fr.themsou.methodes.realDate;
+import fr.themsou.rp.games.DuelGameEvents;
 
 public class QuitListener implements Listener{
+	
+	main pl;
+	public QuitListener(main pl) {
+		this.pl = pl;
+	}
 	
 	@SuppressWarnings("deprecation")
 	@EventHandler
@@ -45,6 +51,7 @@ public class QuitListener implements Listener{
 			PInfos.putStat(PInfos.getOnlineOperators() - 1, "admin");
 		}*/
 		new TntWarsGameEvents().PlayerLeave(p);
+		new DuelGameEvents().PlayerLeave(pl, p);
 		
 		main.config.set(p.getName() + ".time.connect", 0);
 		

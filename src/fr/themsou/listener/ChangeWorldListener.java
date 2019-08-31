@@ -13,11 +13,16 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 
+import fr.themsou.main.main;
 import fr.themsou.methodes.Inventory;
 import fr.themsou.methodes.PInfos;
 
 public class ChangeWorldListener implements Listener{
 	
+	main pl;
+	public ChangeWorldListener(main pl) {
+		this.pl = pl;
+	}
 	
 	@EventHandler
 	public void onGamemodeChange(PlayerGameModeChangeEvent e){

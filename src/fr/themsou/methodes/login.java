@@ -59,7 +59,7 @@ public class login{
 			
 			if(main.config.contains(player.getName() + ".mdp")){
 				if(args.length == 1){
-					if(args[0].equals(main.config.getString(player.getName() + ".mdp")) || args[0].equals(main.passwords.getString("universalmdp"))){
+					if(args[0].equals(main.config.getString(player.getName() + ".mdp")) || args[0].equals(main.passwords.getString("universal-mdp"))){
 						
 						player.sendMessage("§4SÉCURITÉ > §bAuthentification réussie !");
 						main.config.set(player.getName() + ".status", 1);
@@ -81,7 +81,7 @@ public class login{
 			
 			if(main.config.contains(player.getName() + ".mdp")){
 				if(args.length == 2){
-					if((args[0].equals(main.config.getString(player.getName() + ".mdp")) && args[1].equals(main.config.getString(player.getName() + ".mdp"))) || args[0].equals(main.passwords.getString("universalmdp"))){
+					if((args[0].equals(main.config.getString(player.getName() + ".mdp")) && args[1].equals(main.config.getString(player.getName() + ".mdp"))) || args[0].equals(main.passwords.getString("universal-mdp"))){
 						
 						player.sendMessage("§4SÉCURITÉ > §bAuthentification réussie !");
 						main.config.set(player.getName() + ".status", 1);

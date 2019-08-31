@@ -21,6 +21,18 @@ public class RolePlayMainInv {
 		Inventory inv = Bukkit.createInventory(null, 6*9, "§4MENU");
 		new UtilsInv().setWalls(inv, 6);
 		
+///////////////////////////////// LINE 0
+		
+		inv.setItem(0, UtilsInv.makeItem(Material.OAK_SIGN, "§c§lBienvenue en §4Role Play",
+				Arrays.asList("§eDiscord : https://discord.tntgun.fr/",
+						"§eSite : https://tntgun.fr/",
+						"§ee-mail : contact@tntgun.fr")));
+		
+		inv.setItem(8, UtilsInv.makeItem(Material.OAK_SIGN, "§eAchetez un terrain pour construire",
+				Arrays.asList("§evotre maison et progrésser dans les",
+						"§ecompétences. N'oubliez pas de vous",
+						"§efaire embaucher dans une entreprise !")));
+		
 ///////////////////////////////// LINE 1
 		
 		inv.setItem(20, UtilsInv.makeItem(Material.EMERALD, "§3§lSHOP", Arrays.asList("§eIci, c'est pour vendre ou acheter","§edes items avec le serveur")));
@@ -42,18 +54,13 @@ public class RolePlayMainInv {
 		
 ///////////////////////////////// LINE 3
 		
+		inv.setItem(40, UtilsInv.makeItem(Material.SWEET_BERRIES, "§3§lMINI-JEUX", Arrays.asList("§eVous pouvez ici jouer à","§eplusieurs mini-jeux en RolePlay")));
+		
+///////////////////////////////// LINE 4
 		
 		inv.setItem(49, UtilsInv.makeItem(Material.COMMAND_BLOCK, "§3§lESPACE ADMINISTRATEUR", Arrays.asList("§cCet espace est réservé aux administrateur")));
 		
-		inv.setItem(0, UtilsInv.makeItem(Material.OAK_SIGN, "§c§lBienvenue en §4Role Play",
-				Arrays.asList("§eDiscord : https://discord.tntgun.fr/",
-						"§eSite : https://tntgun.fr/",
-						"§ee-mail : contact@tntgun.fr")));
 		
-		inv.setItem(8, UtilsInv.makeItem(Material.OAK_SIGN, "§eAchetez un terrain pour construire",
-				Arrays.asList("§evotre maison et progrésser dans les",
-						"§ecompétences. N'oubliez pas de vous",
-						"§efaire embaucher dans une entreprise !")));
 		
 		p.openInventory(inv);
 		
@@ -87,6 +94,10 @@ public class RolePlayMainInv {
 		}else if(e.getCurrentItem().getType() == Material.DIAMOND){
 			p.closeInventory();
 			new VipInv().openInv(p);
+			
+		}else if(e.getCurrentItem().getType() == Material.SWEET_BERRIES){
+			p.closeInventory();
+			new RolePlayGamesInv().openInv(p);
 			
 		}
 		

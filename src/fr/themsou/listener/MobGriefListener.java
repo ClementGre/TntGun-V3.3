@@ -2,6 +2,8 @@ package fr.themsou.listener;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -32,7 +34,7 @@ public class MobGriefListener implements Listener{
 			
 		}else if(loc.getWorld() == Bukkit.getWorld("BedWars")){
 			
-			e.setYield(0.0F);
+			e.setYield(0.1F);
 			List destroyed = e.blockList();
 		    Iterator it = destroyed.iterator();
 		    while (it.hasNext()) {
@@ -42,6 +44,16 @@ public class MobGriefListener implements Listener{
 		    		block.getType() != Material.RED_CONCRETE && block.getType() != Material.BLUE_CONCRETE && block.getType() != Material.GREEN_CONCRETE && block.getType() != Material.YELLOW_CONCRETE &&
 		    		block.getType() != Material.END_STONE && block.getType() != Material.OBSIDIAN){
 		    		
+					it.remove();
+				}
+		    }
+		}else if(loc.getWorld() == Bukkit.getWorld("TntWars")){
+			
+			List destroyed = e.blockList();
+		    Iterator it = destroyed.iterator();
+		    Random r = new Random();
+		    while (it.hasNext()) {
+		    	if(r.nextInt(4) != 0){
 					it.remove();
 				}
 		    }

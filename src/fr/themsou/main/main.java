@@ -219,10 +219,10 @@ public class main extends JavaPlugin implements Listener {
 		pm.registerEvents(new CommandListener(this), this);
 		pm.registerEvents(new MobGriefListener(), this);
 		pm.registerEvents(new furnaceListener(), this);
-		pm.registerEvents(new QuitListener(), this);
+		pm.registerEvents(new QuitListener(this), this);
 		pm.registerEvents(new MoveListener(this), this);
 		pm.registerEvents(new CraftListener(), this);
-		pm.registerEvents(new ChangeWorldListener(), this);
+		pm.registerEvents(new ChangeWorldListener(this), this);
 		pm.registerEvents(new ChatListener(this), this);
 		pm.registerEvents(new interactListener(this), this);
 		pm.registerEvents(new MobSpawnListener(), this);

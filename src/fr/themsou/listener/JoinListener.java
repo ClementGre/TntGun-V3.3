@@ -123,7 +123,7 @@ public class JoinListener implements Listener{
 					if(ipNumber.equals(e.getAddress().getHostAddress())){
 						
 						
-						if(!Bukkit.getOperators().contains(Bukkit.getOfflinePlayer(player))){
+						if(!Bukkit.getOperators().contains(Bukkit.getOfflinePlayer(player)) && !player.equals(p.getName())){
 							accounts ++;
 						}
 						accountsPlayers += player + ", ";
