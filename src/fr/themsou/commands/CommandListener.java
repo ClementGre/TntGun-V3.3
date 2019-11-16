@@ -1,5 +1,6 @@
 package fr.themsou.commands;
 
+import fr.themsou.methodes.PlayerInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -26,12 +27,12 @@ public class CommandListener implements Listener{
 		Player p = e.getPlayer();
 		String msg = e.getMessage();
 		String[] args = msg.split(" ");
-		
+		PlayerInfo pInfo = main.playersInfos.get(p);
 		GradeCmd CGrade = new GradeCmd();
 		
 		int i = CGrade.getPlayerPermition(p.getName());
 		
-		if(main.config.getInt(p.getName() + ".status") == 1){
+		if(pInfo.isLoggin()){
 			if(p.getGameMode() == GameMode.SURVIVAL){
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////// ROLE PLAY ////////////////////////////////////////////////////////////////////

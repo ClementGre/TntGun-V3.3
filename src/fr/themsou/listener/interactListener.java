@@ -1,5 +1,6 @@
 package fr.themsou.listener;
 
+import fr.themsou.methodes.PlayerInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -37,6 +38,7 @@ import fr.themsou.rp.claim.CanBuild;
 import fr.themsou.rp.claim.GetZoneId;
 import fr.themsou.rp.claim.RPInteractListener;
 import fr.themsou.rp.claim.SignClick;
+import fr.themsou.rp.ent.Utils;
 import fr.themsou.rp.tools.Tools;
 
 public class interactListener implements Listener {
@@ -68,18 +70,24 @@ public class interactListener implements Listener {
 				
 				if(!new RPInteractListener().canPlayerDoPhysical(p)){
 					e.setCancelled(true);
+					cancel = true;
 				}
 				
 			}else if(e.getClickedBlock() != null && e.getAction() == Action.LEFT_CLICK_BLOCK){
 				
 				if(!new RPInteractListener().canGeneralInteract(p, e.getClickedBlock(), e.getAction())){
 					e.setCancelled(true);
+					cancel = true;
 				}
 				
 			}else if(e.getClickedBlock() != null && e.getAction() == Action.RIGHT_CLICK_BLOCK){
 				
 				if(!new RPInteractListener().canInteractPlace(p, e.getClickedBlock(), e.getBlockFace())){
 					e.setCancelled(true);
+					cancel = true;
+				}else{
+					cancel = !new Utils().playerInteractRightClick(p, e.getClickedBlock(), e.getBlockFace());
+					e.setCancelled(cancel);
 				}
 			}
 				
@@ -234,7 +242,7 @@ public class interactListener implements Listener {
 			
 			
 		}else if(p.getWorld() == Bukkit.getWorld("hub")){
-		
+			PlayerInfo pInfo = main.playersInfos.get(p);
 			if(e.getClickedBlock() != null){
 				if(e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.LEFT_CLICK_BLOCK){
 					if(e.getClickedBlock() != null){
@@ -249,7 +257,7 @@ public class interactListener implements Listener {
 					}
 				}
 			}
-			if(main.config.getInt(p.getName() + ".status") == 1){
+			if(pInfo.isLoggin()){
 				if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.LEFT_CLICK_BLOCK){
 					if(p.getInventory().getItemInMainHand() != null){
 						if(p.getInventory().getItemInMainHand().getItemMeta() != null){

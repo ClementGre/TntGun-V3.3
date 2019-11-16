@@ -26,8 +26,8 @@ import fr.themsou.main.main;
 import fr.themsou.methodes.PInfos;
 import fr.themsou.nms.title;
 import fr.themsou.rp.claim.CanBuild;
+import fr.themsou.rp.claim.Spawns;
 import fr.themsou.rp.games.DuelGameEvents;
-
 public class DamageListener implements Listener{
 	
 	main pl;
@@ -50,8 +50,6 @@ public class DamageListener implements Listener{
 			}
 			
 		}
-		
-		
 	}
 	
 	@EventHandler
@@ -83,9 +81,6 @@ public class DamageListener implements Listener{
 			}
 			
 		}
-		
-		
-		
 	}
 	
 	@EventHandler
@@ -97,130 +92,73 @@ public class DamageListener implements Listener{
 		getteam Cgetteam = new getteam();
 		
 		if(victim instanceof Player){
-			Player p = (Player) victim;
-			
-			if(PInfos.getPreciseGame(p).equals("Duel") && PInfos.getPreciseGame(e.getDamager()).equals("Duel")){
-				
-				if(e.getDamage() >= p.getHealth()){
-							
-					for(ItemStack item : p.getInventory().getContents()){
-						if(item != null){
-							p.getWorld().dropItem(p.getLocation(), item);
-						}
-					}
-					p.getInventory().clear();
-					p.setHealth(20);
-					p.setFoodLevel(20);
-					
-					p.setHealth(20);
-					p.setFoodLevel(20);
-					
-					e.setCancelled(true);
-					new DuelGameEvents().PlayerLeave(pl, p);
-				}
-					
-			}else if(PInfos.getPreciseGame(p).equals("TntWars")){
+			Player victimp = (Player) victim;
+
+			if(PInfos.getPreciseGame(victimp).equals("TntWars")){
 				e.setCancelled(true);
-				
-			}else if(PInfos.getPreciseGame(p).equals("BedWars")){
-				
-				if(killer instanceof Player){
-					
-					if(Cgetteam.getplayerteam((Player) victim) == Cgetteam.getplayerteam((Player) killer)){
+
+			}else if(PInfos.getPreciseGame(victimp).equals("BedWars")){
+
+				Player p = PInfos.getPlayerByEntity(killer);
+				if(p != null){
+
+					if(Cgetteam.getplayerteam(victimp) == Cgetteam.getplayerteam(p)){
 						e.setCancelled(true);
 					}else{
-						if(p.hasPotionEffect(PotionEffectType.INVISIBILITY)) p.removePotionEffect(PotionEffectType.INVISIBILITY);
+						if(victimp.hasPotionEffect(PotionEffectType.INVISIBILITY)) victimp.removePotionEffect(PotionEffectType.INVISIBILITY);
 					}
-					
-				}else if(killer instanceof Arrow){
-					
-					if(((Arrow) killer).getShooter() instanceof Player){
-						
-						if(Cgetteam.getplayerteam(p) == Cgetteam.getplayerteam(((Player) ((Arrow) killer).getShooter()))){
-							e.setCancelled(true);
-						}else{
-							if(p.hasPotionEffect(PotionEffectType.INVISIBILITY)) p.removePotionEffect(PotionEffectType.INVISIBILITY);
+				}
+			}else if(PInfos.getPreciseGame(victimp).equals("Duel") && PInfos.getPreciseGame(e.getDamager()).equals("Duel")){
+
+				if(e.getDamage() >= victimp.getHealth()){
+
+					for(ItemStack item : victimp.getInventory().getContents()){
+						if(item != null){
+							victimp.getWorld().dropItem(victimp.getLocation(), item);
 						}
 					}
-					
+					victimp.getInventory().clear();
+					victimp.setHealth(20);
+					victimp.setFoodLevel(20);
+
+					e.setCancelled(true);
+					new DuelGameEvents().PlayerLeave(pl, victimp);
+					return;
 				}
-				
-			}else{
-				e.setCancelled(true);
 			}
-			
-		}else if(killer.getLocation().getWorld() == Bukkit.getWorld("world") || killer.getLocation().getWorld() == Bukkit.getWorld("world_nether") || killer.getLocation().getWorld() == Bukkit.getWorld("world_the_end")){
-			
-			if(killer.getLocation().getWorld() != Bukkit.getWorld("world")) return;
-			
-			if(killer instanceof Player){
-				Player p = (Player) killer;
-				if(e.getEntity() instanceof Player){ 
+		}
+		if(PInfos.getGame(killer).equals("RP")){
+
+			Location loc = killer.getLocation();
+
+			if(loc.getWorld() != Bukkit.getWorld("world")) return;
+
+			// Quoted_sand ARENA
+			if(loc.getX() >= -231 && loc.getX() <= -206 && loc.getZ() >= -1026 && loc.getZ() <= -1003 && loc.getY() >= 33 && loc.getY() <= 36) return;
+			// Azrihell ARENA
+			if(new Spawns().isInSpawn(loc)){
+				if(new Spawns().getSpawnNameWithLoc(loc).equals("Azrihell_ARENA")) return;
+			}
+
+
+			Player p = PInfos.getPlayerByEntity(killer);
+			if(p != null){
+
+				if(victim instanceof Player){
 					if(p.getGameMode() != GameMode.CREATIVE){
 						e.setCancelled(true);
-					} // PVP
+						return;
+					} // PVP -> Direct disable
 				}
-				
-				if(!CCanBuild.canBuild(p, p.getLocation())){
+
+				if(!CCanBuild.canBuildMessage(p, victim.getLocation())){
 					if(p.getGameMode() != GameMode.CREATIVE){
 						e.setCancelled(true);
-					} // PVE // can't build
+						return;
+					} // PVE -> check if can't build
 				}
-			}else if(killer instanceof Arrow){
-				
-				if(victim instanceof Player){
-					if(((Arrow) killer).getShooter() instanceof Player){
-						
-						Player p = (Player) ((Arrow) killer).getShooter();
-						
-						if(p.getGameMode() != GameMode.CREATIVE){
-							e.setCancelled(true);
-						}  // PVP // can't build // BOW
-						
-					}
-				}else{
-					if(((Arrow) killer).getShooter() instanceof Player){
-						
-						Player p = (Player) ((Arrow) killer).getShooter();
-						
-						if(!CCanBuild.canBuild(((Player)((Arrow) killer).getShooter()), victim.getLocation())){
-							if(p.getGameMode() != GameMode.CREATIVE){
-								e.setCancelled(true);
-							}  // PVE // can't build // BOW
-						}
-						
-					}
-				}
-			}else if(killer instanceof Trident){
-				
-				if(victim instanceof Player){
-					if(((Trident) killer).getShooter() instanceof Player){
-						
-						Player p = (Player) ((Trident) killer).getShooter();
-						
-						if(p.getGameMode() != GameMode.CREATIVE){
-							e.setCancelled(true);
-						}  // PVP // can't build // BOW
-						
-					}
-				}else{
-					if(((Trident) killer).getShooter() instanceof Player){
-						
-						Player p = (Player) ((Trident) killer).getShooter();
-						
-						if(!CCanBuild.canBuild(((Player)((Trident) killer).getShooter()), victim.getLocation())){
-							if(p.getGameMode() != GameMode.CREATIVE){
-								e.setCancelled(true);
-							}  // PVE // can't build // BOW
-						}
-						
-					}
-				}
-				
-				
+
 			}
-			
-			
 		}else{
 			e.setCancelled(true);
 		}
@@ -250,10 +188,8 @@ public class DamageListener implements Listener{
 							new TntWarsGameEvents().PlayerLeave(p);
 						}
 					}, 10);
-					
-					
+
 				}
-				
 			}
 		}else if(victim.getWorld() == Bukkit.getWorld("BedWars")){
 		
@@ -289,24 +225,18 @@ public class DamageListener implements Listener{
 							int x = main.configuration.getInt("bedwars.teams." + team + ".x");
 							int z = main.configuration.getInt("bedwars.teams." + team + ".z");
 							
-							new BukkitRunnable(){
+							new BukkitRunnable(){ // REspawn coldown
 					            int countdown = 5;
-					            @Override
-					            public void run(){
+					            @Override public void run(){
 
 					                if(countdown <= 0){
-
 										p.teleport(new Location(Bukkit.getWorld("BedWars"), x, 100, z));
 										p.setGameMode(GameMode.SURVIVAL);
-											
 					                    this.cancel(); //cancel the repeating task
 					                    return; //exit the method
-
 					                }
-					                
 					                title.sendTitle(p, "§c" + countdown + "s", "§6Vous etes mort", 20);
 					                countdown--; //decrement
-
 					            }
 							}.runTaskTimer(pl, 0, 20);
 						
@@ -316,31 +246,32 @@ public class DamageListener implements Listener{
 						
 					}
 				}
-				
 			}else{
 				e.setCancelled(true);
 			}
 			
-		}else if(victim instanceof Player){
-			Player p = (Player) victim;
-			
-			if(PInfos.getPreciseGame(p).equals("RP")){
-				
-				if(p.getLocation().getWorld() == Bukkit.getWorld("world_nether") || p.getLocation().getWorld() == Bukkit.getWorld("world_the_end")) return;
-				
-				// Quoted_sand ARENA
-				if(loc.getX() >= -231 && loc.getX() <= -206 && loc.getZ() >= -1026 && loc.getZ() <= -1003 && loc.getY() >= 33 && loc.getY() <= 36) return;
-				
+		}else if(PInfos.getGame(victim).equals("RP")){
+
+			if(loc.getWorld() == Bukkit.getWorld("world_nether") || loc.getWorld() == Bukkit.getWorld("world_the_end")) return;
+
+			// Quoted_sand ARENA
+			if(loc.getX() >= -231 && loc.getX() <= -206 && loc.getZ() >= -1026 && loc.getZ() <= -1003 && loc.getY() >= 33 && loc.getY() <= 36) return;
+
+			// Azrihell ARENA
+			if(new Spawns().isInSpawn(loc)){
+				if(new Spawns().getSpawnNameWithLoc(loc).equals("Azrihell_ARENA")) return;
+			}
+
+			if(victim instanceof Player){
+				Player p = (Player) victim;
+
+				if(PInfos.getPreciseGame(p).equals("Duel")){
+					return;
+				}
 				if(!CCanBuild.canBuild(p, p.getLocation())){
 					e.setCancelled(true);
 				}
-				
-			}else if(PInfos.getPreciseGame(p).equals("Duel")){
-					
-			}else{
-				e.setCancelled(true);
 			}
-			
 		}else{
 			e.setCancelled(true);
 		}

@@ -2,6 +2,7 @@ package fr.themsou.rp.claim;
 
 import java.util.Set;
 
+import fr.themsou.methodes.PlayerInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -70,7 +71,7 @@ public class ClaimUserUnderCmd {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////// INVITE PLAYER ///////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-	public void invitePlayer(Player p, String player) {
+	public void invitePlayer(Player p, String guest) {
 		
 		GetZoneId CGetZoneId = new GetZoneId();
 		Spawns CSpawns = new Spawns();
@@ -82,14 +83,14 @@ public class ClaimUserUnderCmd {
 			String[] owners = main.config.getString("claim.list." + spawn + "." + id + ".owner").split(",");
 			String type = main.config.getString("claim.list." + spawn + "." + id + ".type");
 			if((!type.equals("ins") && owners[0].equals(p.getName())) || (type.equals("ins") && owners[0].equals(main.config.getString(p.getName() + ".rp.ent.name")) && main.config.getInt(p.getName() + ".rp.ent.role") == 2)){
-				
-				if(Bukkit.getPlayerExact(player) != null){
-					Player p2 = Bukkit.getPlayerExact(player);
-					if(!main.config.getString("claim.list." + spawn + "." + id + ".owner").contains(player)){
-						
-						main.config.set(player + ".claimjoin", id);
+
+				Player p2 = Bukkit.getPlayerExact(guest);
+				if(p2 != null){
+					if(!main.config.getString("claim.list." + spawn + "." + id + ".owner").contains(guest)){
+
+						main.playersInfos.get(p2).setClaimToJoin(id);
 						message.sendNmsMessageCmd(p2, "§3" + p.getDisplayName() + "§b vous invite dans son claim §2\u2714 §bou §4\u2716", "§6Cliquez pour accepter", "/claim join");
-						p.sendMessage("§bUne invitation a été envoyé à §3" + player);
+						p.sendMessage("§bUne invitation a été envoyé à §3" + guest);
 						
 					}else p.sendMessage("§cCe joueur fais déjà partit du claim");
 				}else p.sendMessage("§cJoueur introuvable");
@@ -180,37 +181,27 @@ public class ClaimUserUnderCmd {
 					
 				}else p.sendMessage("§cvous n'etes pas le propriétaire de ce terrain");
 			}
-			
-			
-			
+
 		}else p.sendMessage("§cvous n'etes pas le propriétaire de ce terrain");
 		
 	}
 	public void joinclaim(Player p) {
-		
-		if(main.config.contains(p.getName() + ".claimjoin")){
+
+		PlayerInfo pInfo = main.playersInfos.get(p);
+
+		int id = pInfo.getClaimToJoin();
+		if(id != 0){
 			Spawns CSpawns = new Spawns();
-			int id = main.config.getInt(p.getName() + ".claimjoin");
 			String ville = CSpawns.getSpawnNameWithId(id);
-			
-			if(!main.config.contains(p.getName() + ".claim")){
-				
-				main.config.set(p.getName() + ".claimjoin", null);
-				main.config.set("claim.list." + ville + "." + id + ".owner", main.config.getString("claim.list." + ville + "." + id + ".owner") + "," + p.getName());
-				main.config.set(p.getName() + ".claim." + id, id);
-				p.sendMessage("§bVous venez de rejoindre un claim");
-				
-			}else{
-				
-				main.config.set("claim.list." + ville + "." + id + ".owner", main.config.getString("claim.list." + ville + "." + id + ".owner") + "," + p.getName());
-				main.config.set(p.getName() + ".claim." + id, id);
-				p.sendMessage("§bVous venez de rejoindre un claim");
+
+			pInfo.setClaimToJoin(0);
+			main.config.set("claim.list." + ville + "." + id + ".owner", main.config.getString("claim.list." + ville + "." + id + ".owner") + "," + p.getName());
+			main.config.set(p.getName() + ".claim." + id, id);
+			p.sendMessage("§bVous venez de rejoindre un claim");
 					
-			}
+
 		}else p.sendMessage("§cVous n'avez reçu aucune invitation");
-		
-		main.config.set(p.getName() + ".claimjoin", null);
-		
+
 	}
 	public void sellCountry(Player p) {
 		

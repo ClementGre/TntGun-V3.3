@@ -234,9 +234,9 @@ public class RolePlayMetiersInv {
 		
 		Inventory inv = Bukkit.createInventory(null, 3*9, "§4ENCHANTEUR - CRAFTS");
 		
-		inv.setItem(1, new ItemStack(Material.LAPIS_BLOCK, 1));
+		inv.setItem(10, new ItemStack(Material.LAPIS_BLOCK, 1));
 		inv.setItem(9, new ItemStack(Material.ROTTEN_FLESH, 1));
-		inv.setItem(10, new ItemStack(Material.SPIDER_EYE));
+		inv.setItem(1, new ItemStack(Material.SPIDER_EYE));
 		inv.setItem(11, new ItemStack(Material.BLAZE_POWDER, 1));
 		inv.setItem(19, new ItemStack(Material.BONE, 1));
 		

@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -161,9 +162,7 @@ public class ClaimCmd implements CommandExecutor, TabCompleter {
 					}else p.sendMessage("§cVous devez être dans un claim");
 					
 				}else{
-					
 					help(p);
-					
 				}
 			}else{
 				

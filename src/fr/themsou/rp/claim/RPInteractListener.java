@@ -14,7 +14,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import fr.themsou.main.main;
 import fr.themsou.methodes.realDate;
-import fr.themsou.rp.ent.Utils;
 
 public class RPInteractListener{
 	
@@ -116,8 +115,6 @@ public class RPInteractListener{
 				if(p.getGameMode() != GameMode.CREATIVE){
 					return false;
 				}
-			}else{
-				new Utils().playerInteractRightClick(p, block, face);
 			}
 		}
 		return true;

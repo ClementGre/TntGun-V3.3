@@ -3,9 +3,7 @@ package fr.themsou.methodes;
 import java.util.Date;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 
 import fr.themsou.main.main;
 import fr.themsou.rp.games.DuelGame;
@@ -52,6 +50,24 @@ public class PInfos {
 		}
 		else if(e.getWorld() == Bukkit.getWorld("TntWars")) return "TntWars";
 		else return "HUB";
+	}
+
+	public static Player getPlayerByEntity(Entity e){
+
+		if(e instanceof Player){
+			return (Player) e;
+
+		}else if(e instanceof Arrow){
+			if(((Arrow) e).getShooter() instanceof Player){
+				return (Player) ((Arrow) e).getShooter();
+			}
+		}else if(e instanceof Trident){
+			if(((Trident) e).getShooter() instanceof Player){
+				return (Player) ((Trident) e).getShooter();
+			}
+		}
+		return null;
+
 	}
 	
 	

@@ -12,6 +12,7 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import fr.themsou.methodes.PlayerInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -46,6 +47,8 @@ public class JoinListener implements Listener{
 	public JoinListener(main pl) {
 		this.pl = pl;
 	}
+
+	private boolean secureLogin = false;
 	
 	
 	@EventHandler
@@ -169,20 +172,20 @@ public class JoinListener implements Listener{
 				return;
 				
 			}else{
-				
-				main.config.set(p.getName() + ".mdps", 1);
-				
+				secureLogin = true;
 			}
-			
 		}
-		
-		
 	}
 	
 	@EventHandler
 	public void OnJoin(PlayerJoinEvent e){
 		
 		Player p = e.getPlayer();
+
+		PlayerInfo pInfo = new PlayerInfo(p);
+		main.playersInfos.put(p, pInfo);
+		pInfo.setSecureLogin(secureLogin);
+
 		p.setGameMode(GameMode.SURVIVAL);
 		
 		new Counter().refreshCounters();
@@ -191,15 +194,7 @@ public class JoinListener implements Listener{
 		main.config.set(p.getName() + ".stat.last", date.getDay() + "-" + date.getDate() + "/" + date.getMonth() + " " + date.getHours() + ":" + date.getMinutes());
 		main.config.set(p.getName() + ".stat.lastday", date.getDate());
 		main.config.set(p.getName() + ".lastday", date.getDate());
-		
-		/*PInfos.putStat(Bukkit.getOnlinePlayers().size() - 1, "all");
-		PInfos.putStat(Bukkit.getOnlinePlayers().size(), "all");
-		if(p.isOp()){
-			PInfos.putStat(PInfos.getOnlineOperators() - 1, "admin");
-			PInfos.putStat(PInfos.getOnlineOperators(), "admin");
-		}*/
-		
-		
+
 /////////////////////////////////////////// INITIALISE
 		
 		try{
@@ -232,10 +227,9 @@ public class JoinListener implements Listener{
 		p.setPlayerListFooter("\n§2Site : §7https://tntgun.fr/\n§2Discord : §7https://discord.tntgun.fr/");
 		
 		/*if(isUsernamePremium(p.getName())){
-			main.config.set(p.getName() + ".status", 1);
+			pInfos.setLoggin(true);
 			title.sendTitle(p, "§bBienvenue sur§3 TntGun V3", "§6Vous êtes connecté avec un compte premium.", 60);
 		}else{*/
-			main.config.set(p.getName() + ".status", 0);
 			if(!main.config.contains(p.getName() + ".mdp")){
 				
 				main.config.set(p.getName() + ".grade", "Joueur");
@@ -262,8 +256,7 @@ public class JoinListener implements Listener{
 				}	
 				
 			}else{
-				if(main.config.getInt(p.getName() + ".mdps") == 0) title.sendTitle(p, "§bBienvenue sur§3 TntGun V3", "§6Faites /l <mot de passe>", 60);
-				
+				if(!pInfo.isSecureLogin()) title.sendTitle(p, "§bBienvenue sur§3 TntGun V3", "§6Faites /l <mot de passe>", 60);
 				else{
 					title.sendTitle(p, "§bBienvenue sur§3 TntGun V3", "§6Faites /l <mot de passe> <mot de passe>", 60);
 					p.sendMessage("§cVous ne vous étes pas connecté depuis votre ordianteut habituel, veuillez saisir votre mot de passe deux fois");

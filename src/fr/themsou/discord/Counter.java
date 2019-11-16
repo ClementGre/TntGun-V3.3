@@ -45,7 +45,6 @@ public class Counter {
 				players++;
 			}
 		}
-		
 		CChannels.renameVocalChannel(591541556305985549L, "Membres actifs : " + membresAct + "/" + membres);
 		CChannels.renameVocalChannel(591541769796059165L, "Joueurs actifs : " + joueursAct + "/" + joueurs);
 		CChannels.renameVocalChannel(591859439867527171L, "En ligne : " + playersAct + "/" + players);

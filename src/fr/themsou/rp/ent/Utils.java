@@ -17,7 +17,7 @@ import fr.themsou.methodes.SimpleItem;
 public class Utils {
 	
 	
-	public void playerInteractRightClick(Player p, Block block, BlockFace face){
+	public boolean playerInteractRightClick(Player p, Block block, BlockFace face){
 		
 		Material mat = block.getType();
 		
@@ -51,16 +51,20 @@ public class Utils {
 							
 							if(face == BlockFace.UP){ // normal sign
 								new Sign().placeSign(block.getRelative(face), item, false, getDirection(p));
+								System.out.println("place sign");
 								
 							}else if(face != BlockFace.DOWN){ // Wall sign
 								new Sign().placeSign(block.getRelative(face), item, true, face);
+								System.out.println("place wallsign");
 							}
+							
+							return false;
 						}
 					}
 				}
 			}
 		}
-		
+		return true;
 	}
 	
 	public void log(Player p, HashMap<SimpleItem, Integer> items, boolean add){

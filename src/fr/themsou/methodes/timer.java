@@ -6,11 +6,12 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Random;
 import java.util.Set;
+
+import fr.themsou.BedWars.BedWars;
+import fr.themsou.listener.CustomEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
-
-import fr.themsou.diffusion.api.roles;
 import fr.themsou.discord.Counter;
 import fr.themsou.discord.Roles;
 import fr.themsou.main.main;
@@ -20,23 +21,28 @@ import fr.themsou.rp.ent.Utils;
 public class timer {
 	
 ////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////6S ////////////////////////////////////////
+//////////////////////////////////////////// 1S ////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
-	public void pear1S(main mainclass){
-		
+	public void timer1S(main mainclass){
+
+		new CustomEvent().second();
+
 		if(main.ddos > 0) main.ddos --;
-		
+
+		new Boss().tick();
+		new BedWars().run(mainclass);
 	}
 ////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////// 6S ////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
 	@SuppressWarnings("deprecation")
-	public void pear6S(main mainclass){
+	public void timer6S(main mainclass){
 		
 		Scoreboards CScoreboards = new Scoreboards();
 		Date date = new realDate().getRealDate();
 		main.CSQLConnexion.updatePost();
-		
+
+
 /////////////////////////////////////////// DATABASE, UNMUTE, INFO
 		if(main.timerMinuts == 0){
 			
@@ -72,26 +78,32 @@ public class timer {
 		
 		
 		for(Player players : Bukkit.getOnlinePlayers()){
-			
-			String game = PInfos.getGame(players);
-			
-			if(new Random().nextInt(3) == 1){
-				String key = "nulle";
-				if(game.equals("RP")){
-					
-					key = "rp";
-					
-				}else if(game.equals("TntWars")){
-					
-					key = "tw";
-					
-				}else if(game.equals("BedWars")){
-					
-					key = "bw";
-					
+
+/////////////////////////////////////////// ANTI AFK
+
+			PlayerInfo playersInfo = main.playersInfos.get(players);
+			if(playersInfo != null){
+				playersInfo.addOneToLastViewVelChange();
+				if(playersInfo.getLastViewVelChange() == 30){
+					Bukkit.broadcastMessage("§5" + players.getName() + " semble AFK depuis 3 minutes");
 				}
-				info Cinfo = new info();
-				Cinfo.sendPlayerInfo(players, key);
+				if(playersInfo.getLastViewVelChange() >= 150){
+					Bukkit.broadcastMessage("§5" + players.getName() + " a été expulsé du serveur pour AFK (15min)");
+					players.kickPlayer("§cVous avez été expulsé du serveur pour une innactivitée supérieur à 15 min");
+				}
+			}
+
+/////////////////////////////////////////// INFOS
+
+			String game = PInfos.getGame(players);
+			if(new Random().nextInt(3) == 1){
+
+				String key = null;
+				if(game.equals("RP")) key = "rp";
+				else if(game.equals("TntWars")) key = "tw";
+				else if(game.equals("BedWars")) key = "bw";
+
+				new info().sendPlayerInfo(players, key);
 			}
 			
 /////////////////////////////////////////// NOTIFS
@@ -147,7 +159,7 @@ public class timer {
 //////////////////////////////////////////// QUART //////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
 
-	public void pearQuart(main mainclass){
+	public void timerQuart(main mainclass){
 	
 		mainclass.conf = main.config;
 		mainclass.saveConfig();
@@ -168,7 +180,7 @@ public class timer {
 //////////////////////////////////////////// HOUR //////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
 	
-	public void pearHour(main mainclass){
+	public void timerHour(main mainclass){
 		
 		new Counter().refreshCounters();
 		
@@ -176,10 +188,10 @@ public class timer {
 ////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////// DAY ///////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
-	@SuppressWarnings("deprecation")
-	public void pearDay(main mainclass){
+	public void timerDay(main mainclass){
 		
 		new SendStat().sendDay();
+		new Roles().onDay();
 		
 		try{
 			FileWriter writer = new FileWriter(main.logblock.getAbsoluteFile(), true);
@@ -214,43 +226,7 @@ public class timer {
 			
 			if(main.config.contains(item[number] + ".discord")){
 				
-				int currentDay = new realDate().getRealDate().getDate();
-				String DiscordName = main.config.getString(item[number] + ".discord");
-				
-				int lastDay = main.config.getInt(item[number] + ".rp.lastday");
-				if(currentDay < lastDay) currentDay = currentDay + 30;
-				
-				if(lastDay == 0 || currentDay - lastDay >= 7){
-					roles Croles = new roles();
-					if(Croles.getRoles(DiscordName).contains("RolePlay Player")) Croles.removeRole("RolePlay Player", DiscordName);
-				}
-				
-				lastDay = main.config.getInt(item[number] + ".tntwars.lastday");
-				if(currentDay < lastDay) currentDay = currentDay + 30;
-				
-				if(lastDay == 0 || currentDay - lastDay >= 7){
-					roles Croles = new roles();
-					if(Croles.getRoles(DiscordName).contains("TntWars Player")) Croles.removeRole("TntWars Player", DiscordName);
-				}
-				
-				lastDay = main.config.getInt(item[number] + ".bedwars.lastday");
-				if(currentDay < lastDay) currentDay = currentDay + 30;
-				
-				if(lastDay == 0 || currentDay - lastDay >= 7){
-					roles Croles = new roles();
-					if(Croles.getRoles(DiscordName).contains("BedWars Player")) Croles.removeRole("BedWars Player", DiscordName);
-				}
-				
-				lastDay = main.config.getInt(item[number] + ".lastday");
-				if(currentDay < lastDay) currentDay = currentDay + 30;
-				
-				if(lastDay == 0 || currentDay - lastDay >= 7){
-					roles Croles = new roles();
-					if(Croles.getRoles(DiscordName).contains("Joueur actif")) Croles.removeRole("Joueur actif", DiscordName);
-				}
-				
-				
-				
+				new Roles().onPlayerDay(item[number]);
 				
 			}
 			
@@ -262,7 +238,7 @@ public class timer {
 ////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////// WEEK //////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
-	public void pearWeek(main mainclass){
+	public void timerWeek(main mainclass){
 		
 		new SendStat().sendWeek();
 		new Utils().payEntreprises();
@@ -273,7 +249,7 @@ public class timer {
 //////////////////////////////////////////// MOUNTH ////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
 	@SuppressWarnings("deprecation")
-	public void pearMounth(main mainclass){
+	public void timerMounth(main mainclass){
 		
 		for(String player : main.config.getConfigurationSection("").getKeys(false)){
 			

@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+
+import fr.themsou.methodes.*;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.WorldCreator;
@@ -55,10 +57,6 @@ import fr.themsou.listener.MoveListener;
 import fr.themsou.listener.QuitListener;
 import fr.themsou.listener.furnaceListener;
 import fr.themsou.listener.interactListener;
-import fr.themsou.methodes.Boss;
-import fr.themsou.methodes.PInfos;
-import fr.themsou.methodes.realDate;
-import fr.themsou.methodes.timer;
 import fr.themsou.rp.tools.setcraft;
 import net.milkbowl.vault.economy.Economy;
 
@@ -75,7 +73,6 @@ public class main extends JavaPlugin implements Listener {
 	public static ArrayList<Player> TntWarsFille = new ArrayList<>();
 	public static ArrayList<Player> TntWarsFillea = new ArrayList<>();
 	public static ArrayList<Player> TntWarsFilleb = new ArrayList<>();
-	public static ArrayList<Player> TntWarsCurrent = new ArrayList<>();
 	public static int bedWarsEmerald = 90;
 	public static int bedWarsDiamond = 60;
 	public static int timerMinuts = 0;
@@ -84,6 +81,7 @@ public class main extends JavaPlugin implements Listener {
 	public main mainclass = this;
 	public static HashMap<String, ItemStack[]> entLog = new HashMap<>();
 	public static HashMap<String, BossBar> bars = new HashMap<>();
+	public static HashMap<Player, PlayerInfo> playersInfos = new HashMap<>();
 	
 	public main getinstance(){
 		return this;
@@ -92,8 +90,7 @@ public class main extends JavaPlugin implements Listener {
 	@Override
 	public void onLoad() {
 		super.onLoad();
-		
-		
+
 	}
 	
 
@@ -148,8 +145,8 @@ public class main extends JavaPlugin implements Listener {
 		CSQLConnexion.connexion();
 		
 		
-		timer();
-		timer2();
+		sixSecondsTimer();
+		oneSecondTimer();
 		
 		if(main.config.getInt("bedwars.list.status") == 2){
 			main.config.set("bedwars.list.status", 0);
@@ -290,101 +287,70 @@ public class main extends JavaPlugin implements Listener {
 		
 	}
 	
-	private void timer(){
+	private void sixSecondsTimer(){
 		
-		Bukkit.getScheduler().runTaskTimer(this, new Runnable() {
-			
-			@SuppressWarnings("deprecation")
-			@Override
-			public void run() {
-				
-				Date date = new realDate().getRealDate();
-				timer Ctimer = new fr.themsou.methodes.timer();
-				
-				Ctimer.pear6S(mainclass);
-				
-				if(date.getMinutes() == 0 && main.config.getBoolean("stat.list.issend.hour") == false){ // HOUR
-					main.config.set("stat.list.issend.hour", true);
-					Ctimer.pearHour(getinstance());
-					
-					if(date.getHours() == 0 && main.config.getBoolean("stat.list.issend.day") == false){ // DAY
-						main.config.set("stat.list.issend.day", true);
-						Ctimer.pearDay(getinstance());
-						
-						if(date.getDay() == 1 && main.config.getBoolean("stat.list.issend.week") == false){ // WEEK
-							main.config.set("stat.list.issend.week", true);
-							Ctimer.pearWeek(getinstance());
-							
-						}if(date.getDate() == 0 && main.config.getBoolean("stat.list.issend.mounth") == false){ // MOUNTH
-							main.config.set("stat.list.issend.mounth", true);
-							Ctimer.pearMounth(getinstance());
-							
-						}
-							
-						
+		Bukkit.getScheduler().runTaskTimer(this, () -> {
+
+			Date date = new realDate().getRealDate();
+			timer Ctimer = new timer();
+
+			Ctimer.timer6S(mainclass);
+
+			if(date.getMinutes() == 0 && main.config.getBoolean("stat.list.issend.hour") == false){ // HOUR
+				main.config.set("stat.list.issend.hour", true);
+				Ctimer.timerHour(getinstance());
+
+				if(date.getHours() == 0 && main.config.getBoolean("stat.list.issend.day") == false){ // DAY
+					main.config.set("stat.list.issend.day", true);
+					Ctimer.timerDay(getinstance());
+
+					if(date.getDay() == 1 && main.config.getBoolean("stat.list.issend.week") == false){ // WEEK
+						main.config.set("stat.list.issend.week", true);
+						Ctimer.timerWeek(getinstance());
+
+					}if(date.getDate() == 0 && main.config.getBoolean("stat.list.issend.mounth") == false){ // MOUNTH
+						main.config.set("stat.list.issend.mounth", true);
+						Ctimer.timerMounth(getinstance());
+
 					}
+
+
 				}
-				
-				if((date.getMinutes() == 15 || date.getMinutes() == 30 || date.getMinutes() == 45 || date.getMinutes() == 0) && main.config.getBoolean("stat.list.issend.quart") == false){
-					main.config.set("stat.list.issend.quart", true);
-					Ctimer.pearQuart(getinstance());
-				}
-				
-					
-				if(date.getMinutes() == 16 || date.getMinutes() == 31 || date.getMinutes() == 46 || date.getMinutes() == 1){ // HOUR
-			
-					main.config.set("stat.list.issend.hour", false);
-					main.config.set("stat.list.issend.quart", false);
-				
-					if(date.getHours() == 1){ // DAY
-						main.config.set("stat.list.issend.day", false);
-						
-						if(date.getDay() == 2){ // WEEK
-							main.config.set("stat.list.issend.week", false);
-							
-						}if(date.getDate() == 1){ // MOUNTH
-							main.config.set("stat.list.issend.mounth", false);
-							
-						}
-					}
-				}
-				
-				
-				
-				
-				
 			}
-			
+
+			if((date.getMinutes() == 15 || date.getMinutes() == 30 || date.getMinutes() == 45 || date.getMinutes() == 0) && main.config.getBoolean("stat.list.issend.quart") == false){
+				main.config.set("stat.list.issend.quart", true);
+				Ctimer.timerQuart(getinstance());
+			}
+			if(date.getMinutes() == 16 || date.getMinutes() == 31 || date.getMinutes() == 46 || date.getMinutes() == 1){ // HOUR
+
+				main.config.set("stat.list.issend.hour", false);
+				main.config.set("stat.list.issend.quart", false);
+
+				if(date.getHours() == 1){ // DAY
+					main.config.set("stat.list.issend.day", false);
+
+					if(date.getDay() == 2){ // WEEK
+						main.config.set("stat.list.issend.week", false);
+
+					}if(date.getDate() == 1){ // MOUNTH
+						main.config.set("stat.list.issend.mounth", false);
+
+					}
+				}
+			}
 		},120, 120);
-		
+	}
+
+	private void oneSecondTimer() {
+		Bukkit.getScheduler().runTaskTimer(this, () -> new timer().timer1S(getinstance()),20, 20);
 	}
 	
-	
-	private void timer2() {
-		
-		Bukkit.getScheduler().runTaskTimer(this, new Runnable() {
-			@Override
-			public void run() {
-				
-				new CustomEvent().second();
-				new fr.themsou.methodes.timer().pear1S(getinstance());
-				new Boss().tick();
-				
-			    BedWars CBedWars = new BedWars();
-			    CBedWars.run(getinstance());
-			    
-				
-				
-			}
-		},20, 20);
-	}
-	
-	boolean setupEconomy(){
+	private boolean setupEconomy(){
         RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
         if (economyProvider != null) {
             economy = economyProvider.getProvider();
         }
- 
         return (economy != null);
     }
 }

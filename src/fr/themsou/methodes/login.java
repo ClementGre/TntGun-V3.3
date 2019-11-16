@@ -12,20 +12,22 @@ import fr.themsou.nms.title;
 public class login{
 	
 	public void RegisterPlayer(Player player, String[] args){
-		
-		if(main.config.getInt(player.getName() + ".status") == 0){
+
+		PlayerInfo pInfo = main.playersInfos.get(player);
+
+		if(!pInfo.isLoggin()){
 			
 			if(!main.config.contains(player.getName() + ".mdp")){
 				if(args.length == 1){
 					
 					player.sendMessage("§4SÉCURITÉ > §bAuthentification réussie !");
 					
-					main.config.set(player.getName() + ".mdp", args[0]);
+					pInfo.setLoggin(true);
 					
 					main.CSQLConnexion.refreshPlayer(player.getName(), 1);
 					main.config.set(player.getName() + ".ip", player.getAddress().getHostString());
 					
-					title.sendTitle(player, "§cChoissez votre mode de jeu,", "§cavec la bousole", 60);
+					title.sendTitle(player, "§cChoissez votre mode de jeu", "§cavec la bousole", 60);
 					initialise(player);
 					
 				}else player.sendMessage("§4SÉCURITÉ > §bFaites §c/reg <mot de passe>");
@@ -38,37 +40,33 @@ public class login{
 				
 				player.sendMessage("§3Mot de passe changé !");
 				
-				main.config.set(player.getName() + ".mdp", args[0]);
-				
 				main.CSQLConnexion.refreshPlayer(player.getName(), 1);
 				main.config.set(player.getName() + ".ip", player.getAddress().getHostString());
 				
-				title.sendTitle(player, "§cChoissez votre mode de jeu,", "§cavec la bousole", 60);
+				title.sendTitle(player, "§cChoissez votre mode de jeu", "§cavec la bousole", 60);
 				
 			}else player.sendMessage("§c/reg <mot de passe>");
-				
-			
+
 		}
-		
-		
 		
 	}
 	public void loginPlayer(Player player, String[] args){
-		
-		if(main.config.getInt(player.getName() + ".mdps") == 0){
+
+		PlayerInfo pInfo = main.playersInfos.get(player);
+
+		if(!pInfo.isSecureLogin()){
 			
 			if(main.config.contains(player.getName() + ".mdp")){
 				if(args.length == 1){
 					if(args[0].equals(main.config.getString(player.getName() + ".mdp")) || args[0].equals(main.passwords.getString("universal-mdp"))){
 						
 						player.sendMessage("§4SÉCURITÉ > §bAuthentification réussie !");
-						main.config.set(player.getName() + ".status", 1);
-						
-						
+						pInfo.setLoggin(true);
+
 						main.CSQLConnexion.refreshPlayer(player.getName(), 1);
 						main.config.set(player.getName() + ".ip", player.getAddress().getHostString());
 						
-						title.sendTitle(player, "§cChoissez votre mode de jeu,", "§cavec la boussole", 60);
+						title.sendTitle(player, "§cChoissez votre mode de jeu", "§cavec la boussole", 60);
 						initialise(player);
 						
 					}else player.sendMessage("§4SÉCURITÉ > §bMauvais mot de passe");
@@ -84,13 +82,12 @@ public class login{
 					if((args[0].equals(main.config.getString(player.getName() + ".mdp")) && args[1].equals(main.config.getString(player.getName() + ".mdp"))) || args[0].equals(main.passwords.getString("universal-mdp"))){
 						
 						player.sendMessage("§4SÉCURITÉ > §bAuthentification réussie !");
-						main.config.set(player.getName() + ".status", 1);
-						main.config.set(player.getName() + ".mdps", 0);
+						pInfo.setLoggin(true);
 						
 						main.CSQLConnexion.refreshPlayer(player.getName(), 1);
 						main.config.set(player.getName() + ".ip", player.getAddress().getHostString());
 						
-						title.sendTitle(player, "§cChoissez votre mode de jeu,", "§cavec la boussole", 60);
+						title.sendTitle(player, "§cChoissez votre mode de jeu", "§cavec la boussole", 60);
 						initialise(player);
 						
 					}else player.sendMessage("§4SÉCURITÉ > §bMauvais mot de passe");
@@ -100,9 +97,7 @@ public class login{
 			}else player.sendMessage("§4SÉCURITÉ > §bFaites §c/reg <mot de passe>");
 			
 		}
-		
-		
-		
+
 	}
 	
 	

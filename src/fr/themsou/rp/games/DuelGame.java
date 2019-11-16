@@ -12,7 +12,9 @@ import org.bukkit.entity.Player;
 public class DuelGame {
 	
 	public static final DuelGame ARVENIA_1 = new DuelGame("Arvenia", Material.CAMPFIRE, new Location(Bukkit.getWorld("world"), 145, 73, -119), new Location(Bukkit.getWorld("world"), 145, 73, -119));
-	public static List<DuelGame> games = Arrays.asList(ARVENIA_1);
+	public static final DuelGame SMARTSPEED_1 = new DuelGame("Smart_Speed", Material.CHISELED_QUARTZ_BLOCK, new Location(Bukkit.getWorld("world"), 1251, 64, 1366), new Location(Bukkit.getWorld("world"), 1234, 72, 1366));
+	public static List<DuelGame> games = Arrays.asList(ARVENIA_1, SMARTSPEED_1);
+	
 	
 	public Location loc;
 	public Location specLoc;

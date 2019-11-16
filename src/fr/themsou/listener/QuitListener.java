@@ -131,15 +131,11 @@ public class QuitListener implements Listener{
 			}
 		}
 		Cmessages.addfield("Joueurs connectées: " + (Bukkit.getOnlinePlayers().size() - 1), players, false);
-		
-		
 		Cmessages.setFooter("Service d'informations de TntGun", "https://lh3.googleusercontent.com/a-/ACSszfGsjQF2ipqu2U0e3kC8Ev09mOCJZKoIApjWEw=s176-c-k-c0x00ffffff-no-rj-mo");
-		
 		Cmessages.EditEmbed(414143640995102720L, 464808979219087360L);
-		
 		Cmessages.clearEmbed();
 		
-		
+		main.playersInfos.remove(p);
 		
 	}
 

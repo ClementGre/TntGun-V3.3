@@ -3,6 +3,7 @@ package fr.themsou.listener;
 import java.util.List;
 import java.util.Random;
 
+import fr.themsou.methodes.PlayerInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -28,34 +29,34 @@ public class MoveListener implements Listener{
 	public MoveListener(main pl) {
 		this.pl = pl;
 	}
-	
-	
+
 	@EventHandler
 	public void onwalk(PlayerMoveEvent e){
 		
 		Player p = e.getPlayer();
+		PlayerInfo pInfo = main.playersInfos.get(p);
 		
-		
-		if(main.config.getInt(p.getName() + ".status") == 0){
-			
+		if(!pInfo.isLoggin()){
+
 			Location loc = new Location(Bukkit.getWorld("hub"), 0.5, 50, 0.5);
 			p.teleport(loc);
 			
 			if(new Random().nextInt(5) == 4){
 				if(main.config.contains(p.getName() + ".mdp")){
 
-					if(main.config.getInt(p.getName() + ".mdps") == 0) p.sendMessage("§4SÉCURITÉ > §bFaites §c/l <mot de passe>");
-						
+					if(!pInfo.isSecureLogin()) p.sendMessage("§4SÉCURITÉ > §bFaites §c/l <mot de passe>");
 					else p.sendMessage("§4SÉCURITÉ > §bFaites §c/l <mot de passe> <mot de passe>");
 					
 				}else{
-					
 					p.sendMessage("§4SÉCURITÉ > §bFaites §c/reg <mot de passe>");
-					
 				}
 			}
 			
 		}else{
+
+			pInfo.setLastPitch(e.getTo().getPitch());
+			pInfo.setLastYaw(e.getTo().getYaw());
+
 			
 			if(p.getWorld() == Bukkit.getWorld("BedWars")){
 				

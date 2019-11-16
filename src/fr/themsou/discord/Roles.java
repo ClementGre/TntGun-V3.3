@@ -7,6 +7,7 @@ import fr.themsou.diffusion.api.messages;
 import fr.themsou.diffusion.api.roles;
 import fr.themsou.diffusion.api.user;
 import fr.themsou.main.main;
+import fr.themsou.methodes.realDate;
 
 public class Roles {
 	
@@ -76,6 +77,64 @@ public class Roles {
 		
 	}
 	
+	public void onDay(){
+		
+		roles CRoles = new roles();
+		user CUser = new user();
+		messages CMessages = new messages();
+		
+		ArrayList<String> users = CUser.getUsers();
+		
+		for(int i = 0; i < users.size(); i++){
+			String user = users.get(i);
+			if(!CRoles.getRoles(user).contains("Membre")){
+				CMessages.sendPrivateMessage(":warning: **Vous n'avez pas accepté le règlement **:warning: \n"
+						+ "Veuillez vous rendre dans le salon #:warning:-règles-:warning: "
+						+ "et réagir avec :white_check_mark: pour accéder à l'entièreté du serveur.", user);
+			}
+		}
+		
+	}
+	
+	public void onPlayerDay(String p){
+		
+		@SuppressWarnings("deprecation")
+		int currentDay = new realDate().getRealDate().getDate();
+		String DiscordName = main.config.getString(p + ".discord");
+		
+		int lastDay = main.config.getInt(p + ".rp.lastday");
+		if(currentDay < lastDay) currentDay = currentDay + 30;
+		
+		if(lastDay == 0 || currentDay - lastDay >= 7){
+			roles Croles = new roles();
+			if(Croles.getRoles(DiscordName).contains("RolePlay Player")) Croles.removeRole("RolePlay Player", DiscordName);
+		}
+		
+		lastDay = main.config.getInt(p + ".tntwars.lastday");
+		if(currentDay < lastDay) currentDay = currentDay + 30;
+		
+		if(lastDay == 0 || currentDay - lastDay >= 7){
+			roles Croles = new roles();
+			if(Croles.getRoles(DiscordName).contains("TntWars Player")) Croles.removeRole("TntWars Player", DiscordName);
+		}
+		
+		lastDay = main.config.getInt(p + ".bedwars.lastday");
+		if(currentDay < lastDay) currentDay = currentDay + 30;
+		
+		if(lastDay == 0 || currentDay - lastDay >= 7){
+			roles Croles = new roles();
+			if(Croles.getRoles(DiscordName).contains("BedWars Player")) Croles.removeRole("BedWars Player", DiscordName);
+		}
+		
+		lastDay = main.config.getInt(p + ".lastday");
+		if(currentDay < lastDay) currentDay = currentDay + 30;
+		
+		if(lastDay == 0 || currentDay - lastDay >= 7){
+			roles Croles = new roles();
+			if(Croles.getRoles(DiscordName).contains("Joueur actif")) Croles.removeRole("Joueur actif", DiscordName);
+		}
+		
+	}
 	
 	public void onWeek(){
 		

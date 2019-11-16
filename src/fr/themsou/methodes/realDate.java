@@ -11,8 +11,8 @@ public class realDate {
 		
 		date = new Date();
 		
-		int minutes = date.getMinutes() + 6;
-		int hours = date.getHours() + 2;
+		int minutes = date.getMinutes() + 14;
+		int hours = date.getHours() + 3;
 		int day = date.getDate();
 		int mounth = date.getMonth();
 		

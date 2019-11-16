@@ -19,6 +19,8 @@ public class RolePlayGamePvpBoxInv {
 		inv.setItem(20, UtilsInv.makeItem(Material.SANDSTONE, "§3§lQuoted Sand", null));
 		inv.setItem(29, UtilsInv.makeItem(Material.SANDSTONE_STAIRS, "§3§lQuoted Sand (Spectateur)", null));
 		
+		inv.setItem(21, UtilsInv.makeItem(Material.MAGMA_BLOCK, "§3§lAzRiHEll Arena", null));
+		
 		p.openInventory(inv);
 		
 	}
@@ -35,6 +37,11 @@ public class RolePlayGamePvpBoxInv {
 			p.closeInventory();
 			p.teleport(new Location(Bukkit.getWorld("world"), -219, 40, -998));
 			p.sendMessage("§3Vous venez de vous téléporter à l'arène de §3Quoted Sand §ben tans que §3spectateur.");
+			
+		}else if(e.getCurrentItem().getType() == Material.MAGMA_BLOCK){
+			p.closeInventory();
+			p.teleport(new Location(Bukkit.getWorld("world"), 2697, 187, -415));
+			p.sendMessage("§3Vous venez de vous téléporter à l'arène §3AzRiHEll Arena.");
 			
 		}
 	}	

@@ -2,14 +2,12 @@ package fr.themsou.listener;
 
 import java.util.List;
 
+import fr.themsou.methodes.PlayerInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.CreatureSpawner;
-import org.bukkit.block.Sign;
+import org.bukkit.block.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -44,6 +42,8 @@ public class BreakListener implements Listener{
 	public void onBreak(BlockBreakEvent e){
 		
 		Player p = e.getPlayer();
+		PlayerInfo pInfo = main.playersInfos.get(p);
+		pInfo.setLastViewVelChange(0);
 		getteam Cgetteam = new getteam();
 		
 		if(p.getWorld() == Bukkit.getWorld("world")){
@@ -207,16 +207,27 @@ public class BreakListener implements Listener{
 	public void onplace(BlockPlaceEvent e){
 		
 		Player p = e.getPlayer();
+		PlayerInfo pInfo = main.playersInfos.get(p);
+		pInfo.setLastViewVelChange(0);
 		Location loc = e.getBlockPlaced().getLocation();
 		
 		if(PInfos.getGame(p).equals("RP")){
-			
 			if(!new RPInteractListener().canGeneralInteract(p, e.getBlockPlaced(), Action.RIGHT_CLICK_BLOCK)){
 				e.setBuild(false);
 				e.setCancelled(true);
+			}else{
+				if(e.getBlockPlaced().getType() == Material.CHEST || e.getBlockPlaced().getType() == Material.TRAPPED_CHEST){
+					if(!new Spawns().isInSpawn(loc) && p.getGameMode() != GameMode.CREATIVE){
+						e.setBuild(false);
+						e.setCancelled(true);
+						p.sendMessage("§cIl vous est interdit de stockuer du stuff en dehors du spawn, veuillez acheter un claim dans une ville pour pouvoir stocker du stuff.");
+					}
+				}else if(e.getBlockPlaced().getState() instanceof ShulkerBox){
+					if(!new Spawns().isInSpawn(loc) && p.getGameMode() != GameMode.CREATIVE){
+						p.sendMessage("§cIl vous est interdit de stockuer du stuff en dehors du spawn, cette shulker box ne doit pas rester ici indéfiniment, autrement, elle sera supprimé.");
+					}
+				}
 			}
-			
-			
 		}else if(p.getWorld() == Bukkit.getWorld("BedWars")){
 			
 			if(loc.getBlockY() <= 85 || loc.getBlockY() >= 125){
