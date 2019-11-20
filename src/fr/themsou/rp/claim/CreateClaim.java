@@ -2,6 +2,7 @@ package fr.themsou.rp.claim;
 
 import java.util.Random;
 
+import com.sun.xml.internal.bind.v2.model.core.ClassInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -32,8 +33,7 @@ public class CreateClaim {
 					main.config.set("claim.list." + ville + "." + id + ".y1", loc1.getBlockY());
 					main.config.set("claim.list." + ville + "." + id + ".y2", loc2.getBlockY());
 				}
-				
-				main.config.set("claim.list." + ville + "." + id + ".owner", "l'etat");
+
 				main.config.set("claim.list." + ville + "." + id + ".x1", loc1.getBlockX());
 				main.config.set("claim.list." + ville + "." + id + ".x2", loc2.getBlockX());
 				main.config.set("claim.list." + ville + "." + id + ".z1", loc1.getBlockZ());
@@ -51,17 +51,17 @@ public class CreateClaim {
 	@SuppressWarnings("deprecation")
 	public void setClaimSign(Player p, int prix){
 		
-		int id = CGetZoneId.getIdOfPlayerZone(p.getLocation().getBlock().getLocation());
-		if(id == 0){ p.sendMessage("§cVous devez être dans le claim pour pouvoir poser sa pancarte"); return; }
-		String ville = CSpawns.getSpawnNameWithLoc(p.getLocation());
+		Claim claim = new Claim(p.getLocation());
+		if(!claim.exist()){
+			p.sendMessage("§cVous devez être dans un claim pour pouvoir poser sa pancarte"); return;
+		}
 		
-		Location loc1 = new Location(Bukkit.getWorld("world"), main.config.getInt("claim.list." + ville + "." + id + ".x1"), main.config.getInt("claim.list." + ville + "." + id + ".y1"), main.config.getInt("claim.list." + ville + "." + id + ".z1"));
-		Location loc2 = new Location(Bukkit.getWorld("world"), main.config.getInt("claim.list." + ville + "." + id + ".x2"), main.config.getInt("claim.list." + ville + "." + id + ".y2"), main.config.getInt("claim.list." + ville + "." + id + ".z2"));
+		Location loc1 = claim.getFirstLoc();
+		Location loc2 = claim.getSecondLoc();
 		int CalculSuperficie = CCalculSuperficie.calculSuperficieOfZone(loc1, loc2);
-		String type = main.config.getString("claim.list." + ville + "." + id + ".type");
 		
 		if(prix == -1){
-			if(type.equals("agr")) prix = CalculSuperficie * 10;
+			if(claim.getType().equals(ClaimType.FIELD)) prix = CalculSuperficie * 10;
 			else if(loc1.getBlockY() != 0) prix = CalculSuperficie * (loc2.getBlockY() - loc1.getBlockY() + 1) * 5;
 			else prix = CalculSuperficie * 80;
 		}

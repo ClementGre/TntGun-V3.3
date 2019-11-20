@@ -220,11 +220,11 @@ public class BreakListener implements Listener{
 					if(!new Spawns().isInSpawn(loc) && p.getGameMode() != GameMode.CREATIVE){
 						e.setBuild(false);
 						e.setCancelled(true);
-						p.sendMessage("§cIl vous est interdit de stockuer du stuff en dehors du spawn, veuillez acheter un claim dans une ville pour pouvoir stocker du stuff.");
+						p.sendMessage("§cIl vous est interdit de stocker du stuff en dehors du spawn, veuillez acheter un claim dans une ville pour pouvoir stocker du stuff.");
 					}
 				}else if(e.getBlockPlaced().getState() instanceof ShulkerBox){
 					if(!new Spawns().isInSpawn(loc) && p.getGameMode() != GameMode.CREATIVE){
-						p.sendMessage("§cIl vous est interdit de stockuer du stuff en dehors du spawn, cette shulker box ne doit pas rester ici indéfiniment, autrement, elle sera supprimé.");
+						p.sendMessage("§cIl vous est interdit de stocker du stuff en dehors du spawn, cette shulker box ne doit pas rester ici indéfiniment, autrement, elle sera supprimé.");
 					}
 				}
 			}

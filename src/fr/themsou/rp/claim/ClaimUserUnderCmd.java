@@ -1,5 +1,7 @@
 package fr.themsou.rp.claim;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import fr.themsou.methodes.PlayerInfo;
@@ -20,49 +22,35 @@ public class ClaimUserUnderCmd {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 	@SuppressWarnings("deprecation")
 	public void sellPlayerClaim(Player p, int price){
-		
-		GetZoneId CGetZoneId = new GetZoneId();
-		Spawns CSpawns = new Spawns();
-		
-		int id = CGetZoneId.getIdOfPlayerZone(p.getLocation());
-		String spawn = CSpawns.getSpawnNameWithId(id);
-			
-		if(id != 0){
-			String[] owners = main.config.getString("claim.list." + spawn + "." + id + ".owner").split(",");
-			String type = main.config.getString("claim.list." + spawn + "." + id + ".type");
-			if((!type.equals("ins") && owners[0].equals(p.getName())) || (type.equals("ins") && owners[0].equals(main.config.getString(p.getName() + ".rp.ent.name")) && main.config.getInt(p.getName() + ".rp.ent.role") == 2)){
+
+		Claim claim = new Claim(p.getLocation());
+		if(claim.exist() && claim.getOwner() != null){
+
+			if(claim.getOwner().equals(p.getName()) || claim.getEntManagers().contains(p.getName())){
 					
-				if(price == -1) price = main.config.getInt("claim.list." + spawn + "." + id + ".defprice");
-				
-				Location loc1 = new Location(Bukkit.getWorld("world"), main.config.getInt("claim.list." + spawn + "." + id + ".x1"), main.config.getInt("claim.list." + spawn + "." + id + ".y1"), main.config.getInt("claim.list." + spawn + "." + id + ".z1"));
-				Location loc2 = new Location(Bukkit.getWorld("world"), main.config.getInt("claim.list." + spawn + "." + id + ".x2"), main.config.getInt("claim.list." + spawn + "." + id + ".y2"), main.config.getInt("claim.list." + spawn + "." + id + ".z2"));
-				int CalculSuperficie = new CalculSuperficie().calculSuperficieOfZone(loc1, loc2);
-				main.config.set("claim.list." + spawn + "." + id + ".price", price);
-				main.config.set("claim.list." + spawn + "." + id + ".sell", true);
-				
-				if(type.equals("claim")) type = "Claim libre";
-				if(type.equals("app")) type = "Appartement";
-				if(type.equals("agr")) type = "Agricolle";
-				if(type.equals("ins")) type = "Industrie";
+				if(price == -1) price = claim.getDefPrice();
+				int CalculSuperficie = new CalculSuperficie().calculSuperficieOfZone(claim.getFirstLoc(), claim.getSecondLoc());
+				claim.setPrice(price);
+				claim.setSell(true);
+
 				p.getLocation().getBlock().setType(Material.OAK_SIGN);
 				Sign sign = (Sign) p.getLocation().getBlock().getState();
 				sign.setLine(0, "§b[Acheter]");
 				sign.setLine(1, "§4" + price + " €");
-				sign.setLine(2, "§9" + type);
-				if(loc1.getBlockY() == 0 || type.equals("Agricolle")){
-					sign.setLine(3, "§9" + CalculSuperficie + "m² " + (loc2.getBlockX() - loc1.getBlockX() + 1) + "×" + (loc2.getBlockZ() - loc1.getBlockZ() + 1));
+				sign.setLine(2, "§9" + claim.getType().toUserString());
+
+				if(!claim.is3D() || claim.getType().equals(ClaimType.FIELD)){
+					sign.setLine(3, "§9" + CalculSuperficie + "m² " + (claim.getX2() - claim.getX1() + 1) + "×" + (claim.getZ2() - claim.getZ1() + 1));
 				}else{
-					sign.setLine(3, "§9" + CalculSuperficie + "m² " + (loc2.getBlockX() - loc1.getBlockX() + 1) + "×" + (loc2.getBlockZ() - loc1.getBlockZ() + 1) + "×" + (loc2.getBlockY() - loc1.getBlockY() + 1));
+					sign.setLine(3, "§9" + CalculSuperficie + "m² " + (claim.getX2() - claim.getX1() + 1) + "×" + (claim.getZ2() - claim.getZ1() + 1) + "×" + (claim.getY2() - claim.getY1() + 1));
 				}
 				
 				org.bukkit.material.Sign signdata = (org.bukkit.material.Sign) sign.getBlock().getState().getData();
 				signdata.setFacingDirection(getDirection(p));
 				sign.setData(signdata);
-				
 				sign.update();
 				
 				p.sendMessage("§3Votre terrain est maintenant en vente !");
-					
 			}else p.sendMessage("§cCe terrain ne vous apartiens pas");
 			
 		}else p.sendMessage("§cCe terrain ne vous apartiens pas");
@@ -72,32 +60,22 @@ public class ClaimUserUnderCmd {
 ////////////////////////////////////////////// INVITE PLAYER ///////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 	public void invitePlayer(Player p, String guest) {
-		
-		GetZoneId CGetZoneId = new GetZoneId();
-		Spawns CSpawns = new Spawns();
-		
-		int id = CGetZoneId.getIdOfPlayerZone(p.getLocation());
-		String spawn = CSpawns.getSpawnNameWithId(id);
-		
-		if(id != 0){
-			String[] owners = main.config.getString("claim.list." + spawn + "." + id + ".owner").split(",");
-			String type = main.config.getString("claim.list." + spawn + "." + id + ".type");
-			if((!type.equals("ins") && owners[0].equals(p.getName())) || (type.equals("ins") && owners[0].equals(main.config.getString(p.getName() + ".rp.ent.name")) && main.config.getInt(p.getName() + ".rp.ent.role") == 2)){
+
+		Claim claim = new Claim(p.getLocation());
+		if(claim.exist() && claim.getOwner() != null){
+			if(claim.getOwner().equals(p.getName()) || claim.getEntManagers().contains(p.getName())){
 
 				Player p2 = Bukkit.getPlayerExact(guest);
 				if(p2 != null){
-					if(!main.config.getString("claim.list." + spawn + "." + id + ".owner").contains(guest)){
+					if(!claim.getGuests().contains(guest)){
 
-						main.playersInfos.get(p2).setClaimToJoin(id);
+						main.playersInfos.get(p2).setClaimToJoin(claim.getId());
 						message.sendNmsMessageCmd(p2, "§3" + p.getDisplayName() + "§b vous invite dans son claim §2\u2714 §bou §4\u2716", "§6Cliquez pour accepter", "/claim join");
 						p.sendMessage("§bUne invitation a été envoyé à §3" + guest);
 						
 					}else p.sendMessage("§cCe joueur fais déjà partit du claim");
 				}else p.sendMessage("§cJoueur introuvable");
-				
-				
 			}else p.sendMessage("§cvous n'etes pas le propriétaire de ce terrain");
-			
 		}else p.sendMessage("§cvous n'etes pas le propriétaire de ce terrain");
 		
 	}
@@ -105,164 +83,84 @@ public class ClaimUserUnderCmd {
 ////////////////////////////////////////////// QUIT CLAIM //////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 	public void quitclaim(Player p) {
-		
-		GetZoneId CGetZoneId = new GetZoneId();
-		Spawns CSpawns = new Spawns();
-		
-		int id = CGetZoneId.getIdOfPlayerZone(p.getLocation());
-		String spawn = CSpawns.getSpawnNameWithId(id);
-		
-		if(id != 0){
-			if(main.config.contains(p.getName() + ".claim." + id)){
-				
-				String owner = main.config.getString("claim.list." + spawn + "." + id + ".owner");
-				String[] owners = main.config.getString("claim.list." + spawn + "." + id + ".owner").split(",");
-				
-				if(!owners[0].equals(p.getName())){
-					
-					if(owner.contains(p.getName())){
-						
-						main.config.set("claim.list." + spawn + "." + id + ".owner", owner.replace("," + p.getName(), ""));
-						main.config.set(p.getName() + ".claim." + id, null);
-						
-						p.sendMessage("§bVous venez de quitter ce claim");
-						
-					}else p.sendMessage("§cVous ne faites pas partie de ce claim");
-					
-				}else p.sendMessage("§cVous ne pouvez pas quitter votre propre terrain");
-				
-			}else p.sendMessage("§cVous ne faites pas partie de ce claim");
-			
-		}else p.sendMessage("§cVous ne faites pas partie de ce claim");
+
+		Claim claim = new Claim(p.getLocation());
+		if(claim.exist() && claim.getOwner() != null){
+			if(Claim.hasPlayerClaim(p.getName(), claim.getId())){
+
+				if(claim.getGuests().contains(p.getName())){
+
+					List<String> guests = claim.getGuests();
+					guests.remove(p.getName());
+					claim.setGuests(guests);
+
+					p.sendMessage("§bVous venez de quitter ce claim");
+
+				}else p.sendMessage("§cVous n'avez pas été invités dans ce terrain'");
+			}else p.sendMessage("§cVous ne faites pas partie de ce terrain");
+		}else p.sendMessage("§cvous n'etes pas le propriétaire de ce terrain");
 		
 	}
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////// KICK CLAIM //////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 	public void kickclaim(Player p) {
-		
-		GetZoneId CGetZoneId = new GetZoneId();
-		Spawns CSpawns = new Spawns();
-		
-		int id = CGetZoneId.getIdOfPlayerZone(p.getLocation());
-		String spawn = CSpawns.getSpawnNameWithId(id);
-		
-		if(id != 0){
-			String[] owners = main.config.getString("claim.list." + spawn + "." + id + ".owner").split(",");
-			
-			if(main.config.getString("claim.list." + spawn + "." + id + ".type").equals("ins")){
-				
-				if(owners[0].equals(main.config.getString(p.getName() + ".rp.ent.name")) && main.config.getInt(p.getName() + ".rp.ent.role") == 2){
-					
-					main.config.set("claim.list." + spawn + "." + id + ".owner", main.config.getString(p.getName() + ".rp.ent.name"));
-					p.sendMessage("§bLes invitées ont bien été explulsées");
-					
-					for(String owner : owners){
-						
-						if(!owner.equals(main.config.getString(p.getName() + ".rp.ent.name"))){
-							main.config.set(owner + ".claim." + id, null);
-						}
-					}
-					
-				}else p.sendMessage("§cvous n'etes pas le propriétaire de ce terrain");
-				
-			}else{
-				
-				if(owners[0].equals(p.getName())){
-					
-					main.config.set("claim.list." + spawn + "." + id + ".owner", p.getName());
-					p.sendMessage("§bLes invitées ont bien été explulsées");
-					
-					for(String owner : owners){
-						if(!owner.equals(p.getName())){
-							main.config.set(owner + ".claim." + id, null);
-						}
-					}
-					
-				}else p.sendMessage("§cvous n'etes pas le propriétaire de ce terrain");
-			}
 
+		Claim claim = new Claim(p.getLocation());
+		if(claim.exist() && claim.getOwner() != null){
+
+			if(claim.getOwner().equals(p.getName()) || claim.getEntManagers().contains(p.getName())){
+
+				claim.setGuests(new ArrayList<>());
+				p.sendMessage("§bLes invitées ont bien été explulsées");
+
+			}else p.sendMessage("§cvous n'etes pas le propriétaire de ce terrain");
 		}else p.sendMessage("§cvous n'etes pas le propriétaire de ce terrain");
 		
 	}
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////// JOIN CLAIM //////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 	public void joinclaim(Player p) {
 
 		PlayerInfo pInfo = main.playersInfos.get(p);
 
-		int id = pInfo.getClaimToJoin();
-		if(id != 0){
-			Spawns CSpawns = new Spawns();
-			String ville = CSpawns.getSpawnNameWithId(id);
+		Claim claim = new Claim(pInfo.getClaimToJoin());
+		if(claim.exist() && claim.getOwner() != null){
 
 			pInfo.setClaimToJoin(0);
-			main.config.set("claim.list." + ville + "." + id + ".owner", main.config.getString("claim.list." + ville + "." + id + ".owner") + "," + p.getName());
-			main.config.set(p.getName() + ".claim." + id, id);
+
+			List<String> guests = claim.getGuests();
+			guests.add(p.getName());
+			claim.setGuests(guests);
+
 			p.sendMessage("§bVous venez de rejoindre un claim");
-					
 
 		}else p.sendMessage("§cVous n'avez reçu aucune invitation");
 
 	}
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////// SELL COUNTRY ////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 	public void sellCountry(Player p) {
-		
-		
-		int id = new GetZoneId().getIdOfPlayerZone(p.getLocation());
-		String spawn = new Spawns().getSpawnNameWithId(id);
-		int price = (int) (main.config.getInt("claim.list." + spawn + "." + id + ".defprice") * 0.75);
-		String type = main.config.getString("claim.list." + spawn + "." + id + ".type");
-		String[] owners = main.config.getString("claim.list." + spawn + "." + id + ".owner").split(",");
-		
-		if(type.equals("ins")){
-				
-			Set<String> section = main.config.getConfigurationSection("").getKeys(false);
-			String items = section.toString().replace("[", "").replace("]", "").replace(" ", "");
-			String[] item = items.split(",");
 
-			for(int i = 1; i <= section.size(); i++){
-				int number = i - 1;
-				if(main.config.contains(item[number] + ".claim." + id)){
-					main.config.set(item[number] + ".claim." + id, null);
-				}
-			}
-			
-			main.config.set("ent.list." + owners[0] + ".claim", main.config.getString("ent.list." + owners[0] + ".claim").replace("," + id, "").replace(id + "", ""));
-					
-				
-			main.config.set("claim.list." + spawn + "." + id + ".owner", "l'etat");
-			main.config.set("claim.list." + spawn + "." + id + ".sell", true);
-			main.config.set("claim.list." + spawn + "." + id + ".needsetup", true);
-			p.sendMessage("§bVous venez de vendre votre claim pour §3" + price + "€");
-			
-			main.economy.depositPlayer(p, price);
-				
+		Claim claim = new Claim(p.getLocation());
+		if(claim.exist() && claim.getOwner() != null){
 
-		}else{
-			
-			Set<String> section = main.config.getConfigurationSection("").getKeys(false);	
-			String items = section.toString().replace("[", "").replace("]", "").replace(" ", "");
-			String[] item = items.split(",");
+			int sellPrice = (int) (claim.getDefPrice() * 0.75);
 
-			for(int i = 1; i <= section.size(); i++){
-				int number = i - 1;
-				
-				if(main.config.contains(item[number] + ".claim." + id)){
-					main.config.set(item[number] + ".claim." + id, null);
-				}
-				
-			}
-			
-			
-			main.config.set("claim.list." + spawn + "." + id + ".owner", "l'etat");
-			main.config.set("claim.list." + spawn + "." + id + ".sell", true);
-			main.config.set("claim.list." + spawn + "." + id + ".needsetup", true);
-			
-			main.economy.depositPlayer(p, price);
-			
-			p.sendMessage("§bVous venez de vendre votre claim pour §3" + price + "€");
-			
+			claim.setOwner(null);
+			claim.setGuests(new ArrayList<>());
+			claim.setSell(true);
+			claim.setNeedSetup(false);
+
+			p.sendMessage("§bVous venez de vendre votre claim pour §3" + sellPrice + "€");
+			main.economy.depositPlayer(p, sellPrice);
 		}
 	}
-	
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////// OTHER ///////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 	private BlockFace getDirection(Player player) {
     	
     	double rot = player.getLocation().getYaw();

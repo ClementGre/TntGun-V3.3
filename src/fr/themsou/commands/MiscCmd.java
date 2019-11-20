@@ -43,15 +43,15 @@ public class MiscCmd implements TabCompleter, CommandExecutor{
 				
 			if(args[0].equalsIgnoreCase("getstat")){
 				
-				if(args.length == 4){
-					p.sendMessage("§c" + args[2] + "§6 a miné §c" + Bukkit.getPlayer(args[2]).getStatistic(Statistic.MINE_BLOCK, Material.valueOf(args[3])) + " " + args[3]);
+				if(args.length == 3){
+					p.sendMessage("§c" + args[1] + "§6 a miné §c" + Bukkit.getPlayer(args[1]).getStatistic(Statistic.MINE_BLOCK, Material.valueOf(args[2])) + " " + args[2]);
 				}
 				else p.sendMessage("§c/misc getstat <joueur> <bloc>");
 				
 			}else if(args[0].equalsIgnoreCase("loadschematic")){
 				
-				if(args.length == 3){
-					new Schematics().loadSchematic(p.getLocation(), args[2]);
+				if(args.length == 2){
+					new Schematics().loadSchematic(p.getLocation(), args[1]);
 					p.sendMessage("§bLa Schematic a bien été chargé à votre location !");
 				}else p.sendMessage("§c/misc loadschematic <nom>");
 				

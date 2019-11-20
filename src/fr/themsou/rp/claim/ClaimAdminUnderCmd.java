@@ -1,5 +1,6 @@
 package fr.themsou.rp.claim;
 
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Set;
 
@@ -18,142 +19,62 @@ public class ClaimAdminUnderCmd {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 	public void noteclaim(Player p, int note) {
 		
-		GetZoneId CGetZoneId = new GetZoneId();
-		Spawns CSpawns = new Spawns();
-		
-		int id = CGetZoneId.getIdOfPlayerZone(p.getLocation());
-		String spawn = CSpawns.getSpawnNameWithId(id);
-		
-		if(id != 0){
-			
-			String owner = main.config.getString("claim.list." + spawn + "." + id + ".owner").split(",")[0];
-			
-			int newnote = note + main.config.getInt(owner + ".claim.note");	
+		Claim claim = new Claim(p.getLocation());
+		if(claim.exist() && claim.getOwner() != null){
+
+			int newnote = note + main.config.getInt(claim.getOwner() + ".claim.note");
 			if(newnote > 5) newnote = 5;
 			
-			main.config.set(owner + ".claim.note", newnote);
+			main.config.set(claim.getOwner() + ".rp.claim.note", newnote);
 			
-			p.sendMessage("§bLe claim de §3" + owner + "§b a bien obtenus la note §3" + note + "§b pour un total de §3" + newnote);
-			
-				
-			
-			
-		}else p.sendMessage("§cceci n'est pas un terrain");
+			p.sendMessage("§bLe claim de §3" + claim.getOwner() + "§b a bien obtenus la note §3" + note + "§b pour un total de §3" + newnote);
+
+		}else p.sendMessage("§cCe terrain n'appartiens à personne");
 		
 	}
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////// SET CLAIM OWNER /////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 	public void setclaimowner(Player p, String owner) {
-		
-		GetZoneId CGetZoneId = new GetZoneId();
-		Spawns CSpawns = new Spawns();
-		
-		int id = CGetZoneId.getIdOfPlayerZone(p.getLocation());
-		String spawn = CSpawns.getSpawnNameWithId(id);
-		String type = main.config.getString("claim.list." + spawn + "." + id + ".type");
-		String[] owners = main.config.getString("claim.list." + spawn + "." + id + ".owner").split(",");
-		
-		if(id != 0){
-			
-			if(type.equals("ins")){
-				if(main.config.contains("ent.list." + owner) || owner.equals("l'etat")){
-					
-					if(!owners[0].equals("l'etat")){
-						
-						Set<String> section = main.config.getConfigurationSection("").getKeys(false);	
-						String items = section.toString().replace("[", "").replace("]", "").replace(" ", "");
-						String[] item = items.split(",");
 
-						for(int i = 1; i <= section.size(); i++){
-							int number = i - 1;
-							if(main.config.contains(item[number] + ".claim." + id)){
-								main.config.set(item[number] + ".claim." + id, null);
-							}
-						}
-						
-						main.config.set("ent.list." + owners[0] + ".claim", main.config.getString("ent.list." + owners[0] + ".claim").replace("," + id, "").replace(id + "", ""));
-						
-					}
-					
-					if(!owner.equals("l'etat")){
-						
-						if(main.config.getString("ent.list." + owner + ".claim").equals("")){
-							 main.config.set("ent.list." + owner + ".claim", id);
-						}else main.config.set("ent.list." + owner + ".claim", main.config.getString("ent.list." + owner + ".claim") + "," + id);
-						main.config.set("claim.list." + spawn + "." + id + ".sell", false);
-						
-					}
-					
-					main.config.set("claim.list." + spawn + "." + id + ".owner", owner);
-					p.sendMessage("§bLe propriétaire du claim d'id §3" + id + "§b est maintenant §3" + owner);
-					
-				}else p.sendMessage("§cAucune entreprise trouvée avec le nom §4" + owner);
+		Claim claim = new Claim(p.getLocation());
+		if(claim.exist() && claim.getOwner() != null){
 
-			}else{
-				
-				if(main.config.contains(owner) || owner.equals("l'etat")){
-					
-					Set<String> section = main.config.getConfigurationSection("").getKeys(false);	
-					String items = section.toString().replace("[", "").replace("]", "").replace(" ", "");
-					String[] item = items.split(",");
-
-					for(int i = 1; i <= section.size(); i++){
-						int number = i - 1;
-						
-						if(main.config.contains(item[number] + ".claim." + id)){
-							main.config.set(item[number] + ".claim." + id, null);
-						}
-						
-					}
-					
-					
-					main.config.set("claim.list." + spawn + "." + id + ".owner", owner);
-					main.config.set(owner + ".claim." + id, id);
-					main.config.set("claim.list." + spawn + "." + id + ".sell", false);
-					p.sendMessage("§bLe propriétaire du claim d'id §3" + id + "§b est maintenant §3" + owner);
-					
-					
-				}else p.sendMessage("§cAucun joueur trouvé avec le nom §4" + owner);
-				
+			if(owner.equals("l'etat")){
+				claim.setOwner(null);
+				claim.setGuests(new ArrayList<>());
+				p.sendMessage("§bIl n'y a maintenant plus de propriétaire pour le claim d'id §3" + claim.getId());
 			}
-			
-		}else p.sendMessage("§cCeci n'est pas un terrain");
-		
-		
-		
+
+			if(claim.isEnt()){
+				if(!main.config.contains("ent.list." + owner)){
+					p.sendMessage("§cAucune entreprise trouvée avec le nom §4" + owner);
+					return;
+				}
+			}else{
+				if(!main.config.contains(owner + ".mdp")){
+					p.sendMessage("§cAucun joueur trouvé avec le nom §4" + owner);
+					return;
+				}
+			}
+
+			claim.setOwner(owner);
+			p.sendMessage("§bLe propriétaire du claim d'id §3" + claim.getId() + "§b est maintenant §3" + owner);
+		}
 	}
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////// DELETE CLAIM ////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 	public void deleteclaim(Player p) {
-		
-		GetZoneId CGetZoneId = new GetZoneId();
-		Spawns CSpawns = new Spawns();
-		
-		int id = CGetZoneId.getIdOfPlayerZone(p.getLocation());
-		String spawn = CSpawns.getSpawnNameWithId(id);
-		String type = main.config.getString("claim.list." + spawn + "." + id + ".type");
-		
-		if(id != 0){
-			
-			String[] owners = main.config.getString("claim.list." + spawn + "." + id + ".owner").split(",");
-			main.config.set("claim.list." + spawn + "." + id , null);
-			
-			for(String owner : owners){
-				if(main.config.contains(owner + ".claim." + id)) main.config.set(owner + ".claim." + id, null);
-			}
-			
-			if(type.equals("ins")){
-				if(main.config.contains("ent.list." + owners[0]) && !owners[0].equals("l'etat")){
-					
-					main.config.set("ent.list." + owners[0] + ".claim", main.config.getString("ent.list." + owners[0] + ".claim").replace("," + id, "").replace(id + "", ""));
-					
-				}
 
-			}
-			
-			p.sendMessage("§BLe claim d'id §3" + id + "§b à bien été supprimé !");
+		Claim claim = new Claim(p.getLocation());
+		if(claim.exist() && claim.getOwner() != null){
+
+			claim.setOwner(null);
+			claim.setGuests(new ArrayList<>());
+
+			main.config.set("claim.list." + claim.getSpawn() + "." + claim.getId(), null);
+			p.sendMessage("§BLe claim d'id §3" + claim.getId() + "§b à bien été supprimé !");
 			
 		}else p.sendMessage("§cceci n'est pas un terrain");
 		
@@ -208,7 +129,9 @@ public class ClaimAdminUnderCmd {
 		}else p.sendMessage("§cVous devez d'abord selexioner la zone");
 		
 	}
-	
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////// SET SPAWN ///////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 	public void setSpawn(Player p, String spawn, boolean visible){
 		
 		if(p.getWorld() == Bukkit.getWorld("world") || p.getWorld() == Bukkit.getWorld("world_nether") || p.getWorld() == Bukkit.getWorld("world_the_end")){

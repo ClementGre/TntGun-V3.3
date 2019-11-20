@@ -1,12 +1,18 @@
 package fr.themsou.main;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
+import java.io.*;
+import java.util.*;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import fr.themsou.methodes.*;
+import fr.themsou.rp.claim.Claim;
+import org.apache.commons.compress.archivers.ArchiveException;
+import org.apache.commons.compress.archivers.ArchiveStreamFactory;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.compress.utils.IOUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.WorldCreator;
@@ -59,6 +65,8 @@ import fr.themsou.listener.furnaceListener;
 import fr.themsou.listener.interactListener;
 import fr.themsou.rp.tools.setcraft;
 import net.milkbowl.vault.economy.Economy;
+import org.rauschig.jarchivelib.Archiver;
+import org.rauschig.jarchivelib.ArchiverFactory;
 
 public class main extends JavaPlugin implements Listener {
 	
@@ -97,7 +105,26 @@ public class main extends JavaPlugin implements Listener {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onEnable(){
-		
+
+		/*File toUnzip = new File("aaaworld.tar");
+		File dir = new File("extracted");
+
+		try {
+			boolean exist = toUnzip.exists();
+			if(exist){
+				System.out.println("---> start unzipping...");
+				Archiver archiver = ArchiverFactory.createArchiver(toUnzip);
+				archiver.extract(toUnzip, dir);
+				System.out.println("---> finishing unzipping...");
+			}else{
+				System.out.println("---> file does not exist, skip unzipping");
+			}
+
+		}catch(IOException e) {
+			System.out.println("---> error when unzipping");
+			e.printStackTrace();
+		}*/
+
 		if(!logblock.exists()){
 			try{
 				logblock.createNewFile();
@@ -255,6 +282,32 @@ public class main extends JavaPlugin implements Listener {
 				
 			}
 		}, 200);
+
+
+		// New claim system converter
+		for(Integer id : Claim.getAllClaims()){
+
+			Claim claim = new Claim(id);
+			//if(main.config.getString("claim.list." + claim.getSpawn() + "." + id + ".owner").split(",").length > 1){
+
+				String owner = main.config.getString("claim.list." + claim.getSpawn() + "." + id + ".owner").split(",")[0];
+
+				List<String> guests = new ArrayList<>(); int i = 0;
+				for(String guest : main.config.getString("claim.list." + claim.getSpawn() + "." + id + ".owner").split(",")){
+					if(i != 0) guests.add(guest);
+					i++;
+				}
+
+				claim.setGuests(guests);
+				claim.setOwner(owner);
+			//}
+		}
+		for(String player : main.config.getConfigurationSection("").getKeys(false)){
+			if(!main.config.contains(player + ".list")){
+				main.config.set(player + ".claim", null);
+			}
+		}
+
 		
 	}
 	
