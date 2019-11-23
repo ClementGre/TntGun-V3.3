@@ -22,10 +22,10 @@ public class ClaimAdminUnderCmd {
 		Claim claim = new Claim(p.getLocation());
 		if(claim.exist() && claim.getOwner() != null){
 
-			int newnote = note + main.config.getInt(claim.getOwner() + ".claim.note");
+			int newnote = note + main.config.getInt(claim.getOwner() + ".claims.note");
 			if(newnote > 5) newnote = 5;
 			
-			main.config.set(claim.getOwner() + ".rp.claim.note", newnote);
+			main.config.set(claim.getOwner() + ".rp.claims.note", newnote);
 			
 			p.sendMessage("§bLe claim de §3" + claim.getOwner() + "§b a bien obtenus la note §3" + note + "§b pour un total de §3" + newnote);
 
@@ -38,12 +38,13 @@ public class ClaimAdminUnderCmd {
 	public void setclaimowner(Player p, String owner) {
 
 		Claim claim = new Claim(p.getLocation());
-		if(claim.exist() && claim.getOwner() != null){
+		if(claim.exist()){
 
 			if(owner.equals("l'etat")){
 				claim.setOwner(null);
-				claim.setGuests(new ArrayList<>());
+				claim.setSell(true);
 				p.sendMessage("§bIl n'y a maintenant plus de propriétaire pour le claim d'id §3" + claim.getId());
+				return;
 			}
 
 			if(claim.isEnt()){
@@ -59,8 +60,9 @@ public class ClaimAdminUnderCmd {
 			}
 
 			claim.setOwner(owner);
+			claim.setSell(false);
 			p.sendMessage("§bLe propriétaire du claim d'id §3" + claim.getId() + "§b est maintenant §3" + owner);
-		}
+		}else p.sendMessage("§cceci n'est pas un terrain");
 	}
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////// DELETE CLAIM ////////////////////////////////////////
@@ -68,10 +70,9 @@ public class ClaimAdminUnderCmd {
 	public void deleteclaim(Player p) {
 
 		Claim claim = new Claim(p.getLocation());
-		if(claim.exist() && claim.getOwner() != null){
+		if(claim.exist()){
 
 			claim.setOwner(null);
-			claim.setGuests(new ArrayList<>());
 
 			main.config.set("claim.list." + claim.getSpawn() + "." + claim.getId(), null);
 			p.sendMessage("§BLe claim d'id §3" + claim.getId() + "§b à bien été supprimé !");

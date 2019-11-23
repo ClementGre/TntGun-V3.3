@@ -1,7 +1,13 @@
 package fr.themsou.rp.claim;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.BlockState;
@@ -31,120 +37,75 @@ public class SignClick {
 
 							int prix = Integer.parseInt(sign.getLine(1).replace(" €", "").replace("§4", ""));
 							int id = new GetZoneId().getIdOfPlayerZone(sign.getBlock().getLocation());
-							
-							String ville = CSpawns.getSpawnNameWithId(id);
-							String[] owners = main.config.getString("claim.list." + ville + "." + id + ".owner").split(",");
-							String type = main.config.getString("claim.list." + ville + "." + id + ".type");
-							
-							if(type.equals("ins")){
-								
-								String ent = owners[0];
-								
-								if(main.config.contains(p.getName() + ".rp.ent.name")){
-									if(main.config.getInt(p.getName() + ".rp.ent.role") == 2){
-										String pEnt = main.config.getString(p.getName() + ".rp.ent.name");
-										if(!ent.equals(pEnt)){
-											if(main.config.getInt("ent.list." + pEnt + ".money") >= prix){
 
-												if(!ent.equals("l'etat")){
-													Set<String> section = main.config.getConfigurationSection("").getKeys(false);	
-													String items = section.toString().replace("[", "").replace("]", "").replace(" ", "");
-													String[] item = items.split(",");
+							Claim claim = new Claim(id);
+							if(claim.exist()){
+								if(claim.isEnt()){
+									String lastEnt = claim.getPureOwner();
+									if(lastEnt == null) lastEnt = "";
 
-													for(int i = 1; i <= section.size(); i++){
-														int number = i - 1;
-														if(main.config.contains(item[number] + ".claim." + id)){
-															main.config.set(item[number] + ".claim." + id, null);
-														}
+									if(main.config.contains(p.getName() + ".rp.ent.name")){
+										if(main.config.getInt(p.getName() + ".rp.ent.role") == 2){
+											String pEnt = main.config.getString(p.getName() + ".rp.ent.name");
+											if(!lastEnt.equals(pEnt)){
+												if(main.config.getInt("ent.list." + pEnt + ".money") >= prix){
+
+													if(!lastEnt.equals("")){
+														main.config.set("ent.list." + lastEnt + ".money", main.config.getInt("ent.list." + lastEnt + ".money") + prix);
 													}
-													
-													main.config.set("ent.list." + ent + ".money", main.config.getInt("ent.list." + ent + ".money") + prix);
-													main.config.set("ent.list." + ent + ".claim", main.config.getString("ent.list." + ent + ".claim").replace("," + id, "").replace(id + "", ""));
-														
-												}
-												
-												main.config.set("ent.list." + pEnt + ".money", main.config.getInt("ent.list." + pEnt + ".money") - prix);
-												main.config.set("claim.list." + ville + "." + id + ".owner", pEnt);
-												
-												if(main.config.getString("ent.list." + pEnt + ".claim").equals("")){
-													main.config.set("ent.list." + pEnt + ".claim", id);
-												}else main.config.set("ent.list." + pEnt + ".claim", main.config.getString("ent.list." + pEnt + ".claim") + "," + id);
-													
-												p.sendMessage("§bVous venez d'acheter un terrain à §3" + prix + " €§b d'id §3" + id);
-												
-												sign.getBlock().setType(Material.AIR);
-												main.config.set("claim.list." + ville + "." + id + ".sell", false);
-													
-												
-											}else p.sendMessage("§cVous devez avoir §4" + prix + "€ §cpour acheter ce terain");
-										}else p.sendMessage("§cCe terrain appartient déjà a votre entreprise.");
-									}else p.sendMessage("§cVous devez être PDG de votre entreprise pour pouvoir acheter des terrains.");
-								}else p.sendMessage("§cVous ne pouvez pas acheder de terrain d'industrie car vous n'êtes pas dans une entreprise.");
-								
-							}else if(!owners[0].equals(p.getName())){
-								if(main.economy.getBalance(p) >= prix){
-									if(!main.config.contains(p.getName() + ".claim")){
-										for(String players : main.config.getConfigurationSection("").getKeys(false)){
-											if(main.config.contains(players + ".claim." + id)){
-												main.config.set(players + ".claim." + id, null);
-											}
+													main.config.set("ent.list." + pEnt + ".money", main.config.getInt("ent.list." + pEnt + ".money") - prix);
+
+													claim.setOwner(pEnt);
+													p.sendMessage("§bVous venez d'acheter un terrain à §3" + prix + " €§b d'id §3" + id);
+
+													sign.getBlock().setType(Material.AIR);
+													claim.setSell(false);
+
+												}else p.sendMessage("§cVous devez avoir §4" + prix + "€ §cpour acheter ce terain");
+											}else p.sendMessage("§cCe terrain appartient déjà a votre entreprise.");
+										}else p.sendMessage("§cVous devez être PDG de votre entreprise pour pouvoir acheter des terrains.");
+									}else p.sendMessage("§cVous ne pouvez pas acheter de terrain d'industrie car vous n'êtes pas dans une entreprise.");
+
+								}else if(claim.getOwner() == null ? true : !claim.getOwner().equals(p.getName())){
+
+									if(main.economy.getBalance(p) >= prix){
+
+										// CLAIMS LIMIT
+
+										List<Integer> claims = Claim.getPlayerClaims(p.getName());
+										claims = claims.stream().filter(playerClaim -> new Claim(playerClaim).getOwner().equals(p.getName())).collect(Collectors.toList());
+
+										if(claim.getType().equals(ClaimType.FREE)){
+											int freeClaims = claims.stream().filter(playerClaim -> new Claim(playerClaim).getType().equals(ClaimType.FREE)).collect(Collectors.toList()).size();
+											if(freeClaims >= 3){ p.sendMessage("§bVous ne pouvez pas avoir plus de 3 §3Terrains libres§b, faites §3/claim sell §bpour vendre votre terrain"); return; }
+
+										}else if(claim.getType().equals(ClaimType.APARTMENT)){
+											int apartmentClaims = claims.stream().filter(playerClaim -> new Claim(playerClaim).getType().equals(ClaimType.APARTMENT)).collect(Collectors.toList()).size();
+											if(apartmentClaims >= 3){ p.sendMessage("§bVous ne pouvez pas avoir plus de 3 §3Appartements§b, faites §3/claim sell §bpour vendre votre terrain"); return; }
+
+										}else if(claim.getType().equals(ClaimType.FIELD)){
+											int fieldClaims = claims.stream().filter(playerClaim -> new Claim(playerClaim).getType().equals(ClaimType.FIELD)).collect(Collectors.toList()).size();
+											if(fieldClaims >= 3){ p.sendMessage("§bVous ne pouvez pas avoir plus de 3 terrains d'§3Agriculture§b, faites §3/claim sell §bpour vendre votre terrain"); return; }
 										}
-										p.sendMessage("§bVous venez d'acheter un terrain à §3" + prix + " €§b d'id §3" + id);
-										main.economy.depositPlayer(owners[0], prix);
+
+										// SELLING
+										if(claim.getOwner() != null){
+											main.economy.depositPlayer(claim.getOwner(), prix);
+										}
 										main.economy.withdrawPlayer(p, prix);
-										main.config.set("claim.list." + ville + "." + id + ".owner", p.getName());
-										main.config.set(p.getName() + ".claim." + id, id);
-										
+
+										claim.setOwner(p.getName());
+										p.sendMessage("§bVous venez d'acheter un terrain à §3" + prix + " €§b d'id §3" + id);
+
 										sign.getBlock().setType(Material.AIR);
-										main.config.set("claim.list." + ville + "." + id + ".sell", false);
-										
+										claim.setSell(false);
+
 									}else{
-										int app = 0; int claim = 0; int agr = 0;
-										
-										for(String idsString : main.config.getConfigurationSection(p.getName() + ".claim").getKeys(false)){
-											
-											if(!idsString.equalsIgnoreCase("note")){
-												
-												int ids = Integer.parseInt(idsString);
-												String spawn = CSpawns.getSpawnNameWithId(ids);
-												
-												if(main.config.getString("claim.list." + spawn + "." + ids + ".owner").split(",")[0].equals(p.getName())){
-													if(main.config.getString("claim.list." + spawn + "." + ids + ".type").equalsIgnoreCase("agr")) agr ++;
-													else if(main.config.getString("claim.list." + spawn + "." + ids + ".type").equalsIgnoreCase("app")) app ++;
-													else if(main.config.getString("claim.list." + spawn + "." + ids + ".type").equalsIgnoreCase("claim")) claim ++;
-												}
-											}
-										}
-										
-										if(type.equals("agr")){
-											if(agr >= 3){ p.sendMessage("§bVous ne pouvez pas avoir plus de 3 terrains d'§3Agriculture§b, faites §3/claim sell §bpour vendre votre terrain"); return; }
-										}else if(type.equals("app")){
-											if(app >= 3){ p.sendMessage("§bVous ne pouvez pas avoir plus de 3 §3Appartements§b, faites §3/claim sell §bpour vendre votre terrain"); return; }
-										}else if(type.equals("claim")){
-											if(claim >= 3){ p.sendMessage("§bVous ne pouvez pas avoir plus de 3 §3Terrain libres§b, faites §3/claim sell §bpour vendre votre terrain"); return; }
-										}
-										
-										for(String players : main.config.getConfigurationSection("").getKeys(false)){
-											if(main.config.contains(players + ".claim." + id)){
-												main.config.set(players + ".claim." + id, null);
-											}
-										}
-										
-										p.sendMessage("§bVous venez d'acheter un terrain à §3" + prix + " €§b d'id §3" + id);
-										main.economy.depositPlayer(owners[0], prix);
-										main.economy.withdrawPlayer(p, prix);
-										main.config.set("claim.list." + ville + "." + id + ".owner", p.getName());
-										main.config.set(p.getName() + ".claim." + id, id);
-											
-										sign.getBlock().setType(Material.AIR);
-										main.config.set("claim.list." + ville + "." + id + ".sell", false);
-										
+										p.sendMessage("§cVous devez avoir §4" + prix + "€ §cpour acheter ce terain");
 									}
-								}else{
-									p.sendMessage("§cVous devez avoir §4" + prix + "€ §cpour acheter ce terain");
-								}
-								
-							}else p.sendMessage("§cCe terrain vous apartiens déjà !");
+
+								}else p.sendMessage("§cCe terrain vous apartiens déjà !");
+							}else p.sendMessage("§cLe terrain a été supprimé entre temps, vous ne pouvez plus l'acheter");
 						}else p.sendMessage("§cVeuillez acheter ce terrain en mode survie");
 					}
 					

@@ -1,5 +1,6 @@
 package fr.themsou.commands;
 
+import fr.themsou.rp.claim.Claim;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
@@ -31,37 +32,31 @@ public class GamemodeCmd implements CommandExecutor{
 				
 				p.sendMessage("§6Bienvenue en §cCréatif - §3INFOS :");
 				
-				for(String spawn : main.config.getConfigurationSection("claim.list").getKeys(false)){
-					for(String id : main.config.getConfigurationSection("claim.list." + spawn).getKeys(false)){
-						
-						if(id.equals("minx") || id.equals("maxx") || id.equals("minz") || id.equals("maxz") || id.equals("app") || id.equals("x") || id.equals("y") || id.equals("z")){
-							continue;
-						}
-						
-						if(!main.config.getBoolean("claim.list." + spawn + "." + id + ".needsetup")) continue;
-						
-						if(main.config.getString("claim.list." + spawn + "." + id + ".type").equals("ins")){
-							if(main.config.contains("ent.list." + main.config.getString("claim.list." + spawn + "." + id + ".owner").split(",")[0])) continue;
-						}else{
-							if(main.config.contains(main.config.getString("claim.list." + spawn + "." + id + ".owner").split(",")[0])) continue;
-						}
-						
-						int minx = main.config.getInt("claim.list." + spawn + "." + id + ".x1");
-						int minz = main.config.getInt("claim.list." + spawn + "." + id + ".z1");
-						int maxx = main.config.getInt("claim.list." + spawn + "." + id + ".x2");
-						int maxz = main.config.getInt("claim.list." + spawn + "." + id + ".z2");
-						int x = minx + (maxx - minx) / 2;
-						int z = minz + (maxz - minz) / 2;
-						int y = main.config.getInt("claim.list." + spawn + "." + id + ".y1");
-						if(y == 0) y = Bukkit.getWorld("world").getHighestBlockYAt(x, z) + 1;
-						
-						message.sendNmsMessageCmd(p, "§c- §4" + id + " §c est un claim à setup, vous devez le supprimer", "§3Cliquez pour vous téléporter", "/tp " + x + " " + y + " " + z);
-					
+				for(Integer id : Claim.getAllClaims()){
+
+					Claim claim = new Claim(id);
+
+
+					if(!claim.getNeedSetup()) continue;
+
+					if(claim.isEnt()){
+						if(main.config.contains("ent.list." + claim.getPureOwner())) continue;
+					}else{
+						if(main.config.contains(claim.getOwner())) continue;
 					}
-					
+
+					int minx = claim.getX1();
+					int minz = claim.getZ1();
+					int maxx = claim.getX2();
+					int maxz = claim.getZ2();
+					int x = minx + (maxx - minx) / 2;
+					int z = minz + (maxz - minz) / 2;
+					int y = claim.getY1();
+					if(y == 0) y = Bukkit.getWorld("world").getHighestBlockYAt(x, z) + 2;
+
+					message.sendNmsMessageCmd(p, "§c- §4" + id + " §c est un claim à setup, vous devez le supprimer", "§3Cliquez pour vous téléporter", "/tp " + x + " " + y + " " + z);
+
 				}
-				
-				
 			}
 		}
 		

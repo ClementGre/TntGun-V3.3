@@ -1,5 +1,6 @@
 package fr.themsou.listener;
 
+import fr.themsou.rp.claim.Claim;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -20,15 +21,10 @@ public class MobSpawnListener implements Listener{
 		if(e.getEntity() instanceof LivingEntity){
 			
 			if(e.getEntity().getLocation().getWorld() == Bukkit.getWorld("world")){
-				
-				GetZoneId CGetZoneId = new GetZoneId();
-				Spawns CSpawns = new Spawns();
-				
-				int id = CGetZoneId.getIdOfPlayerZone(e.getEntity().getLocation());
-				String ville = CSpawns.getSpawnNameWithLoc(e.getEntity().getLocation());
-				
-				if(CSpawns.isInSpawn(e.getEntity().getLocation())){
-					if(id == 0 || main.config.get("claim.list." + ville + "." + id + ".owner").equals("l'etat") || main.config.get("claim.list." + ville + "." + id + ".type").equals("ins")){
+
+				Claim claim = new Claim(e.getEntity().getLocation());
+				if(claim.getSpawn() != null){
+					if(!claim.exist() || claim.getPureOwner() == null || claim.isEnt()){
 						if(e.getEntityType() != EntityType.ARMOR_STAND && e.getEntity() instanceof Monster){
 							e.setCancelled(true);
 						}

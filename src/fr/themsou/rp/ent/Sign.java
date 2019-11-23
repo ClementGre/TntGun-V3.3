@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Random;
 
+import fr.themsou.rp.claim.Claim;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -88,14 +89,12 @@ public class Sign {
 		if(sign.getLine(0).equals("§3[Acheter]")){
 			
 			if(p.getGameMode() == GameMode.SURVIVAL){
-				
-				int claim = new GetZoneId().getIdOfPlayerZone(block.getLocation());
-				String spawn = new Spawns().getSpawnNameWithId(claim);
-				
-				if(claim != 0){
-					if(!main.config.getString("claim.list." + spawn + "." + claim + ".owner").equals("l'etat") && main.config.getString("claim.list." + spawn + "." + claim + ".type").equals("ins")){
+
+				Claim claim = new Claim(block.getLocation());
+				if(claim.exist()){
+					if(!claim.isSell() && claim.isEnt()){
 						
-						String ent = main.config.getString("claim.list." + spawn + "." + claim + ".owner").split(",")[0];
+						String ent = claim.getPureOwner();
 						String desc = sign.getLine(1).replace("§4", "");
 						
 						int price = Integer.parseInt(sign.getLine(2).split(" ")[0].replace("€", "").replace("§4", ""));
@@ -103,8 +102,7 @@ public class Sign {
 						int itemId = Integer.parseInt(sign.getLine(3).split(" - ")[0]);
 							
 						ItemStack toSell = new ItemStack(Material.matchMaterial(main.config.getString("items.list." + itemId)), amount);
-						
-						
+
 						if(main.economy.getBalance(p) >= price){
 								
 							int x = sign.getLocation().getBlockX();
@@ -113,7 +111,8 @@ public class Sign {
 							World world = Bukkit.getWorld("world");
 							Location src = null;
 							Chest chest = null;
-							
+
+							// SEARCH NEARS CHEST
 							x += 1;
 							if(new Location(world, x, y, z).getBlock().getType() == Material.CHEST || new Location(world, x, y, z).getBlock().getType() == Material.TRAPPED_CHEST){
 								src = new Location(world, x, y, z);
@@ -122,8 +121,7 @@ public class Sign {
 							if(new Location(world, x, y, z).getBlock().getType() == Material.CHEST || new Location(world, x, y, z).getBlock().getType() == Material.TRAPPED_CHEST){
 								src = new Location(world, x, y, z);
 							}
-							z += 1;
-							x += 1;
+							z += 1; x += 1;
 							if(new Location(world, x, y, z).getBlock().getType() == Material.CHEST || new Location(world, x, y, z).getBlock().getType() == Material.TRAPPED_CHEST){
 								src = new Location(world, x, y, z);
 							}
@@ -131,13 +129,13 @@ public class Sign {
 							if(new Location(world, x, y, z).getBlock().getType() == Material.CHEST || new Location(world, x, y, z).getBlock().getType() == Material.TRAPPED_CHEST){
 								src = new Location(world, x, y, z);
 							}
-							
+
+							// DEFINE SRC
 							if(src != null){
-								
 								chest = (Chest) src.getBlock().getState();
-								
 							}else if(main.config.contains("ent.list." + ent + ".src")){
-								
+
+								// SEARCH IN SRCs CHESTS
 								ConfigurationSection srcs = main.config.getConfigurationSection("ent.list." + ent + ".src");
 								
 								for(String id : srcs.getKeys(false)){
@@ -152,9 +150,7 @@ public class Sign {
 										if(contains(((Chest) chestLoc.getBlock().getState()).getInventory(), toSell)){
 											chest = (Chest) chestLoc.getBlock().getState();
 										}
-										
 									}
-									
 								}
 								
 								if(chest == null){
@@ -165,9 +161,8 @@ public class Sign {
 									else p.sendMessage("§cCet item n'est plus en stock.");
 									return;
 								}
-								
-								
 							}else{
+								// NO CHEST FINDED
 								if(!main.config.contains(p.getName() + ".rp.ent.name"))
 									p.sendMessage("§cUne erreur est survenue, impossible d'acheter cet item.");
 								else if(main.config.getString(p.getName() + ".rp.ent.name").equals(ent))
@@ -175,7 +170,8 @@ public class Sign {
 								else p.sendMessage("§cUne erreur est survenue, impossible d'acheter cet item.");
 								return;
 							}
-							
+
+							// SELL SYSTEM
 							ItemStack removed = remove(chest.getInventory(), toSell);
 							if(removed != null){
 								
@@ -193,10 +189,8 @@ public class Sign {
 								}
 									
 							}else p.sendMessage("§cCet item n'est plus en stock.");
-							
-							
+
 						}else p.sendMessage("§cVous devez avoir §4" + price + " € §cpour acheter cet item");
-						
 					}else p.sendMessage("§cCette pancarte de vente ne se situe pas dans un claim d'entreprise (industrie)");
 				}else p.sendMessage("§cCette pancarte de vente ne se situe pas dans un claim d'entreprise (industrie)");
 				

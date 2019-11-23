@@ -45,6 +45,9 @@ public class Counter {
 				players++;
 			}
 		}
+
+		fr.themsou.diffusion.main.jda.getCategoryById(591542107856961537L).getManager().setName("STATISTIQUES (" + playersAct + " CONNECTÉS)").queue();
+
 		CChannels.renameVocalChannel(591541556305985549L, "Membres actifs : " + membresAct + "/" + membres);
 		CChannels.renameVocalChannel(591541769796059165L, "Joueurs actifs : " + joueursAct + "/" + joueurs);
 		CChannels.renameVocalChannel(591859439867527171L, "En ligne : " + playersAct + "/" + players);

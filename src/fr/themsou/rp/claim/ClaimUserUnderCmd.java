@@ -150,7 +150,6 @@ public class ClaimUserUnderCmd {
 			int sellPrice = (int) (claim.getDefPrice() * 0.75);
 
 			claim.setOwner(null);
-			claim.setGuests(new ArrayList<>());
 			claim.setSell(true);
 			claim.setNeedSetup(false);
 

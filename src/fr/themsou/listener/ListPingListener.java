@@ -13,7 +13,7 @@ public class ListPingListener implements Listener {
 
 		e.setMaxPlayers(15);
 		
-		String line1 = "                   §4§l\u226b\u226b §6TntGun V3 §4§l\u226a\u226a   §d[1.14.2]";
+		String line1 = "                   §4§l\u226b\u226b §6TntGun V3 §4§l\u226a\u226a   §d[1.14.4]";
 		String line2 = "         §4§l\u25b6 §2Serveur §aRolePlay §2et §aMini-Jeux §4§l\u25c0";
 		
 		if(main.ddos != 0){

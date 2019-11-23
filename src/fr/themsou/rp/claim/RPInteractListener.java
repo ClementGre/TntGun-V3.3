@@ -34,28 +34,30 @@ public class RPInteractListener{
 				// --- LOG ---
 				
 				String debug = CCanBuild.canBuildDebug(p, loc);
-				if(!debug.equals("Spawn")){
-					
-					Date rd = new realDate().getRealDate();
-					String date = "[" + rd.getMonth() + "/" + rd.getDay() + " " + rd.getHours() + ":" + rd.getMinutes() + "] ";
-					String blockName = "";
-					if(action == Action.RIGHT_CLICK_BLOCK){
-						if(p.getInventory().getItemInMainHand().getType().toString().equals("AIR")) return true;
-						blockName = "posé le bloc \"" + p.getInventory().getItemInMainHand().getType().toString();
-					}else{
-						
-						blockName = "cassé le bloc \"" + mat.toString();
+				if(debug != null){
+					if(!debug.equals("Spawn")){
+
+						Date rd = new realDate().getRealDate();
+						String date = "[" + rd.getMonth() + "/" + rd.getDay() + " " + rd.getHours() + ":" + rd.getMinutes() + "] ";
+						String blockName = "";
+						if(action == Action.RIGHT_CLICK_BLOCK){
+							if(p.getInventory().getItemInMainHand().getType().toString().equals("AIR")) return true;
+							blockName = "posé le bloc \"" + p.getInventory().getItemInMainHand().getType().toString();
+						}else{
+
+							blockName = "cassé le bloc \"" + mat.toString();
+						}
+						try{
+							FileWriter writer = new FileWriter(main.logblock.getAbsoluteFile(), true);
+							BufferedWriter out = new BufferedWriter(writer);
+							out.write(date + p.getName() + " a " + blockName + "\" dans le claim de " + debug);
+							out.newLine();
+							out.close();
+						}catch(IOException e1){
+							e1.printStackTrace();
+						}
+
 					}
-					try{
-						FileWriter writer = new FileWriter(main.logblock.getAbsoluteFile(), true);
-						BufferedWriter out = new BufferedWriter(writer);
-						out.write(date + p.getName() + " a " + blockName + "\" dans le claim de " + debug);
-						out.newLine();
-						out.close();
-					}catch(IOException e1){
-						e1.printStackTrace();
-					}
-					
 				}
 				
 			}

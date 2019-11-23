@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class Claim {
 
@@ -33,13 +34,14 @@ public class Claim {
 
     public Claim(Location loc){
 
-        id = new GetZoneId().getIdOfPlayerZone(loc);
-        if(id != 0 && id != -1){
-            spawn = new Spawns().getSpawnNameWithId(id);
-            if(spawn != null){
+        spawn = new Spawns().getSpawnNameWithLoc(loc);
+        if(spawn != null){
+            id = new GetZoneId().getIdOfPlayerZone(loc);
+            if(id != 0 && id != -1){
                 exist = true;
             }
         }
+
     }
     public Claim(int id){
         this.id = id;
@@ -93,6 +95,7 @@ public class Claim {
             return new ArrayList<>();
         }else{
             List<String> owners = new ArrayList<>();
+            owners.add(getOwner());
             for(String manager : main.config.getString("ent.list." + getPureOwner() + ".manager").split(",")){
                 owners.add(manager);
             }
@@ -127,20 +130,23 @@ public class Claim {
 
     public void setOwner(String owner) {
         if(owner == null){
-            if(isEnt()){
-                removeEntClaim(this.owner, id);
-            }else{
-                removePlayerClaim(this.owner, id);
+            if(getPureOwner() != null){
+                if(isEnt()){
+                    removeEntClaim(getPureOwner(), id);
+                }else{
+                    removePlayerClaim(getPureOwner(), id);
+                }
             }
         }else{
             if(isEnt()){
-                removeEntClaim(this.owner, id);
+                removeEntClaim(getPureOwner(), id);
                 addEntClaim(owner, id);
             }else{
-                removePlayerClaim(this.owner, id);
+                removePlayerClaim(getPureOwner(), id);
                 addPlayerClaim(owner, id);
             }
         }
+        setGuests(new ArrayList<>());
         this.owner = owner;
         main.config.set("claim.list." + spawn + "." + id + ".owner", owner);
     }
@@ -152,7 +158,7 @@ public class Claim {
         }
     }
     public void setGuests(List<String> guests){
-        for(String guest : this.guests){
+        for(String guest : getGuests()){
             removePlayerClaim(guest, id);
         }
         for(String guest : guests){
@@ -230,7 +236,7 @@ public class Claim {
     }
 
     public int getX1(){
-        if(x1 != -1) return x1;
+        if(x1 != 0) return x1;
         else return (x1 = main.config.getInt("claim.list." + spawn + "." + id + ".x1"));
     }
     public void setX1(int x1) {
@@ -238,7 +244,7 @@ public class Claim {
         main.config.set("claim.list." + spawn + "." + id + ".x1", x1);
     }
     public int getX2() {
-        if(x2 != -1) return x2;
+        if(x2 != 0) return x2;
         else return (x2 = main.config.getInt("claim.list." + spawn + "." + id + ".x2"));
     }
     public void setX2(int x2) {
@@ -246,7 +252,7 @@ public class Claim {
         main.config.set("claim.list." + spawn + "." + id + ".x2", x2);
     }
     public int getZ1() {
-        if(z1 != -1) return z1;
+        if(z1 != 0) return z1;
         else return (z1 = main.config.getInt("claim.list." + spawn + "." + id + ".z1"));
     }
     public void setZ1(int z1) {
@@ -254,7 +260,7 @@ public class Claim {
         main.config.set("claim.list." + spawn + "." + id + ".z1", z1);
     }
     public int getZ2() {
-        if(z2 != -1) return z2;
+        if(z2 != 0) return z2;
         else return (z2 = main.config.getInt("claim.list." + spawn + "." + id + ".z2"));
     }
     public void setZ2(int z2) {
@@ -262,7 +268,7 @@ public class Claim {
         main.config.set("claim.list." + spawn + "." + id + ".z2", z2);
     }
     public int getY1() {
-        if(y1 != -1) return y1;
+        if(y1 != 0) return y1;
         else return (y1 = main.config.getInt("claim.list." + spawn + "." + id + ".y1"));
     }
     public void setY1(int y1) {
@@ -270,7 +276,7 @@ public class Claim {
         main.config.set("claim.list." + spawn + "." + id + ".y1", y1);
     }
     public int getY2() {
-        if(y2 != -1) return y2;
+        if(y2 != 0) return y2;
         else return (y2 = main.config.getInt("claim.list." + spawn + "." + id + ".y2"));
     }
     public void setY2(int y2) {
@@ -318,7 +324,10 @@ public class Claim {
     }
 
     public static String[] getSpawns(){
-        return (String[]) main.config.getConfigurationSection("claim.list").getKeys(false).toArray();
+        Set<String> spawnsSet = main.config.getConfigurationSection("claim.list").getKeys(false);
+        String[] spawns = new String[spawnsSet.size()];
+        spawnsSet.toArray(spawns);
+        return spawns;
     }
     public static List<Integer> getSpawnClaims(String spawn){
 
@@ -361,6 +370,7 @@ public class Claim {
 
     }
     public static void removePlayerClaim(String player, int id){
+
         List<Integer> ids = getPlayerClaims(player);
         ids.remove((Integer) id);
         setPlayerClaims(player, ids);

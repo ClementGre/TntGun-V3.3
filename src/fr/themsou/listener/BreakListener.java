@@ -3,6 +3,7 @@ package fr.themsou.listener;
 import java.util.List;
 
 import fr.themsou.methodes.PlayerInfo;
+import fr.themsou.rp.claim.Claim;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -60,12 +61,13 @@ public class BreakListener implements Listener{
 					}
 					if(((Sign) e.getBlock().getState()).getLine(0).equals("§b[Acheter]")){
 						e.setDropItems(false);
-						
-						p.sendMessage("§cCe claim n'est officielement plus en vente !");
-						
-						int id = new GetZoneId().getIdOfPlayerZone(p.getLocation());
-						String spawn = new Spawns().getSpawnNameWithId(id);
-						main.config.set("claim.list." + spawn + "." + id + ".sell", false);
+
+						Claim claim = new Claim(e.getBlock().getLocation());
+						if(claim.exist()){
+							p.sendMessage("§cCe claim n'est officielement plus en vente !");
+							claim.setSell(false);
+						}
+
 					}
 				}
 				

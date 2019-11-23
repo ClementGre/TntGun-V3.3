@@ -1,5 +1,6 @@
 package fr.themsou.methodes;
 
+import fr.themsou.rp.claim.Claim;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -69,48 +70,34 @@ public class Scoreboards {
 				
 				// CLAIMS
 				
-				int id = CGetZoneId.getIdOfPlayerZone(p.getLocation());
-				if(id == 0){
+				Claim claim = new Claim(p.getLocation());
+				if(!claim.exist()){
 					String ville = CSpawns.getSpawnNameWithLoc(p.getLocation());
 					if(ville != null){
-						Score reg = obj.getScore("§bClaim : §3" + ville);
+						Score reg = obj.getScore("§bClaim : §6" + ville);
 						reg.setScore(8);
-						
 					}else{
-						Score reg = obj.getScore("§bClaim : §3Aucun");
+						Score reg = obj.getScore("§bClaim : §cAucun");
 						reg.setScore(8);
 					}
 				}else{
-					String ville = CSpawns.getSpawnNameWithLoc(p.getLocation());
-					String owners = main.config.getString("claim.list." + ville + "." + id + ".owner").replaceAll(",", " §bet§3 ");
-					if(owners.equals("l'etat")){
-						Score reg = obj.getScore("§bClaim : §cÀ vendre");
+					if(claim.getOwner() == null){
+						Score reg = obj.getScore("§bClaim : §2À vendre");
 						reg.setScore(8);
-					}else if(owners.length() > 20){
-						if(main.config.getBoolean("claim.list." + CSpawns.getSpawnNameWithId(id) + "." + id + ".sell")){
-							Score reg = obj.getScore("§bClaim : §c" + owners.substring(0, 20) + " ...");
-							reg.setScore(8);
-						}else{
-							Score reg = obj.getScore("§bClaim : §3" + owners.substring(0, 20) + " ...");
-							reg.setScore(8);
-						}
-						
 					}else{
-						if(main.config.getBoolean("claim.list." + CSpawns.getSpawnNameWithId(id) + "." + id + ".sell")){
-							Score reg = obj.getScore("§bClaim : §c" + owners);
+						if(claim.isSell()){
+							Score reg = obj.getScore("§bClaim : §2" + claim.getOwner());
 							reg.setScore(8);
 						}else{
-							Score reg = obj.getScore("§bClaim : §3" + owners);
+							Score reg = obj.getScore("§bClaim : §3" + claim.getOwner());
 							reg.setScore(8);
 						}
 					}
 				}
-				
 				Score esp2 = obj.getScore("§1");
 				esp2.setScore(7);
 				
 				// ENT
-				
 				if(main.config.contains(p.getName() + ".rp.ent.name")){
 					Score ent = obj.getScore("§bEntreprise : §3" + main.config.getString(p.getName() + ".rp.ent.name"));
 					ent.setScore(6);

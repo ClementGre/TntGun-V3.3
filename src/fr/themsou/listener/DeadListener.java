@@ -27,14 +27,9 @@ public class DeadListener implements Listener{
 						new Chasseur(p).addPCAuto();
 						
 					}
-					
 				}
 			}else{
-				
 				Player p = (Player) victim;
-				
-				p.getInventory().clear();
-				
 			}
 		}
 		

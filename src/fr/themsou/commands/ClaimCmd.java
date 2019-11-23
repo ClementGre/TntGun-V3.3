@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import fr.themsou.rp.claim.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -16,11 +17,6 @@ import org.bukkit.entity.Player;
 
 import fr.themsou.main.main;
 import fr.themsou.nms.message;
-import fr.themsou.rp.claim.ClaimAdminUnderCmd;
-import fr.themsou.rp.claim.ClaimUserUnderCmd;
-import fr.themsou.rp.claim.CreateClaim;
-import fr.themsou.rp.claim.GetZoneId;
-import fr.themsou.rp.claim.Spawns;
 
 public class ClaimCmd implements CommandExecutor, TabCompleter {
 	
@@ -89,21 +85,16 @@ public class ClaimCmd implements CommandExecutor, TabCompleter {
 				}
 				else if(args[0].equalsIgnoreCase("settype")){
 					if(args.length == 2){
-						
 						if(args[1].equalsIgnoreCase("agr") || args[1].equalsIgnoreCase("app") || args[1].equalsIgnoreCase("claim") || args[1].equalsIgnoreCase("ins")){
-							
-							
-							int id = new GetZoneId().getIdOfPlayerZone(p.getLocation());
-							if(id != 0){
-								String spawn = new Spawns().getSpawnNameWithId(id);
-								main.config.set("claim.list." + spawn + "." + id + ".type", args[1]);
-								p.sendMessage("§bLe claim d'id §3" + id + "§b est désormais du type §3" + args[1]);
+
+							Claim claim = new Claim(p.getLocation());
+							if(claim.exist()){
+								claim.setType(ClaimType.getClaimType(args[1]));
+								p.sendMessage("§bLe claim d'id §3" + claim.getId() + "§b est désormais du type §3" + args[1]);
 							}else p.sendMessage("§cVous devez être dans un claim.");
-							
+
 						}else p.sendMessage("§c/claim settype <agr/app/claim/ins>");
-						
 					}else p.sendMessage("§c/claim settype <agr/app/claim/ins>");
-					
 				}
 				else if(args[0].equalsIgnoreCase("setsign")){
 					if(args.length == 2){
@@ -199,8 +190,7 @@ public class ClaimCmd implements CommandExecutor, TabCompleter {
 				}
 				else if(args[0].equalsIgnoreCase("kick")){
 					new ClaimUserUnderCmd().kickclaim(p);
-				}
-				else if(args[0].equalsIgnoreCase("join")){
+				}else if(args[0].equalsIgnoreCase("join")){
 					new ClaimUserUnderCmd().joinclaim(p);
 				}else if(args[0].equalsIgnoreCase("confirmsell")){
 					new ClaimUserUnderCmd().sellCountry(p);

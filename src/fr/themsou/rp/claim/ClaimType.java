@@ -28,7 +28,7 @@ public enum ClaimType {
                 return ClaimType.APARTMENT;
             case "agr":
                 return ClaimType.FIELD;
-            case "ent":
+            case "ins":
                 return ClaimType.COMPANY;
             default:
                 return ClaimType.FREE;

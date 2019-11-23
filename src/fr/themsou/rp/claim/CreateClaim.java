@@ -13,20 +13,16 @@ import fr.themsou.main.main;
 import fr.themsou.methodes.Schematics;
 
 public class CreateClaim {
-	
-	private CalculSuperficie CCalculSuperficie = new CalculSuperficie();
-	private GetZoneId CGetZoneId = new GetZoneId();
-	private Schematics CSchematics = new Schematics();
-	private Spawns CSpawns = new Spawns();
-	
+
 	public void set2DClaim(Player p, int prix, String type, boolean is2d){
+		Schematics CSchematics = new Schematics();
 		if(CSchematics.getSelection1(p) != null || CSchematics.getSelection2(p) != null){
 			
 			if(p.getLocation().getWorld() == Bukkit.getWorld("world")){
 				
 				Location loc1 = CSchematics.getSelection1(p);
 				Location loc2 = CSchematics.getSelection2(p);
-				String ville = CSpawns.getSpawnNameWithLoc(loc1);
+				String ville = new Spawns().getSpawnNameWithLoc(loc1);
 				
 				int id = new Random().nextInt(1000000);
 				if(!is2d){
@@ -58,29 +54,25 @@ public class CreateClaim {
 		
 		Location loc1 = claim.getFirstLoc();
 		Location loc2 = claim.getSecondLoc();
-		int CalculSuperficie = CCalculSuperficie.calculSuperficieOfZone(loc1, loc2);
-		
+		int CalculSuperficie = new CalculSuperficie().calculSuperficieOfZone(loc1, loc2);
+
 		if(prix == -1){
 			if(claim.getType().equals(ClaimType.FIELD)) prix = CalculSuperficie * 10;
 			else if(loc1.getBlockY() != 0) prix = CalculSuperficie * (loc2.getBlockY() - loc1.getBlockY() + 1) * 5;
 			else prix = CalculSuperficie * 80;
 		}
-		
-		main.config.set("claim.list." + ville + "." + id + ".defprice", prix);
-		main.config.set("claim.list." + ville + "." + id + ".price", prix);
-		main.config.set("claim.list." + ville + "." + id + ".sell", true);
-		
-		if(type.equals("claim")) type = "Claim libre";
-		if(type.equals("app")) type = "Appartement";
-		if(type.equals("agr")) type = "Agricolle";
-		if(type.equals("ins")) type = "Industrie";
+
+		claim.setDefPrice(prix);
+		claim.setPrice(prix);
+		claim.setSell(true);
+
 		p.getLocation().getBlock().setType(Material.OAK_SIGN);
 		Sign sign = (Sign) p.getLocation().getBlock().getState();
 		sign.setLine(0, "§b[Acheter]");
 		sign.setLine(1, "§4" + prix + " €");
-		sign.setLine(2, "§9" + type);
+		sign.setLine(2, "§9" + claim.getType().toUserString());
 		
-		if(loc1.getBlockY() == 0 || type.equals("Agricolle")){
+		if(loc1.getBlockY() == 0 || claim.getType().equals(ClaimType.FIELD)){
 			sign.setLine(3, "§9" + CalculSuperficie + "m² " + (loc2.getBlockX() - loc1.getBlockX() + 1) + "×" + (loc2.getBlockZ() - loc1.getBlockZ() + 1));
 		}else{
 			sign.setLine(3, "§9" + CalculSuperficie + "m² " + (loc2.getBlockX() - loc1.getBlockX() + 1) + "×" + (loc2.getBlockZ() - loc1.getBlockZ() + 1) + "×" + (loc2.getBlockY() - loc1.getBlockY() + 1));
@@ -89,10 +81,9 @@ public class CreateClaim {
 		org.bukkit.material.Sign signdata = (org.bukkit.material.Sign) sign.getBlock().getState().getData();
 		signdata.setFacingDirection(getDirection(p));
 		sign.setData(signdata);
-		
 		sign.update();
 		
-		p.sendMessage("§bVous venez de poser la pancarte d'achat du claim d'id §3" + id);
+		p.sendMessage("§bVous venez de poser la pancarte d'achat du claim d'id §3" + claim.getId());
 		
 	}
 	

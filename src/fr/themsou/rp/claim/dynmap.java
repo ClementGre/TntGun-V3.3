@@ -97,53 +97,49 @@ public class dynmap {
 				Integer id = ids.get(i);
 				
 				try{
-					if(!id.equals("minx") && !id.equals("maxx") && !id.equals("minz") && !id.equals("maxz") && !id.equals("app") && !id.equals("x") && !id.equals("y") && !id.equals("z")){
-						
-						int x1 = main.config.getInt("claim.list." + spawn + "." + id + ".x1");
-						int z1 = main.config.getInt("claim.list." + spawn + "." + id + ".z1");
-						int x2 = main.config.getInt("claim.list." + spawn + "." + id + ".x2");
-						int z2 = main.config.getInt("claim.list." + spawn + "." + id + ".z2");
-						int sup = CCalculSuperficie.calculSuperficieOfZone(new Location(Bukkit.getWorld("world"), x1, 0, z1), new Location(Bukkit.getWorld("world"), x2, 0, z2));
-						
-						String owner = main.config.getString("claim.list." + spawn + "." + id + ".owner");
-						List<String> guests = main.config.getStringList("claim.list." + spawn + "." + id + ".guests");
-						ClaimType type = ClaimType.getClaimType(main.config.getString("claim.list." + spawn + "." + id + ".type"));
-						boolean sell = main.config.getBoolean("claim.list." + spawn + "." + id + ".sell");
-						int price = main.config.getInt("claim.list." + spawn + "." + id + ".price");
-						int defPrice = main.config.getInt("claim.list." + spawn + "." + id + ".defprice");
-						
-						int[] range = {x1, x2, z1, z2};
-						
-						if(type.equals(ClaimType.FREE)){
-							if(mClaim == null){
-								mClaim = main.dynmap.getMarkerAPI().createMarkerSet("tntgun.markerset." + spawn + ".claim", "Claim libres", main.dynmap.getMarkerAPI().getMarkerIcons(), false);
-								mClaim.setLayerPriority(layer);
-							}
-							addSpeedMarker(mClaim, range, id, sell, price, defPrice, owner, guests, type.toUserString(), sup, false);
-							
-						}else if(type.equals(ClaimType.APARTMENT)){
-							if(mApp == null){
-								mApp = main.dynmap.getMarkerAPI().createMarkerSet("tntgun.markerset." + spawn + ".app", "Appartements", main.dynmap.getMarkerAPI().getMarkerIcons(), false);
-								mApp.setLayerPriority(layer);
-							}
-							addSpeedMarker(mApp, range, id, sell, price, defPrice, owner, guests, type.toUserString(), sup, false);
-							
-						}else if(type.equals(ClaimType.FIELD)){
-							if(mAgr == null){
-								mAgr = main.dynmap.getMarkerAPI().createMarkerSet("tntgun.markerset." + spawn + ".agr", "Zones agricolles", main.dynmap.getMarkerAPI().getMarkerIcons(), false);
-								mAgr.setLayerPriority(layer);
-							}
-							addSpeedMarker(mAgr, range, id, sell, price, defPrice, owner, guests, type.toUserString(), sup, false);
-							
-						}else if(type.equals(ClaimType.COMPANY)){
-							if(mIns == null){
-								mIns = main.dynmap.getMarkerAPI().createMarkerSet("tntgun.markerset." + spawn + "ins", "Industries", main.dynmap.getMarkerAPI().getMarkerIcons(), false);
-								mIns.setLayerPriority(layer);
-							}
-							addSpeedMarker(mIns, range, id, sell, price, defPrice, owner, guests, type.toUserString(), sup, false);
-							
+					int x1 = main.config.getInt("claim.list." + spawn + "." + id + ".x1");
+					int z1 = main.config.getInt("claim.list." + spawn + "." + id + ".z1");
+					int x2 = main.config.getInt("claim.list." + spawn + "." + id + ".x2");
+					int z2 = main.config.getInt("claim.list." + spawn + "." + id + ".z2");
+					int sup = CCalculSuperficie.calculSuperficieOfZone(new Location(Bukkit.getWorld("world"), x1, 0, z1), new Location(Bukkit.getWorld("world"), x2, 0, z2));
+
+					String owner = main.config.getString("claim.list." + spawn + "." + id + ".owner");
+					List<String> guests = main.config.getStringList("claim.list." + spawn + "." + id + ".guests");
+					ClaimType type = ClaimType.getClaimType(main.config.getString("claim.list." + spawn + "." + id + ".type"));
+					boolean sell = main.config.getBoolean("claim.list." + spawn + "." + id + ".sell");
+					int price = main.config.getInt("claim.list." + spawn + "." + id + ".price");
+					int defPrice = main.config.getInt("claim.list." + spawn + "." + id + ".defprice");
+
+					int[] range = {x1, x2, z1, z2};
+
+					if(type.equals(ClaimType.FREE)){
+						if(mClaim == null){
+							mClaim = main.dynmap.getMarkerAPI().createMarkerSet("tntgun.markerset." + spawn + ".claim", "Claim libres", main.dynmap.getMarkerAPI().getMarkerIcons(), false);
+							mClaim.setLayerPriority(layer);
 						}
-							
+						addSpeedMarker(mClaim, range, id, sell, price, defPrice, owner, guests, type.toUserString(), sup, false);
+
+					}else if(type.equals(ClaimType.APARTMENT)){
+						if(mApp == null){
+							mApp = main.dynmap.getMarkerAPI().createMarkerSet("tntgun.markerset." + spawn + ".app", "Appartements", main.dynmap.getMarkerAPI().getMarkerIcons(), false);
+							mApp.setLayerPriority(layer);
+						}
+						addSpeedMarker(mApp, range, id, sell, price, defPrice, owner, guests, type.toUserString(), sup, false);
+
+					}else if(type.equals(ClaimType.FIELD)){
+						if(mAgr == null){
+							mAgr = main.dynmap.getMarkerAPI().createMarkerSet("tntgun.markerset." + spawn + ".agr", "Zones agricolles", main.dynmap.getMarkerAPI().getMarkerIcons(), false);
+							mAgr.setLayerPriority(layer);
+						}
+						addSpeedMarker(mAgr, range, id, sell, price, defPrice, owner, guests, type.toUserString(), sup, false);
+
+					}else if(type.equals(ClaimType.COMPANY)){
+						if(mIns == null){
+							mIns = main.dynmap.getMarkerAPI().createMarkerSet("tntgun.markerset." + spawn + "ins", "Industries", main.dynmap.getMarkerAPI().getMarkerIcons(), false);
+							mIns.setLayerPriority(layer);
+						}
+						addSpeedMarker(mIns, range, id, sell, price, defPrice, owner, guests, type.toUserString(), sup, false);
+
 					}
 					
 				}catch(Exception e){
@@ -165,7 +161,8 @@ public class dynmap {
 		// TITRE
 		String title = id + " - " + type;
 			
-		if(owner != null) title += " de " + owner.split(",")[0];
+		if(owner != null) title += " de " + owner;
+		else owner = "Aucun";
 		
 		if(sell){
 			title += " à vendre";
@@ -185,7 +182,7 @@ public class dynmap {
 			// DESC ENTREPRISES
 			if(type.equals("ins")){
 				zoneType = 5;
-				String entName = owner.split(",")[0];
+				String entName = owner;
 				List<String> salarié = main.config.getStringList("ent.list." + entName + ".salarié");
 				List<String> manager = main.config.getStringList("ent.list." + entName + ".manager");
 				String pdg = main.config.getString("ent.list." + entName + ".pdg");
@@ -195,10 +192,10 @@ public class dynmap {
 			
 			// DESC PARTICULIERS
 			}else{
-				desc += "<b>Propriétaire :</b> " + owner.split(",")[0] + "<br>";
+				desc += "<b>Propriétaire :</b> " + owner + "<br>";
 			}
 			// DESC INVITÉS
-			if(owner.split(",").length >= 2){
+			if(guests.size() >= 1){
 				desc += "<b>Invités :</b> ";
 				for(String guest : guests){
 					desc += guest + ", ";
@@ -228,11 +225,8 @@ public class dynmap {
 		int z = loc.getBlockZ();
 		
 		if(x <= maxx && x >= minx && z <= maxz && z >= minz){
-			
 			return true;
-			
 		}
-		
 		return false;
 	}
 
