@@ -53,7 +53,7 @@ public class CanBuild {
 			if(claim.getOwner() == null){
 				title.sendActionBar(p, "§cCE TERRAIN EST §4À VENDRE");
 				return false;
-			}else if(claim.getGuests().contains(p.getName()) || claim.getEntOwners().contains(p.getName())){
+			}else if(claim.getOwner().equals(p.getName()) || claim.getGuests().contains(p.getName()) || claim.getEntOwners().contains(p.getName())){
 				return true;
 			}else{
 				if(claim.isSell() && claim.isEnt()){
@@ -88,7 +88,7 @@ public class CanBuild {
 		}else{
 			if(claim.getOwner() == null){
 				return false;
-			}else return claim.getGuests().contains(p.getName()) || claim.getEntOwners().contains(p.getName());
+			}else return claim.getOwner().equals(p.getName()) || claim.getGuests().contains(p.getName()) || claim.getEntOwners().contains(p.getName());
 
 		}
 	}

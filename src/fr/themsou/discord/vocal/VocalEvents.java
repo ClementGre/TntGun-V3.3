@@ -46,7 +46,7 @@ public class VocalEvents {
 		
 		Cmessages.clearEmbed();
 		Cmessages.setColor(Color.ORANGE);
-		Cmessages.setAuthor("Musique", "https://tntgun.fr/", "https://tntgun.fr/img/icon.png");
+		Cmessages.setAuthor("Musique" + (Music.djMode ? " *Mode DJ activé*" : ""), "https://tntgun.fr/", "https://tntgun.fr/img/icon.png");
 		Cmessages.setFooter("Service musical de TntGun", "https://tntgun.fr/img/icon.png");
 		
 		if(!Music.radio.isEmpty()){
@@ -101,7 +101,8 @@ public class VocalEvents {
 		Cmessages.addReact(Music.channelId, id, "⏭");
 		Cmessages.addReact(Music.channelId, id, "❌");
 		Cmessages.addReact(Music.channelId, id, "🚫");
-		Cmessages.addReact(Music.channelId, id, "🛑");
+		Cmessages.addReact(Music.channelId, id, "🛑"); // Tout arrêter
+		Cmessages.addReact(Music.channelId, id, "\uD83C\uDFA4"); // Micro
 		
 		return id;
 		
@@ -110,7 +111,7 @@ public class VocalEvents {
 		
 		Cmessages.clearEmbed();
 		Cmessages.setColor(Color.ORANGE);
-		Cmessages.setAuthor("Musique", "https://tntgun.fr/", "https://tntgun.fr/img/icon.png");
+		Cmessages.setAuthor("Musique" + (Music.djMode ? " *Mode DJ activé*" : ""), "https://tntgun.fr/", "https://tntgun.fr/img/icon.png");
 		Cmessages.setFooter("Service musical de TntGun", "https://tntgun.fr/img/icon.png");
 		
 		if(!Music.radio.isEmpty()){
@@ -174,7 +175,7 @@ public class VocalEvents {
 		
 	}public void sendEmbedTimeAndAutoComplete(int time){
 		
-		Cmessages.setAuthor("Musique", "https://tntgun.fr/", "https://tntgun.fr/img/icon.png");
+		Cmessages.setAuthor("Musique" + (Music.djMode ? " *Mode DJ activé*" : ""), "https://tntgun.fr/", "https://tntgun.fr/img/icon.png");
 		Cmessages.setFooter("Service musical de TntGun", "https://tntgun.fr/img/icon.png");
 		
 		long id = Cmessages.sendEmbed(Music.channelId);

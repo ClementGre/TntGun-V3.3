@@ -17,7 +17,7 @@ public class Enchanteur {
 	
 	public void addPCAuto(int xp){
 		
-		xp /= 5;
+		xp /= 10;
 		
 		if(getPC() < 100){
 			addPC(xp);

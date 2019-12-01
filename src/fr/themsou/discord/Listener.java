@@ -90,19 +90,22 @@ public class Listener{
 	// JOIN/LEAVE
 	
 	public void PlayerJoin(String userName){
-		
+
+		new Counter().refreshCounters();
 		messages Cmessages = new messages();
+
+		Cmessages.sendMessage("Bienvenue <@" + new user().getIdByPlayer(userName) + ">, pour accéder au discord complet, vous devez accepter le règlement dans <#532139944140079104> (Réagissez avec :white_check_mark:)", 585009111201087488L);
+
 		Cmessages.clearEmbed(); Cmessages.setColor(Color.RED);
 		Cmessages.setTitle("Bienvenue sur TntGun !");
 		Cmessages.addfield("Ce serveur Discord est liée à un serveur Minecraft.", "Vous pouvez voir les infos du serveur dans le salon ℹ-infos-ℹ", false);
 		Cmessages.addfield("Vous pouvez transférer vos grades sur Discord en liant vos 2 comptes.", "Pour cela, vous devez entrer la commande /discord en jeu.", false);
 		Cmessages.addfield("Le serveur TntGun vous souhaite de très bon moments sur le serveur.", "Nous vous remercions d'avoir rejoins notre communauté.", false);
+
 		Cmessages.sendPrivateEmbed(userName); Cmessages.clearEmbed();
-		
-		Cmessages.sendMessage("Bienvenue <@" + new user().getIdByPlayer(userName) + ">, pour accéder au discord complet, vous devez accepter le règlement dans <#532139944140079104> (Réagissez avec :white_check_mark:)", 585009111201087488L);
 		Cmessages.sendPrivateMessage("Pour accéder au discord complet, vous devez accepter le règlement dans #⚠-règles-⚠  (Réagissez avec :white_check_mark:)", userName);
 		
-		new Counter().refreshCounters();
+
 		
 	}public void PlayerLeave(String userName){
 		

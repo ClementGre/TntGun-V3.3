@@ -284,32 +284,6 @@ public class main extends JavaPlugin implements Listener {
 				
 			}
 		}, 200);
-
-		// New claim system converter
-		for(Integer id : Claim.getAllClaims()){
-
-			Claim claim = new Claim(id);
-			String owner = main.config.getString("claim.list." + claim.getSpawn() + "." + id + ".owner").split(",")[0];
-
-			List<String> guests = new ArrayList<>(); int i = 0;
-			for(String guest : main.config.getString("claim.list." + claim.getSpawn() + "." + id + ".owner").split(",")){
-				if(i != 0) guests.add(guest);
-				i++;
-			}
-
-			if(owner.equals("l'etat")) owner = null;
-
-			claim.setOwner(owner);
-			claim.setGuests(guests);
-		}
-		for(String player : main.config.getConfigurationSection("").getKeys(false)){
-			if(main.config.contains(player + ".claim")){
-				main.config.set(player + ".claim", null);
-			}
-		}
-		for(String ent : main.config.getConfigurationSection("ent.list").getKeys(false)){
-			main.config.set("ent.list." + ent + ".claim", null);
-		}
 		
 	}
 	
