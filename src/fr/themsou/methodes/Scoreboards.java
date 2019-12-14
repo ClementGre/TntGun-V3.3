@@ -39,7 +39,7 @@ public class Scoreboards {
 			Score point = obj.getScore("§7Points : §6" + points + "§b");
 			point.setScore(14);
 			
-			Score space = obj.getScore("§k");
+			Score space = obj.getScore("§1");
 			space.setScore(13);
 			
 			if(!PInfos.getGame(p).equals("HUB")){

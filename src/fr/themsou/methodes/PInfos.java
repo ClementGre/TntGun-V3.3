@@ -29,7 +29,7 @@ public class PInfos {
 	
 	public static String getPreciseGame(Entity e){
 		
-		if(e.getWorld() == Bukkit.getWorld("BedWars") || e.getWorld() == Bukkit.getWorld("BedWars-ressources")) return "BedWars";
+		if(e.getWorld() == Bukkit.getWorld("BedWars")) return "BedWars";
 		else if(e.getWorld() == Bukkit.getWorld("World") || e.getWorld() == Bukkit.getWorld("World_nether") || e.getWorld() == Bukkit.getWorld("World_the_end")){
 			if(e instanceof Player){
 				if(DuelGame.getStartedInstanceViaPlayer((Player) e) != null){

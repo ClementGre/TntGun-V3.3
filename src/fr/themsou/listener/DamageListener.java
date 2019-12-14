@@ -94,18 +94,14 @@ public class DamageListener implements Listener{
 		if(victim instanceof Player){
 			Player victimp = (Player) victim;
 
-			if(PInfos.getPreciseGame(victimp).equals("TntWars")){
-				e.setCancelled(true);
-
-			}else if(PInfos.getPreciseGame(victimp).equals("BedWars")){
+			if(PInfos.getPreciseGame(victimp).equals("BedWars")){
 
 				Player p = PInfos.getPlayerByEntity(killer);
 				if(p != null){
 
-					if(Cgetteam.getplayerteam(victimp) == Cgetteam.getplayerteam(p)){
-						e.setCancelled(true);
-					}else{
+					if(Cgetteam.getplayerteam(victimp) != Cgetteam.getplayerteam(p)){
 						if(victimp.hasPotionEffect(PotionEffectType.INVISIBILITY)) victimp.removePotionEffect(PotionEffectType.INVISIBILITY);
+						return;
 					}
 				}
 			}else if(PInfos.getPreciseGame(victimp).equals("Duel") && PInfos.getPreciseGame(e.getDamager()).equals("Duel")){
@@ -117,14 +113,14 @@ public class DamageListener implements Listener{
 							victimp.getWorld().dropItem(victimp.getLocation(), item);
 						}
 					}
+
 					victimp.getInventory().clear();
 					victimp.setHealth(20);
 					victimp.setFoodLevel(20);
-
-					e.setCancelled(true);
 					new DuelGameEvents().PlayerLeave(pl, victimp);
-					return;
+					e.setCancelled(true);
 				}
+				return;
 			}
 		}
 		if(PInfos.getGame(killer).equals("RP")){

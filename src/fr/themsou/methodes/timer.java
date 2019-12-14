@@ -11,12 +11,15 @@ import fr.themsou.BedWars.BedWars;
 import fr.themsou.listener.CustomEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import fr.themsou.discord.Counter;
 import fr.themsou.discord.Roles;
 import fr.themsou.main.main;
 import fr.themsou.rp.claim.dynmap;
 import fr.themsou.rp.ent.Utils;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 public class timer {
 	
@@ -47,32 +50,43 @@ public class timer {
 		if(main.timerMinuts == 0){
 			
 			main.timerMinuts = 60;
-			
-			Set<String> section = main.config.getConfigurationSection("").getKeys(false);	
-			String items = section.toString().replace("[", "").replace("]", "").replace(" ", "");
-			String[] item = items.split(",");
-			for(int i = 1; i <= section.size(); i++){
-				int number = i - 1;
-				
-				if(main.config.getInt(item[number] + ".punish.mute.minutes") > 0){
-					main.config.set(item[number] + ".punish.mute.minutes", main.config.getInt(item[number] + ".punish.mute.minutes") - 1);
-				}
-				
-				if(main.config.contains(item[number] + ".stat.last") && main.config.contains(item[number] + ".mdp")){
-					if(main.config.getInt(item[number] + ".punish.ban.day") > 0){
-						main.CSQLConnexion.refreshPlayer(item[number], 3);
-					}else{
-						if(Bukkit.getPlayerExact(item[number]) != null){
-							main.CSQLConnexion.refreshPlayer(item[number], 1);
+
+			BukkitRunnable timer = new BukkitRunnable(){
+
+				int i = 0;
+				Set<String> section = main.config.getConfigurationSection("").getKeys(false);
+				String[] players = section.toArray(new String[section.size()]);
+
+				@Override
+				public void run() {
+
+					String player = players[i];
+
+					if(main.config.getInt(player + ".punish.mute.minutes") > 0){
+						main.config.set(player + ".punish.mute.minutes", main.config.getInt(player + ".punish.mute.minutes") - 1);
+					}
+
+					if(main.config.contains(player + ".stat.last") && main.config.contains(player + ".mdp")){
+						if(main.config.getInt(player + ".punish.ban.day") > 0){
+							main.CSQLConnexion.refreshPlayer(player, 3);
 						}else{
-							main.CSQLConnexion.refreshPlayer(item[number], 2);
+							if(Bukkit.getPlayerExact(player) != null){
+								main.CSQLConnexion.refreshPlayer(player, 1);
+							}else{
+								main.CSQLConnexion.refreshPlayer(player, 2);
+							}
 						}
 					}
+
+					i++;
+					if(i >= section.size()){
+						cancel();
+					}
 				}
-			}
-			
-			
-				
+			};
+			timer.runTaskTimer(mainclass, 10, 10);
+
+
 		}
 		main.timerMinuts --;
 		
@@ -108,17 +122,15 @@ public class timer {
 			
 /////////////////////////////////////////// NOTIFS
 			
-			String notifs = main.config.getString(players.getName() + ".notifs");
+			String notif = main.config.getString(players.getName() + ".notifs");
 			
-			if(notifs != null){
+			if(notif != null){
 				
-				String[] notif = notifs.split(",");
+				String[] notifs = notif.split(",");
 				players.sendMessage("§c§lNOTIFICATIONS :");
 				
-				for(String n : notif){
-					
-					players.sendMessage(n);
-					
+				for(String n : notifs){
+					if(!n.isEmpty()) players.sendMessage(n);
 				}
 				main.config.set(players.getName() + ".notifs", null);
 			}
