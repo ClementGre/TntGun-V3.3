@@ -13,10 +13,8 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
-
-import fr.themsou.diffusion.api.messages;
+import fr.themsou.main.main;
 
 public class statLine{			// 1000 / 562
 	
@@ -215,11 +213,9 @@ public class statLine{			// 1000 / 562
 	}
 	
 	public void send(String name, Long channelId, String message){
-		
-		messages Cmessages = new messages();
-		
+
 		File f = new File("plugins/TntGun/statistiques/" + name + ".png");
-		Cmessages.sendFile(f, message, channelId);
+		main.guild.getTextChannelById(channelId).sendMessage(message).addFile(f).queue();
 		
 		
 	}

@@ -1,244 +1,235 @@
 package fr.themsou.discord.vocal;
 
 import java.awt.Color;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.function.Consumer;
 
-import fr.themsou.diffusion.api.messages;
-import fr.themsou.diffusion.api.roles;
-import fr.themsou.diffusion.api.user;
-import fr.themsou.diffusion.api.vocal;
+import fr.themsou.diffusion.music.Vocal;
+import fr.themsou.discord.tools.Tools;
 import fr.themsou.main.main;
 import fr.themsou.methodes.realDate;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 
 public class Music {
 
 	public static long channelId = 554358119262584853L;
 	public static long vocalId = 414907026800640042L;
 	
-	public static vocal vocal = null;
-	public static long vocalControler = 0;
+	public static Vocal vocal = null;
+	public static Message vocalControler = null;
 	public static String radio = "";
 
 	public static boolean djMode = false;
 	public static ArrayList<String> logs = new ArrayList<>();
 	public static long logMessage = 648129999513059328L;
 
-	messages Cmessages = new messages();
 	
-	public void userSendMessage(String userName, String message, long messageId){
+	public void userSendMessage(MessageReceivedEvent e){
 
-		String[] args = message.split(" ");
-		
-		Cmessages.deleteMessage(channelId, messageId);
-		if(vocal == null) vocal = new vocal();
+		String msg = e.getMessage().getContentRaw();
+		String[] args = msg.split(" ");
+
+		User user = e.getAuthor();
+		Member member = e.getMember();
+
+		e.getMessage().delete().queue();
+		if(vocal == null) vocal = new Vocal();
 
 		if(!vocal.isInChannel(vocalId)){
 			djMode = false;
 		}
 
 		if(djMode){
-			if(!new roles().getRoles(userName).contains("DJ")){
-				Cmessages.sendPrivateMessage("Le mode DJ est activé : seul les membres ayant le rôle @DJ peuvent gérer la musique.", userName);
+			Role role = main.jda.getRolesByName("DJ", false).get(0);
+			if(!member.getRoles().contains(role)){
+				sendAutoMessage("Le mode DJ est activé : seul les membres ayant le rôle @DJ peuvent gérer la musique.", Color.RED, user, false);
+				addLog(user.getAsTag(), "Éxécute la commande " + msg + " (Invalide)");
 				return;
 			}
 		}
 
-		if(args[0].equalsIgnoreCase("/play") && args.length == 2){
-			if(new user().getConectedVocalChannel(userName) == vocalId){
+		if(Tools.getConectedVoiceChannel(member) != vocalId){
+			sendAutoMessage("Vous devez être connecté dans le salon Vocal 📻 Musique 📻", Color.RED, user, false);
+			addLog(user.getAsTag(), "Éxécute la commande " + msg + " (Invalide)");
+			return;
+		}
 
-				addLog(userName, "Éxécute la commande " + message + " (Valide)");
-				vocal.joinChannel(vocalId);
-				try{
-					Thread.sleep(250);
-				}catch(InterruptedException e1){ e1.printStackTrace(); }
-				
-				if(!radio.isEmpty() && vocalControler != 0){
-					new messages().deleteMessage(channelId, vocalControler);
-					vocalControler = 0;
-					radio = "";
-					vocal.clearWhiout();
-				}
-				
-				vocal.playFirst(args[1]);
-				
-			}else{
-				addLog(userName, "Éxécute la commande " + message + " (Invalide)");
-				sendSimpleEmbed("Vous devez être connecté dans le salon vocal 📻 Musique 📻", Color.RED, 15);
+		if(args[0].equalsIgnoreCase("/play") && args.length == 2){
+
+			addLog(user.getAsTag(), "Éxécute la commande " + msg + " (Valide)");
+			vocal.joinChannel(vocalId);
+			try{
+				Thread.sleep(250);
+			}catch(InterruptedException e1){ e1.printStackTrace(); }
+
+			if(!radio.isEmpty() && vocalControler != null){
+				vocalControler.delete().queue();
+				vocalControler = null;
+				radio = "";
+				vocal.clearWhiout();
 			}
+
+			vocal.playFirst(args[1]);
 				
 		}else if(args[0].equalsIgnoreCase("/playadd") && args.length == 2){
-			if(new user().getConectedVocalChannel(userName) == vocalId){
 
-				addLog(userName, "Éxécute la commande " + message + " (Valide)");
+				addLog(user.getAsTag(), "Éxécute la commande " + msg + " (Valide)");
 
 				vocal.joinChannel(vocalId);
 				try{
 					Thread.sleep(250);
 				}catch(InterruptedException e1){ e1.printStackTrace(); }
 					
-				if(!radio.isEmpty() && vocalControler != 0){
-					new messages().deleteMessage(channelId, vocalControler);
-					vocalControler = 0;
+				if(!radio.isEmpty() && vocalControler != null){
+					vocalControler.delete().queue();
+					vocalControler = null;
 					radio = "";
 					vocal.clearWhiout();
 				}
 				
 				vocal.playLast(args[1]);
-				
-			}else{
-				addLog(userName, "Éxécute la commande " + message + " (Invalide)");
-				sendSimpleEmbed("Vous devez être connecté dans le salon vocal 📻 Musique 📻", Color.RED, 15);
-			}
 			
 		}else if(args[0].equalsIgnoreCase("/radio")){
 			if(args.length >= 2 && args.length <= 4){
-				if(new user().getConectedVocalChannel(userName) == vocalId){
 
-					if(args.length == 3) args[1] = args[1] + " " + args[2];
-					if(args.length == 4) args[1] = args[1] + " " + args[2] + " " + args[3];
-					String radios = "";
-					
-					for(String section : main.configuration.getConfigurationSection("discord.radio").getKeys(false)){
-						radios += section + ", ";
-						if(args[1].equalsIgnoreCase(section)){
+				if(args.length == 3) args[1] = args[1] + " " + args[2];
+				if(args.length == 4) args[1] = args[1] + " " + args[2] + " " + args[3];
+				String radios = "";
 
-							addLog(userName, "Éxécute la commande " + message + " (Valide)");
+				for(String section : main.configuration.getConfigurationSection("discord.radio").getKeys(false)){
+					radios += section + ", ";
+					if(args[1].equalsIgnoreCase(section)){
 
-							vocal.joinChannel(vocalId);
-							try{
-								Thread.sleep(250);
-							}catch(InterruptedException e1){ e1.printStackTrace(); }
-							
-							if(radio.isEmpty() && vocalControler != 0){
-								new messages().deleteMessage(channelId, vocalControler);
-								vocalControler = 0;
-							}
-							
-							vocal.clearWhiout();
-							vocal.playLast(main.configuration.getString("discord.radio." + section));
-							radio = section;
-							return;
+						addLog(user.getAsTag(), "Éxécute la commande " + msg + " (Valide)");
+
+						vocal.joinChannel(vocalId);
+						try{
+							Thread.sleep(250);
+						}catch(InterruptedException e1){ e1.printStackTrace(); }
+
+						if(radio.isEmpty() && vocalControler != null){
+							vocalControler.delete().queue();
+							vocalControler = null;
 						}
-					}
 
-					addLog(userName, "Éxécute la commande " + message + " (Invalide)");
-					Cmessages.clearEmbed();
-					Cmessages.setColor(Color.RED);
-					Cmessages.addfield("Différentes radios : ", radios, false);
-					sendEmbedTimeAndAutoComplete(45);
-					
-				}else{
-					addLog(userName, "Éxécute la commande " + message + " (Invalide)");
-					sendSimpleEmbed("Vous devez être connecté dans le salon vocal 📻 Musique 📻", Color.RED, 15);
+						vocal.clearWhiout();
+						vocal.playLast(main.configuration.getString("discord.radio." + section));
+						radio = section;
+						return;
+					}
 				}
+
+				addLog(user.getAsTag(), "Éxécute la commande " + msg + " (Invalide)");
+				EmbedBuilder embed = new EmbedBuilder();
+				embed.setColor(Color.RED);
+				embed.addField("Différentes radios : ", radios, false);
+				sendEmbedTimeAndAutoComplete(embed, 45);
+
 			}else{
-				addLog(userName, "Éxécute la commande " + message + " (Invalide)");
+				addLog(user.getAsTag(), "Éxécute la commande " + msg + " (Invalide)");
 				String radios = "";
 				
 				for(String section : main.configuration.getConfigurationSection("discord.radio").getKeys(false)){
 					radios += section + ", ";
 				}
-				
-				Cmessages.clearEmbed();
-				Cmessages.setColor(Color.RED);
-				Cmessages.addfield("Différentes radios : ", radios, false);
-				sendEmbedTimeAndAutoComplete(45);
+
+				EmbedBuilder embed = new EmbedBuilder();
+				embed.setColor(Color.RED);
+				embed.addField("Différentes radios : ", radios, false);
+				sendEmbedTimeAndAutoComplete(embed, 45);
 			}
 		
 		}else if(args[0].equalsIgnoreCase("/playlist")){
 			if(args.length >= 2 && args.length <= 4){
-				if(new user().getConectedVocalChannel(userName) == vocalId){
 					
-					if(args.length == 3) args[1] = args[1] + " " + args[2];
-					if(args.length == 4) args[1] = args[1] + " " + args[2] + " " + args[3];
-					String playlist = "";
-					String tntplaylist = "";
-					String ytplaylist = "";
-					
-					for(String section : main.config.getConfigurationSection("discord.list.playlist").getKeys(false)){
-						playlist += section + ", ";
-						if(args[1].equalsIgnoreCase(section)){
+				if(args.length == 3) args[1] = args[1] + " " + args[2];
+				if(args.length == 4) args[1] = args[1] + " " + args[2] + " " + args[3];
+				String playlist = "";
+				String tntplaylist = "";
+				String ytplaylist = "";
 
-							addLog(userName, "Éxécute la commande " + message + " (Valide)");
-							vocal.joinChannel(vocalId);
-							try{
-								Thread.sleep(250);
-							}catch(InterruptedException e1){ e1.printStackTrace(); }
-							
-							if(!radio.isEmpty() && vocalControler != 0){
-								new messages().deleteMessage(channelId, vocalControler);
-								vocalControler = 0;
-								radio = "";
-							}
-							vocal.clearWhiout();
-							
-							for(String playlistId : main.config.getConfigurationSection("discord.list.playlist." + section).getKeys(false)){
-								vocal.playLast(main.config.getString("discord.list.playlist." + section + "." + playlistId));
-							}
-							
-							return;
-						}
-					}
-					for(String section : main.configuration.getConfigurationSection("discord.tntplaylist").getKeys(false)){
-						tntplaylist += section + ", ";
-						if(args[1].equalsIgnoreCase(section)){
+				for(String section : main.config.getConfigurationSection("discord.list.playlist").getKeys(false)){
+					playlist += section + ", ";
+					if(args[1].equalsIgnoreCase(section)){
 
-							addLog(userName, "Éxécute la commande " + message + " (Valide)");
-							vocal.joinChannel(vocalId);
-							try{
-								Thread.sleep(250);
-							}catch(InterruptedException e1){ e1.printStackTrace(); }
-							
-							if(!radio.isEmpty() && vocalControler != 0){
-								new messages().deleteMessage(channelId, vocalControler);
-								vocalControler = 0;
-								radio = "";
-							}
-							vocal.clearWhiout();
-							
-							vocal.playLast(main.configuration.getString("discord.tntplaylist." + section));
-							
-							return;
-						}
-					}
-					for(String section : main.configuration.getConfigurationSection("discord.ytplaylist").getKeys(false)){
-						ytplaylist += section + ", ";
-						if(args[1].equalsIgnoreCase(section)){
+						addLog(user.getAsTag(), "Éxécute la commande " + msg + " (Valide)");
+						vocal.joinChannel(vocalId);
+						try{
+							Thread.sleep(250);
+						}catch(InterruptedException e1){ e1.printStackTrace(); }
 
-							addLog(userName, "Éxécute la commande " + message + " (Valide)");
-							vocal.joinChannel(vocalId);
-							try{
-								Thread.sleep(250);
-							}catch(InterruptedException e1){ e1.printStackTrace(); }
-							
-							if(!radio.isEmpty() && vocalControler != 0){
-								new messages().deleteMessage(channelId, vocalControler);
-								vocalControler = 0;
-								radio = "";
-							}
-							vocal.clearWhiout();
-							
-							vocal.playLast(main.configuration.getString("discord.ytplaylist." + section));
-							
-							return;
+						if(!radio.isEmpty() && vocalControler != null){
+							vocalControler.delete().queue();
+							vocalControler = null;
+							radio = "";
 						}
+						vocal.clearWhiout();
+
+						for(String playlistId : main.config.getConfigurationSection("discord.list.playlist." + section).getKeys(false)){
+							vocal.playLast(main.config.getString("discord.list.playlist." + section + "." + playlistId));
+						}
+
+						return;
 					}
-					addLog(userName, "Éxécute la commande " + message + " (Invalide)");
-					Cmessages.clearEmbed();
-					Cmessages.setColor(Color.RED);
-					Cmessages.addfield("Playlist du serveur : ", tntplaylist, false);
-					Cmessages.addfield("Playlist YouTube : ", ytplaylist, false);
-					Cmessages.addfield("Playlist des utilisateurs : ", playlist, false);
-					sendEmbedTimeAndAutoComplete(45);
-					
-				}else{
-					addLog(userName, "Éxécute la commande " + message + " (Invalide)");
-					sendSimpleEmbed("Vous devez être connecté dans le salon vocal 📻 Musique 📻", Color.RED, 15);
 				}
+				for(String section : main.configuration.getConfigurationSection("discord.tntplaylist").getKeys(false)){
+					tntplaylist += section + ", ";
+					if(args[1].equalsIgnoreCase(section)){
+
+						addLog(user.getAsTag(), "Éxécute la commande " + msg + " (Valide)");
+						vocal.joinChannel(vocalId);
+						try{
+							Thread.sleep(250);
+						}catch(InterruptedException e1){ e1.printStackTrace(); }
+
+						if(!radio.isEmpty() && vocalControler != null){
+							vocalControler.delete().queue();
+							vocalControler = null;
+							radio = "";
+						}
+						vocal.clearWhiout();
+						vocal.playLast(main.configuration.getString("discord.tntplaylist." + section));
+
+						return;
+					}
+				}
+				for(String section : main.configuration.getConfigurationSection("discord.ytplaylist").getKeys(false)){
+					ytplaylist += section + ", ";
+					if(args[1].equalsIgnoreCase(section)){
+
+						addLog(user.getAsTag(), "Éxécute la commande " + msg + " (Valide)");
+						vocal.joinChannel(vocalId);
+						try{
+							Thread.sleep(250);
+						}catch(InterruptedException e1){ e1.printStackTrace(); }
+
+						if(!radio.isEmpty() && vocalControler != null){
+							vocalControler.delete().queue();
+							vocalControler = null;
+							radio = "";
+						}
+						vocal.clearWhiout();
+
+						vocal.playLast(main.configuration.getString("discord.ytplaylist." + section));
+
+						return;
+					}
+				}
+				addLog(user.getAsTag(), "Éxécute la commande " + msg + " (Invalide)");
+				EmbedBuilder embed = new EmbedBuilder();
+				embed.setColor(Color.RED);
+				embed.addField("Playlist du serveur : ", tntplaylist, false);
+				embed.addField("Playlist YouTube : ", ytplaylist, false);
+				embed.addField("Playlist des utilisateurs : ", playlist, false);
+				sendEmbedTimeAndAutoComplete(embed, 45);
+
 			}else{
-				addLog(userName, "Éxécute la commande " + message + " (Invalide)");
+				addLog(user.getAsTag(), "Éxécute la commande " + msg + " (Invalide)");
 				String playlist = "";
 				String tntplaylist = "";
 				String ytplaylist = "";
@@ -252,16 +243,15 @@ public class Music {
 				for(String section : main.configuration.getConfigurationSection("discord.ytplaylist").getKeys(false)){
 					ytplaylist += section + ", ";
 				}
-				Cmessages.clearEmbed();
-				Cmessages.setColor(Color.RED);
-				Cmessages.addfield("Playlist du serveur : ", tntplaylist, false);
-				Cmessages.addfield("Playlist YouTube : ", ytplaylist, false);
-				Cmessages.addfield("Playlist des utilisateurs : ", playlist, false);
-				sendEmbedTimeAndAutoComplete(45);
+				EmbedBuilder embed = new EmbedBuilder();
+				embed.setColor(Color.RED);
+				embed.addField("Playlist du serveur : ", tntplaylist, false);
+				embed.addField("Playlist YouTube : ", ytplaylist, false);
+				embed.addField("Playlist des utilisateurs : ", playlist, false);
+				sendEmbedTimeAndAutoComplete(embed, 45);
 			}
 		
 		}else if(args[0].equalsIgnoreCase("/addplaylist") && args.length >= 2 && args.length <= 4){
-			if(new user().getConectedVocalChannel(userName) == vocalId){
 
 				if(args.length == 3) args[1] = args[1] + " " + args[2];
 				if(args.length == 4) args[1] = args[1] + " " + args[2] + " " + args[3];
@@ -271,18 +261,18 @@ public class Music {
 				String[] afterMusic = vocal.getPlayListUrl();
 				
 				if(lastMusics.length == 0 && afterMusic.length == 0 && currentMusic == null){
-					sendSimpleEmbed("Vous ne pouvez pas sauvegarder une playlist vide.", Color.RED, 15);
-					addLog(userName, "Éxécute la commande " + message + " (Invalide)");
+					sendAutoMessage("Vous ne pouvez pas sauvegarder une playlist vide.", Color.RED, user, true);
+					addLog(user.getAsTag(), "Éxécute la commande " + msg + " (Invalide)");
 					return;
 					
 				}if(main.config.contains("discord.list.playlist." + args[1]) || main.configuration.contains("discord.tntplaylist." + args[1]) || main.configuration.contains("discord.ytplaylist." + args[1])){
-					sendSimpleEmbed("Ce nom est déjà utilisé.", Color.RED, 15);
-					addLog(userName, "Éxécute la commande " + message + " (Invalide)");
+					sendAutoMessage("Ce nom est déjà utilisé.", Color.RED, user, true);
+					addLog(user.getAsTag(), "Éxécute la commande " + msg + " (Invalide)");
 					return;
 					
 				}if(!radio.isEmpty()){
-					sendSimpleEmbed("Vous ne pouvez pas sauvegarder une radio.", Color.RED, 15);
-					addLog(userName, "Éxécute la commande " + message + " (Invalide)");
+					sendAutoMessage("Vous ne pouvez pas sauvegarder une radio.", Color.RED, user, true);
+					addLog(user.getAsTag(), "Éxécute la commande " + msg + " (Invalide)");
 					return;
 				}
 				
@@ -299,59 +289,58 @@ public class Music {
 					main.config.set("discord.list.playlist." + args[1] + "." + i, url);
 					i++;
 				}
-				addLog(userName, "Éxécute la commande " + message + " (Valide)");
-				sendSimpleEmbed("Votre playlist a bien été enregistré avec le nom : **" + args[1] + "**", Color.GREEN, 15);
-				
-				
-			}else{
-				addLog(userName, "Éxécute la commande " + message + " (Invalide)");
-				sendSimpleEmbed("Vous devez être connecté dans le salon vocal 📻 Musique 📻", Color.RED, 15);
-			}
+				addLog(user.getAsTag(), "Éxécute la commande " + msg + " (Valide)");
+				sendAutoMessage("Votre playlist a bien été enregistré avec le nom : **" + args[1] + "**", Color.GREEN, user, true);
+
 			
 		}else{
 			if(args[0].equalsIgnoreCase("/play") || args[0].equalsIgnoreCase("/playadd") || args[0].equalsIgnoreCase("/radio") || args[0].equalsIgnoreCase("/playlist") || args[0].equalsIgnoreCase("/addplaylist")){
-				addLog(userName, "Éxécute la commande " + message + " (Inalide)");
+				addLog(user.getAsTag(), "Éxécute la commande " + msg + " (Inalide)");
 			}else{
-				addLog(userName, "Éxécute une commande inconnue");
+				addLog(user.getAsTag(), "Éxécute une commande inconnue");
 			}
 
 			if(!vocal.isInChannel(vocalId)){
-				
-				Cmessages.clearEmbed();
-				Cmessages.addfield(":loud_sound:  **/play <lien>**", "Ajouter une musique au début de la playlist.", false);
-				Cmessages.addfield(":loud_sound:  **/playadd <lien>**", "Ajouter une musique à la fin de la playlist.", false);
-				Cmessages.addfield(":radio:  **/radio <nom>**", "Écouter une radio.", false);
-				Cmessages.addfield(":repeat:  **/playlist <nom>**", "Lancer une playlist.", false);
-				Cmessages.addfield(":repeat_one:  **/addplaylist <nom>**", "Sauvegarder la playlist.", false);
 
-				sendEmbedTimeAndAutoComplete(30);
+				EmbedBuilder embed = new EmbedBuilder();
+				embed.setColor(Color.CYAN);
+				embed.addField(":loud_sound:  **/play <lien>**", "Ajouter une musique au début de la playlist.", false);
+				embed.addField(":loud_sound:  **/playadd <lien>**", "Ajouter une musique à la fin de la playlist.", false);
+				embed.addField(":radio:  **/radio <nom>**", "Écouter une radio.", false);
+				embed.addField(":repeat:  **/playlist <nom>**", "Lancer une playlist.", false);
+				embed.addField(":repeat_one:  **/addplaylist <nom>**", "Sauvegarder la playlist.", false);
+
+				sendEmbedTimeAndAutoComplete(embed, 30);
 			}
 		}
 	}
 	
-	public void sendSimpleEmbed(String content, Color color, int time){
+	public void sendAutoMessage(String msg, Color color, User user, boolean forceOnServer){
+
+		if(vocalControler != null && !forceOnServer){
+			PrivateChannel privateChannel = user.openPrivateChannel().complete();
+			privateChannel.sendMessage(msg).queue(new Consumer<Message>(){public void accept(Message message){}}, new Consumer<Throwable>(){public void accept(Throwable throwable){}});
+		}
+
+		EmbedBuilder embed = new EmbedBuilder();
+		embed.setColor(color);
+		embed.setDescription(msg);
 		
-		Cmessages.clearEmbed();
-		Cmessages.setColor(color);
-		Cmessages.setDescription(content);
-		
-		sendEmbedTimeAndAutoComplete(time);
+		sendEmbedTimeAndAutoComplete(embed, 15);
 		
 	}
 	
-	public void sendEmbedTimeAndAutoComplete(int time){
+	public void sendEmbedTimeAndAutoComplete(EmbedBuilder embed, int time){
 		
-		Cmessages.setAuthor("Musique", "https://tntgun.fr/", "https://tntgun.fr/img/icon.png");
-		Cmessages.setFooter("Service musical de TntGun", "https://tntgun.fr/img/icon.png");
-		
-		
-		long id = Cmessages.sendEmbed(channelId);
-		Cmessages.clearEmbed();
-		
+		embed.setAuthor("Musique", "https://tntgun.fr/", "https://tntgun.fr/img/icon.png");
+		embed.setFooter("Service musical de TntGun", "https://tntgun.fr/img/icon.png");
+		embed.setTimestamp(Instant.now());
+
+		Message msg = main.guild.getTextChannelById(channelId).sendMessage(embed.build()).complete();
 		new Thread(new Runnable(){
             public void run() {
             	try{ Thread.sleep(time * 1000); }catch(InterruptedException e1){ e1.printStackTrace(); }
-            	Cmessages.deleteMessage(channelId, id);
+            	msg.delete().queue();
             }
         }).start();
 		
@@ -363,64 +352,68 @@ public class Music {
 		
 		if(lastUsers == 0){
 			vocal.leaveChannel();
-			addLog("TntGun-BOT", "Quitte le salon vocal : Personne de connecté.");
+			addLog("TntGun-BOT", "Quitte le salon Vocal : Personne de connecté.");
 		}
 		
 	}
 	
-	public void userReact(String reaction, String userName, Long channelId, Long messageId){
+	public void userReact(MessageReactionAddEvent e){
 		
-		if(messageId == vocalControler){
+		if(e.getMessageIdLong() == vocalControler.getIdLong()){
 
-			Cmessages.removeReact(channelId, messageId, reaction, userName);
+			e.getReaction().removeReaction(e.getUser()).complete();
 
 			if(!vocal.isInChannel(vocalId)){
 				djMode = false;
 			}
-			if(new user().getConectedVocalChannel(userName) != vocalId){
-				Cmessages.sendPrivateMessage("Vous devez être connecté dans le salon vocal \uD83D\uDCFBmusique\uD83D\uDCFB pour pouvoir gérer la musique.", userName);
+			if(Tools.getConectedVoiceChannel(e.getMember()) != vocalId){
+				sendAutoMessage("Vous devez être connecté dans le salon Vocal \uD83D\uDCFBmusique\uD83D\uDCFB pour pouvoir gérer la musique.", Color.RED, e.getUser(), false);
 				return;
 			}
-			if(reaction.equals("\uD83C\uDFA4")){
-				if(!new roles().getRoles(userName).contains("DJ") || new roles().getRoles(userName).contains("Admin") || new roles().getRoles(userName).contains("Super-Modo")){
+			if(e.getReactionEmote().getName().equals("\uD83C\uDFA4")){
+				Role djRole = main.jda.getRolesByName("DJ", false).get(0);
+				Role adminRole = main.jda.getRolesByName("DJ", false).get(0);
+				Role smRole = main.jda.getRolesByName("DJ", false).get(0);
+				if(e.getMember().getRoles().contains(djRole) || e.getMember().getRoles().contains(adminRole) || e.getMember().getRoles().contains(smRole)){
 					djMode = !djMode;
-					addLog(userName, "Réaction :microphone:, mode DJ " + (djMode ? "activé" : "désactivé"));
+					addLog(e.getUser().getAsTag(), "Réaction :microphone:, mode DJ " + (djMode ? "activé" : "désactivé"));
 					new VocalEvents().refreshVocalControler();
 				}else{
-					addLog(userName, "Réaction :microphone:, mode DJ (Invalide)");
-					Cmessages.sendPrivateMessage("Vous devez être dans le staff ou être DJ pour activer / désactiver le mode DJ.", userName);
+					addLog(e.getUser().getAsTag(), "Réaction :microphone:, mode DJ (Invalide)");
+					sendAutoMessage("Vous devez être dans le staff ou être DJ pour activer / désactiver le mode DJ.", Color.RED, e.getUser(), false);
 				}
 				return;
 			}
 			if(djMode){
-				if(!new roles().getRoles(userName).contains("DJ")){
-					Cmessages.sendPrivateMessage("Le mode DJ est activé : seul les membres ayant le rôle @DJ peuvent gérer la musique.", userName);
+				Role djRole = main.jda.getRolesByName("DJ", false).get(0);
+				if(!e.getMember().getRoles().contains(djRole)){
+					sendAutoMessage("Le mode DJ est activé : seul les membres ayant le rôle @DJ peuvent gérer la musique.", Color.RED, e.getUser(), false);
 					return;
 				}
 			}
 			
-			if(reaction.equals("⏯")){
-				addLog(userName, "Réaction :play_pause:, pause");
+			if(e.getReactionEmote().getName().equals("⏯")){
+				addLog(e.getUser().getAsTag(), "Réaction :play_pause:, pause");
 				vocal.pause();
 				
-			}else if(reaction.equals("⏮")){
-				addLog(userName, "Réaction :track_previous:, musique préçédente : " + (vocal.getLastPlayList().length >= 1 ? vocal.getLastPlayList()[vocal.getLastPlayList().length - 1] : "Aucune piste"));
+			}else if(e.getReactionEmote().getName().equals("⏮")){
+				addLog(e.getUser().getAsTag(), "Réaction :track_previous:, musique préçédente : " + (vocal.getLastPlayList().length >= 1 ? vocal.getLastPlayList()[vocal.getLastPlayList().length - 1] : "Aucune piste"));
 				vocal.last();
 				
-			}else if(reaction.equals("⏭")){
-				addLog(userName, "Réaction :track_next:, musique suivante : " + (vocal.getPlayList().length >= 1 ? vocal.getPlayList()[0] : "Aucune piste"));
+			}else if(e.getReactionEmote().getName().equals("⏭")){
+				addLog(e.getUser().getAsTag(), "Réaction :track_next:, musique suivante : " + (vocal.getPlayList().length >= 1 ? vocal.getPlayList()[0] : "Aucune piste"));
 				vocal.next();
 				
-			}else if(reaction.equals("❌")){
-				addLog(userName, "Réaction :x:, supprimé la musique " + vocal.getCurrentTrack());
+			}else if(e.getReactionEmote().getName().equals("❌")){
+				addLog(e.getUser().getAsTag(), "Réaction :x:, supprimé la musique " + vocal.getCurrentTrack());
 				vocal.clearCurrent();
 				
-			}else if(reaction.equals("🚫")){
-				addLog(userName, "Réaction :no_entry_sign:, tout retiré");
+			}else if(e.getReactionEmote().getName().equals("🚫")){
+				addLog(e.getUser().getAsTag(), "Réaction :no_entry_sign:, tout retiré");
 				vocal.clear();
 				
-			}else if(reaction.equals("🛑")){
-				addLog(userName, "Réaction :octagonal_sign:, tout arrété");
+			}else if(e.getReactionEmote().getName().equals("🛑")){
+				addLog(e.getUser().getAsTag(), "Réaction :octagonal_sign:, tout arrété");
 				vocal.leaveChannel();
 			}
 		}
@@ -441,20 +434,18 @@ public class Music {
 	}
 	public void updateLogMessage(){
 
-		Cmessages.clearEmbed();
-		Cmessages.setColor(Color.ORANGE);
-		Cmessages.setAuthor("Logs", "https://tntgun.fr/", "https://tntgun.fr/img/icon.png");
-		Cmessages.setFooter("Service musical de TntGun", "https://tntgun.fr/img/icon.png");
+		EmbedBuilder embed = new EmbedBuilder();
+		embed.setColor(Color.ORANGE);
+		embed.setAuthor("Logs", "https://tntgun.fr/", "https://tntgun.fr/img/icon.png");
+		embed.setFooter("Service musical de TntGun", "https://tntgun.fr/img/icon.png");
+		embed.setTimestamp(Instant.now());
 
 		String desc = "";
 		for(int i = logs.size()-1; i >= 0; i--){
 			desc += "\n" + logs.get(i);
 		}
-		Cmessages.setDescription(desc);
+		embed.setDescription(desc);
 
-		Cmessages.EditEmbed(channelId, logMessage);
-		Cmessages.clearEmbed();
+		main.jda.getTextChannelById(channelId).editMessageById(logMessage, embed.build()).queue();
 	}
-	
-	
 }

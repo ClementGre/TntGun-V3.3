@@ -287,8 +287,7 @@ public class BreakListener implements Listener{
 			for(BlockState block : e.getBlocks()){
 				
 				if(CGetZoneId.getIdOfPlayerZone(block.getLocation()) != id){
-					System.out.println(block.getBlockData().getAsString());
-						e.getBlocks().get(i).setType(Material.AIR);
+					e.getBlocks().get(i).setType(Material.AIR);
 				}
 				
 				i++;

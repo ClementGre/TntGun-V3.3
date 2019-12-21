@@ -26,14 +26,14 @@ public class CmdInv {
 		if(PInfos.getGame(p).equals("RP")){
 			
 			inv.setItem(20, UtilsInv.makeItem(Material.PLAYER_HEAD, "§3§lTÉLEPORTATION", Arrays.asList("§bApprenez a vous téléporter a d'autres joueurs...")));
-			inv.setItem(22, UtilsInv.makeItem(Material.BOOK, "§3§lDISCUTIONS", Arrays.asList("§bApprenez a envoyer des messages privées...")));
+			inv.setItem(22, UtilsInv.makeItem(Material.BOOK, "§3§lDISCUTIONS", Arrays.asList("§bApprenez a envoyer des Messages privées...")));
 			inv.setItem(24, UtilsInv.makeItem(Material.EMERALD, "§3§lARGENT", Arrays.asList("§bApprenez a utiliser/récupérer de l'argent")));
 			inv.setItem(30, UtilsInv.makeItem(Material.SHULKER_SHELL, "§3§lCLAIMS", Arrays.asList("§bApprenez a gérer vos claims")));
 			inv.setItem(32, UtilsInv.makeItem(Material.NETHER_STAR, "§3§lENTREPRISES", Arrays.asList("§bApprenez a créer votre entreprise")));
 			
 		}else{
 			
-			inv.setItem(22, UtilsInv.makeItem(Material.BOOK, "§3§lDISCUTIONS", Arrays.asList("§bApprenez a envoyer des messages privées...")));
+			inv.setItem(22, UtilsInv.makeItem(Material.BOOK, "§3§lDISCUTIONS", Arrays.asList("§bApprenez a envoyer des Messages privées...")));
 			
 		}
 		

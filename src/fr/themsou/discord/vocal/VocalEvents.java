@@ -1,10 +1,13 @@
 package fr.themsou.discord.vocal;
 
+import fr.themsou.main.main;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Message;
+
 import java.awt.Color;
-import fr.themsou.diffusion.api.messages;
+import java.time.Instant;
 
 public class VocalEvents {
-	messages Cmessages = new messages();
 	
 	public void vocalErrorLoad(String error){
 		
@@ -19,9 +22,9 @@ public class VocalEvents {
 	}
 	
 	public void playlistEnd(){
-		if(Music.vocalControler != 0){
-			new messages().deleteMessage(Music.channelId, Music.vocalControler);
-			Music.vocalControler = 0;
+		if(Music.vocalControler != null){
+			Music.vocalControler.delete().queue();
+			Music.vocalControler = null;
 			Music.radio = "";
 		}
 		
@@ -31,34 +34,35 @@ public class VocalEvents {
 		refreshVocalControler();
 	}
 	public void vocalStartMusic(){
-		if(Music.vocalControler == 0){
+		if(Music.vocalControler == null){
 			Music.vocalControler = sendVocalControler();
 		}else refreshVocalControler();
 		
 	}
 	public void vocalAddMusic(){
-		if(Music.vocalControler == 0){
+		if(Music.vocalControler == null){
 			Music.vocalControler = sendVocalControler();
 		}else refreshVocalControler();
 	}
 	
-	public long sendVocalControler(){
-		
-		Cmessages.clearEmbed();
-		Cmessages.setColor(Color.ORANGE);
-		Cmessages.setAuthor("Musique" + (Music.djMode ? " *Mode DJ activé*" : ""), "https://tntgun.fr/", "https://tntgun.fr/img/icon.png");
-		Cmessages.setFooter("Service musical de TntGun", "https://tntgun.fr/img/icon.png");
+	public Message sendVocalControler(){
+
+		EmbedBuilder embed = new EmbedBuilder();
+		embed.setColor(Color.ORANGE);
+		embed.setAuthor("Musique" + (Music.djMode ? " *Mode DJ activé*" : ""), "https://tntgun.fr/", "https://tntgun.fr/img/icon.png");
+		embed.setFooter("Service musical de TntGun", "https://tntgun.fr/img/icon.png");
+		embed.setTimestamp(Instant.now());
 		
 		if(!Music.radio.isEmpty()){
+
+			embed.addField(":loud_sound: Radio en cours :", Music.radio, false);
+
+			Message msg = main.guild.getTextChannelById(Music.channelId).sendMessage(embed.build()).complete();
+
+			msg.addReaction("⏯").queue();
+			msg.addReaction("🛑").queue();
 			
-			Cmessages.addfield(":loud_sound: Radio en cours :", Music.radio, false);
-			long id = Cmessages.sendEmbed(Music.channelId);
-			Cmessages.clearEmbed();
-			
-			Cmessages.addReact(Music.channelId, id, "⏯");
-			Cmessages.addReact(Music.channelId, id, "🛑");
-			
-			return id;
+			return msg;
 		}
 		
 		String[] playlist = Music.vocal.getLastPlayList();
@@ -77,8 +81,8 @@ public class VocalEvents {
 			}
 			
 		}else playlistShow = "Aucune piste.";
-		Cmessages.addfield(":arrow_double_down: Musiques précédentes :", playlistShow, false);
-		Cmessages.addfield(":loud_sound: Musique en cours :", Music.vocal.getCurrentTrack(), false);
+		embed.addField(":arrow_double_down: Musiques précédentes :", playlistShow, false);
+		embed.addField(":loud_sound: Musique en cours :", Music.vocal.getCurrentTrack(), false);
 		
 		playlist = Music.vocal.getPlayList();
 		playlistShow = "";
@@ -91,44 +95,40 @@ public class VocalEvents {
 				i++;
 			}
 		}else playlistShow = "Aucune piste.";
-		Cmessages.addfield(":arrow_double_down: Musiques à suivre :", playlistShow, false);
+		embed.addField(":arrow_double_down: Musiques à suivre :", playlistShow, false);
+
+		Message msg = main.guild.getTextChannelById(Music.channelId).sendMessage(embed.build()).complete();
+
+		msg.addReaction("⏯").queue();
+		msg.addReaction("⏮").queue();
+		msg.addReaction("⏭").queue();
+		msg.addReaction("❌").queue();
+		msg.addReaction("🚫").queue();
+		msg.addReaction("🛑").queue(); // Tout arrêter
+		msg.addReaction("\uD83C\uDFA4").queue(); // Micro
 		
-		long id = Cmessages.sendEmbed(Music.channelId);
-		Cmessages.clearEmbed();
-		
-		Cmessages.addReact(Music.channelId, id, "⏯");
-		Cmessages.addReact(Music.channelId, id, "⏮");
-		Cmessages.addReact(Music.channelId, id, "⏭");
-		Cmessages.addReact(Music.channelId, id, "❌");
-		Cmessages.addReact(Music.channelId, id, "🚫");
-		Cmessages.addReact(Music.channelId, id, "🛑"); // Tout arrêter
-		Cmessages.addReact(Music.channelId, id, "\uD83C\uDFA4"); // Micro
-		
-		return id;
+		return msg;
 		
 	}
-	public long refreshVocalControler(){
-		
-		Cmessages.clearEmbed();
-		Cmessages.setColor(Color.ORANGE);
-		Cmessages.setAuthor("Musique" + (Music.djMode ? " *Mode DJ activé*" : ""), "https://tntgun.fr/", "https://tntgun.fr/img/icon.png");
-		Cmessages.setFooter("Service musical de TntGun", "https://tntgun.fr/img/icon.png");
-		
+	public void refreshVocalControler(){
+
+		EmbedBuilder embed = new EmbedBuilder();
+		embed.setColor(Color.ORANGE);
+		embed.setAuthor("Musique" + (Music.djMode ? " *Mode DJ activé*" : ""), "https://tntgun.fr/", "https://tntgun.fr/img/icon.png");
+		embed.setFooter("Service musical de TntGun", "https://tntgun.fr/img/icon.png");
+		embed.setTimestamp(Instant.now());
+
 		if(!Music.radio.isEmpty()){
-			
-			Cmessages.addfield(":loud_sound: Radio en cours :", Music.radio, false);
-			Cmessages.EditEmbed(Music.channelId, Music.vocalControler);
-			Cmessages.clearEmbed();
-			
-			Cmessages.addReact(Music.channelId, Music.vocalControler, "⏯");
-			Cmessages.addReact(Music.channelId, Music.vocalControler, "🛑");
-			
-			return Music.vocalControler;
+
+			embed.addField(":loud_sound: Radio en cours :", Music.radio, false);
+
+			main.guild.getTextChannelById(Music.channelId).editMessageById(Music.vocalControler.getIdLong(), embed.build()).queue();
+
 		}
-		
+
 		String[] playlist = Music.vocal.getLastPlayList();
 		String playlistShow = "";
-		
+
 		if(playlist.length >= 1){
 			if(playlist.length > 5){
 				playlistShow = playlistShow + (playlist.length - 5) + " autres pistes...";
@@ -140,51 +140,46 @@ public class VocalEvents {
 					playlistShow = playlistShow + play + "\n";
 				}
 			}
+
 		}else playlistShow = "Aucune piste.";
-		
-		Cmessages.addfield(":arrow_double_down: Musiques précédentes :", playlistShow, false);
-		Cmessages.addfield(":loud_sound: Musique en cours :", Music.vocal.getCurrentTrack(), false);
-		
+		embed.addField(":arrow_double_down: Musiques précédentes :", playlistShow, false);
+		embed.addField(":loud_sound: Musique en cours :", Music.vocal.getCurrentTrack(), false);
+
 		playlist = Music.vocal.getPlayList();
 		playlistShow = "";
-		
 		if(playlist.length >= 1){
 			int i = 0;
 			for(String play : playlist){
 				if(i == 5){
-					playlistShow = playlistShow + (playlist.length - 5) + " autres pistes.";
+					playlistShow = playlistShow + (playlist.length - 5) + " autres pistes...";
 				}else if(i < 5) playlistShow = playlistShow + play + "\n";
 				i++;
 			}
 		}else playlistShow = "Aucune piste.";
-		Cmessages.addfield(":arrow_double_down: Musiques à suivre :", playlistShow, false);
-		
-		Cmessages.EditEmbed(Music.channelId, Music.vocalControler);
-		Cmessages.clearEmbed();
-		
-		return Music.vocalControler;
+		embed.addField(":arrow_double_down: Musiques à suivre :", playlistShow, false);
+
+		main.guild.getTextChannelById(Music.channelId).editMessageById(Music.vocalControler.getIdLong(), embed.build()).queue();
 		
 	}
 	
 	public void sendSimpleEmbed(String content, Color color, int time){
+
+		EmbedBuilder embed = new EmbedBuilder();
+		embed.setColor(color);
+		embed.setDescription(content);
+		sendEmbedTimeAndAutoComplete(embed, time);
 		
-		Cmessages.clearEmbed();
-		Cmessages.setColor(color);
-		Cmessages.setDescription(content);
-		sendEmbedTimeAndAutoComplete(time);
+	}public void sendEmbedTimeAndAutoComplete(EmbedBuilder embed, int time){
 		
-	}public void sendEmbedTimeAndAutoComplete(int time){
+		embed.setAuthor("Musique");
+		embed.setFooter("Service musical de TntGun", "https://tntgun.fr/img/icon.png");
+		embed.setTimestamp(Instant.now());
 		
-		Cmessages.setAuthor("Musique" + (Music.djMode ? " *Mode DJ activé*" : ""), "https://tntgun.fr/", "https://tntgun.fr/img/icon.png");
-		Cmessages.setFooter("Service musical de TntGun", "https://tntgun.fr/img/icon.png");
-		
-		long id = Cmessages.sendEmbed(Music.channelId);
-		Cmessages.clearEmbed();
-		
+		Message msg = main.guild.getTextChannelById(Music.channelId).sendMessage(embed.build()).complete();
 		new Thread(new Runnable(){
             public void run() {
             	try{ Thread.sleep(time * 1000); }catch(InterruptedException e1){ e1.printStackTrace(); }
-            	Cmessages.deleteMessage(Music.channelId, id);
+            	msg.delete();
             }
         }).start();
 		

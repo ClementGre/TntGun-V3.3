@@ -51,7 +51,7 @@ public class BedWarsPNJInv {
 		}
 		
 		for(int i = 10; i <= 16; i++){
-			inv.setItem(i, createItemStack(p, Material.WHITE_STAINED_GLASS_PANE, 1, 0, " ", null));
+			inv.setItem(i, createItemStack(p, Material.WHITE_STAINED_GLASS_PANE, 1, 0, "§e", null));
 		}
 		
 		int y = 29;
@@ -80,7 +80,8 @@ public class BedWarsPNJInv {
 						y = y - 9;
 					}
 				}else y++;
-				
+
+
 			}
 		}
 		
@@ -93,13 +94,13 @@ public class BedWarsPNJInv {
 		if(e.getCurrentItem().getType() != Material.WHITE_STAINED_GLASS_PANE || e.getCurrentItem().getType() != Material.RED_STAINED_GLASS_PANE || e.getCurrentItem().getType() != Material.BLUE_STAINED_GLASS_PANE || e.getCurrentItem().getType() != Material.GREEN_STAINED_GLASS_PANE || e.getCurrentItem().getType() != Material.YELLOW_STAINED_GLASS_PANE){
 			
 			String itemName = e.getCurrentItem().getItemMeta().getDisplayName();
-			
+
 			if(itemName.contains("§6")){
 				
 				int tab = e.getSlot() - 1;
 				e.getInventory().setContents(getShopInv(p, tab).getContents());
 				
-			}else{
+			}else if(!itemName.equals("§e")){
 				
 				ItemStack item = e.getCurrentItem();
 				

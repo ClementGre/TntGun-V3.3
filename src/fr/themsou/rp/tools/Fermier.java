@@ -29,7 +29,6 @@ public class Fermier {
 	public void useAuto(Location loc){
 		
 		id = new GetZoneId().getIdOfPlayerZone(loc);
-		System.out.println(loc.getBlock().getType());
 		if(getType(loc.getBlock().getType()) == 0){
 			return;
 		}else if(getType(loc.getBlock().getType()) == 2){

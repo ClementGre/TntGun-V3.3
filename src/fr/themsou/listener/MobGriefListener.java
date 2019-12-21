@@ -52,9 +52,10 @@ public class MobGriefListener implements Listener{
 			List destroyed = e.blockList();
 		    Iterator it = destroyed.iterator();
 		    Random r = new Random();
-		    while (it.hasNext()) {
-		    	if(r.nextInt(4) != 0){
-					it.remove();
+		    while(it.hasNext()){
+		    	it.next();
+		    	if(r.nextInt(5) == 0){
+		    		it.remove();
 				}
 		    }
 		}

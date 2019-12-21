@@ -1,6 +1,5 @@
 package fr.themsou.listener;
 
-import java.awt.Color;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -8,6 +7,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import fr.themsou.discord.Chat;
 import fr.themsou.methodes.PlayerInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -18,7 +18,6 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import fr.themsou.BedWars.getteam;
 import fr.themsou.commands.GradeCmd;
-import fr.themsou.diffusion.api.messages;
 import fr.themsou.main.main;
 import fr.themsou.methodes.PInfos;
 
@@ -105,9 +104,9 @@ public class ChatListener implements Listener{
 			staffOverlay = "§cPseudo Original : §4" + p.getName();
 			playerGrade = "Joueur";
 			pName = p.getDisplayName();
-			SendDiscordMsg(message, pName.replaceFirst("§r", ""));
-			
-		}else SendDiscordMsg(message, pName);
+		}
+
+		new Chat().sendMessage(pName.replaceFirst("§r", ""), message);
 		
 		// GRADE
 		
@@ -163,21 +162,6 @@ public class ChatListener implements Listener{
 		}
 		
 		System.out.println("[" + game + "] [" + playerGrade + "] " + p.getName() + " : " + message);
-		
-	}
-	
-	
-	public void SendDiscordMsg(String message, String PlayerName) {
-		
-		messages Cmessages = new messages();
-		Cmessages.clearEmbed();
-		Cmessages.setColor(Color.CYAN);
-		Cmessages.setAuthor(PlayerName, "https://minotar.net/avatar/"+PlayerName+"/32.png", "https://minotar.net/avatar/"+PlayerName+"/32.png");
-		Cmessages.setTitle(message);
-		Cmessages.setFooter("Depuis Minecraft", "https://vignette.wikia.nocookie.net/minecraftproject/images/3/31/311.png/revision/latest?cb=20120726083051");
-
-		Cmessages.sendEmbed(452810136319295498L);
-		Cmessages.clearEmbed();
 		
 	}
 	

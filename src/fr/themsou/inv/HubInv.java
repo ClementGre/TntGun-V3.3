@@ -3,6 +3,8 @@ package fr.themsou.inv;
 import java.util.Arrays;
 import java.util.Random;
 
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Role;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -15,7 +17,6 @@ import fr.themsou.BedWars.getteam;
 import fr.themsou.BedWars.join;
 import fr.themsou.TntWars.TntWarsGameEvents;
 import fr.themsou.TntWars.TntWarsInv;
-import fr.themsou.diffusion.api.roles;
 import fr.themsou.main.main;
 import fr.themsou.methodes.realDate;
 import fr.themsou.nms.title;
@@ -49,8 +50,11 @@ public class HubInv {
 			
 			main.config.set(p.getName() + ".rp.lastday", new realDate().getRealDate());
 			if(main.config.contains(p.getName() + ".discord")){
-				roles Croles = new roles();
-				Croles.addRole("RolePlay Player", main.config.getString(p.getName() + ".discord"));
+				Member member = main.guild.getMemberByTag(main.config.getString(p.getName() + ".discord"));
+				if(member != null){
+					Role role = main.guild.getRolesByName("RolePlay Player", false).get(0);
+					main.guild.addRoleToMember(member, role).queue();
+				}
 			}
 			
 			p.sendMessage("§6Bienvenue en RolePlay, ici, vous devrez trouver des ressources pour ensuite les vendre dans le menu principal (/?) ou les donner à votre patron pour les vendre via votre entreprise (/ent). Vous pourrez ensuite acheter des claims en cliquant sur les pancartes [Acheter] des spawn. Vous avez aussi comme défi d'arriver à 100% dans chacune des compétences afin de débloquer des outils spéciaux qui vous seront nécessaires.");

@@ -1,10 +1,11 @@
 package fr.themsou.BedWars;
 
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Role;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import fr.themsou.diffusion.api.roles;
 import fr.themsou.main.main;
 import fr.themsou.methodes.realDate;
 import fr.themsou.nms.title;
@@ -37,8 +38,11 @@ public class join {
 		
 		main.config.set(p.getName() + ".bedwars.lastday", new realDate().getRealDate().getDate());
 		if(main.config.contains(p.getName() + ".discord")){
-			roles Croles = new roles();
-			Croles.addRole("BedWars Player", main.config.getString(p.getName() + ".discord"));
+			Member member = main.guild.getMemberByTag(main.config.getString(p.getName() + ".discord"));
+			if(member != null){
+				Role role = main.guild.getRolesByName("BedWars Player", false).get(0);
+				main.guild.addRoleToMember(member, role).queue();
+			};
 		}
 		
 		
@@ -84,8 +88,11 @@ public class join {
 		
 		main.config.set(p.getName() + ".bedwars.lastday", new realDate().getRealDate().getDate());
 		if(main.config.contains(p.getName() + ".discord")){
-			roles Croles = new roles();
-			Croles.addRole("BedWars Player", main.config.getString(p.getName() + ".discord"));
+			Member member = main.guild.getMemberByTag(main.config.getString(p.getName() + ".discord"));
+			if(member != null){
+				Role role = main.guild.getRolesByName("BedWars Player", false).get(0);
+				main.guild.addRoleToMember(member, role).queue();
+			};
 		}
 		
 		int cteam = new getteam().getplayerteam(p);

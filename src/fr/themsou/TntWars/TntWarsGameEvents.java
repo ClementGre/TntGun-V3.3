@@ -2,6 +2,8 @@ package fr.themsou.TntWars;
 
 import java.util.Random;
 
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Role;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -11,7 +13,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.themsou.commands.GradeCmd;
-import fr.themsou.diffusion.api.roles;
 import fr.themsou.main.main;
 import fr.themsou.methodes.Schematics;
 import fr.themsou.methodes.realDate;
@@ -168,7 +169,11 @@ public class TntWarsGameEvents {
 				
 				main.config.set(ps.getName() + ".tntwars.lastday", new realDate().getRealDate().getDate());
 				if(main.config.contains(ps.getName() + ".discord")){
-					new roles().addRole("TntWars Player", main.config.getString(ps.getName() + ".discord"));
+					Member member = main.guild.getMemberByTag(main.config.getString(p.getName() + ".discord"));
+					if(member != null){
+						Role role = main.guild.getRolesByName("TntWars Player", false).get(0);
+						main.guild.addRoleToMember(member, role).queue();
+					};
 				}
 				
 				ps.teleport(new Location(Bukkit.getWorld("hub"), 0.5, 50, 0.5));

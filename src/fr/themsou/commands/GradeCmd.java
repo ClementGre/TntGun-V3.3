@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+import net.dv8tion.jda.api.entities.Member;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -48,8 +49,11 @@ public class GradeCmd implements TabCompleter, CommandExecutor{
 				Bukkit.broadcastMessage("§3" + cible + "§b a bien obtenu son grade " + main.configuration.getString("grades." + item[number] + ".gradecolor") + item[number]);
 				
 				if(main.config.contains(cible + ".discord")){
-					new Roles().removeRole(main.config.getString(cible + ".discord"));
-					if(!item[number].equals("Joueur")) new Roles().setRole(cible);
+					Member member = main.guild.getMemberByTag(main.config.getString(cible + ".discord"));
+					if(member != null){
+						new Roles().removeRole(member, (member.getNickname() == null) ? member.getUser().getName() : member.getNickname());
+						new Roles().setRole(cible);
+					}
 				}
 				int perm = main.configuration.getInt("grades." + item[number] + ".perm");
 				if(perm >= 4){
@@ -87,8 +91,12 @@ public class GradeCmd implements TabCompleter, CommandExecutor{
 				Bukkit.broadcastMessage("§3" + cible + "§b a bien obtenu son grade " + main.configuration.getString("grades." + item[number] + ".gradecolor") + item[number]);
 				
 				if(main.config.contains(cible + ".discord")){
-					new Roles().removeRole(main.config.getString(cible + ".discord"));
-					new Roles().setRole(cible);
+					Member member = main.guild.getMemberByTag(main.config.getString(cible + ".discord"));
+					if(member != null){
+						new Roles().removeRole(member, (member.getNickname() == null) ? member.getUser().getName() : member.getNickname());
+						new Roles().setRole(cible);
+					}
+
 				}
 				int perm = main.configuration.getInt("grades." + item[number] + ".perm");
 				if(perm >= 4){

@@ -53,7 +53,6 @@ public class SQLConnexion {
 	public void refreshPlayer(String playerName, int status){ // 1 = connecté    2 = Hors Ligne    3 = Bannis
 		
 		if(!isConnected()){
-			connexion();
 			return;
 		}
 		
@@ -121,7 +120,6 @@ public class SQLConnexion {
 	public void sendPost(String name, String message, boolean verify){
 		
 		if(!isConnected()){
-			connexion();
 			return;
 		}
 		
@@ -154,7 +152,6 @@ public class SQLConnexion {
 	public void updatePost(){
 		
 		if(!isConnected()){
-			connexion();
 			return;
 		}
 		

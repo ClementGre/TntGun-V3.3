@@ -6,8 +6,12 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import fr.themsou.discord.Counter;
 import fr.themsou.methodes.*;
 import fr.themsou.rp.claim.Claim;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
@@ -70,7 +74,7 @@ import org.rauschig.jarchivelib.ArchiverFactory;
 
 public class main extends JavaPlugin implements Listener {
 
-	public static boolean DISCORD_SERVICES = false;
+
 
 	public FileConfiguration conf = getConfig();
 	public static FileConfiguration config;
@@ -92,15 +96,21 @@ public class main extends JavaPlugin implements Listener {
 	public static HashMap<String, ItemStack[]> entLog = new HashMap<>();
 	public static HashMap<String, BossBar> bars = new HashMap<>();
 	public static HashMap<Player, PlayerInfo> playersInfos = new HashMap<>();
+
+
+	public static boolean DISCORD_SERVICES = true;
+	public static boolean isBotStarted = false;
+	public static net.dv8tion.jda.api.JDA jda;
+	public static Guild guild;
+
 	
 	public main getinstance(){
 		return this;
 	}
 	
 	@Override
-	public void onLoad() {
+	public void onLoad(){
 		super.onLoad();
-
 	}
 	
 
@@ -168,9 +178,7 @@ public class main extends JavaPlugin implements Listener {
 		
 		
 		config = conf;
-		
 		CSQLConnexion = new SQLConnexion("jdbc:mysql://", main.passwords.getString("mysql.url"), main.passwords.getString("mysql.user"), main.passwords.getString("mysql.user"), main.passwords.getString("mysql.mdp"));
-		
 		CSQLConnexion.connexion();
 		
 		
@@ -203,6 +211,7 @@ public class main extends JavaPlugin implements Listener {
 		
 		
 		getCommand("discord").setExecutor(new GeneralCmd());
+		getCommand("discord").setTabCompleter(new GeneralCmd());
 		getCommand("?").setExecutor(new GeneralCmd());
 		getCommand("help").setExecutor(new GeneralCmd());
 		getCommand("l").setExecutor(new GeneralCmd());
@@ -290,6 +299,9 @@ public class main extends JavaPlugin implements Listener {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onDisable() {
+
+		new Counter().setOfflineCounters();
+
 		Date date = new realDate().getRealDate();
 		
 		main.config.set("stat.list.server.stoptime", date.getDate() + "-" + date.getHours() + ":" + date.getMinutes());

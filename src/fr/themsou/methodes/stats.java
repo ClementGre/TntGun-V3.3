@@ -1,5 +1,7 @@
 	package fr.themsou.methodes;
 
+import fr.themsou.main.main;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -12,10 +14,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
-
-import fr.themsou.diffusion.api.messages;
 
 public class stats {			// 560 / 400
 	
@@ -145,13 +144,8 @@ public class stats {			// 560 / 400
 	}
 	
 	public void send(String name, Long channelId, String message){
-		
-		messages Cmessages = new messages();
-		
 		File f = new File("plugins/TntGun/statistiques/" + name + ".png");
-		Cmessages.sendFile(f, message, channelId);
-		
-		
+		main.guild.getTextChannelById(channelId).sendMessage(message).addFile(f).queue();
 	}
 	
 	public void centerString(Graphics g, int minX, int maxX, int minY, int maxY, String s, Font font) {

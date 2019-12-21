@@ -2,9 +2,10 @@ package fr.themsou.methodes;
 
 import java.util.ArrayList;
 import java.util.Date;
-import org.bukkit.entity.Player;
 
-import fr.themsou.diffusion.api.roles;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Role;
+import org.bukkit.entity.Player;
 import fr.themsou.main.main;
 import fr.themsou.nms.title;
 
@@ -26,6 +27,7 @@ public class login{
 					
 					main.CSQLConnexion.refreshPlayer(player.getName(), 1);
 					main.config.set(player.getName() + ".ip", player.getAddress().getHostString());
+					main.config.set(player.getName() + ".mdp", args[0]);
 					
 					title.sendTitle(player, "§cChoissez votre mode de jeu", "§cavec la bousole", 60);
 					initialise(player);
@@ -41,7 +43,7 @@ public class login{
 				player.sendMessage("§3Mot de passe changé !");
 				
 				main.CSQLConnexion.refreshPlayer(player.getName(), 1);
-				main.config.set(player.getName() + ".ip", player.getAddress().getHostString());
+				main.config.set(player.getName() + ".mdp", args[0]);
 				
 				title.sendTitle(player, "§cChoissez votre mode de jeu", "§cavec la bousole", 60);
 				
@@ -106,8 +108,11 @@ public class login{
 		Date Date = new realDate().getRealDate();
 		
 		if(main.config.contains(p.getName() + ".discord")){
-			roles Croles = new roles();
-			Croles.addRole("Joueur actif", main.config.getString(p.getName() + ".discord"));
+			Member member = main.guild.getMemberByTag(main.config.getString(p.getName() + ".discord"));
+			if(member != null){
+				Role role = main.guild.getRolesByName("Joueur actif", false).get(0);
+				main.guild.addRoleToMember(member, role).queue();
+			}
 		}
 		
 /////////////////////////////////////////// STATS

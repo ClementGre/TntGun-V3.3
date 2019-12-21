@@ -7,12 +7,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.time.Instant;
 import java.util.Date;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import fr.themsou.methodes.PlayerInfo;
+import net.dv8tion.jda.api.EmbedBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -28,8 +30,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import eu.blackfire62.myskin.bukkit.MySkin;
-import fr.themsou.diffusion.api.messages;
-import fr.themsou.diffusion.api.roles;
 import fr.themsou.discord.Counter;
 import fr.themsou.discord.Link;
 import fr.themsou.main.main;
@@ -75,7 +75,8 @@ public class JoinListener implements Listener{
 	
 	@EventHandler
 	public void onPlayerLogin(PlayerLoginEvent e){
-	
+
+
 		Player p = e.getPlayer();
 		
 //-------------------- ALPHAN UMERIQUE --------------------
@@ -160,9 +161,10 @@ public class JoinListener implements Listener{
 			main.config.set(p.getName() + ".ip", e.getAddress().getHostAddress());
 		}
 		
-//-------------------- CHANGE IP --------------------	
+//-------------------- CHANGE IP --------------------
+
+		secureLogin = false;
 		if(!main.config.getString(p.getName() + ".ip").equals(e.getAddress().getHostAddress())){
-			
 			if(main.config.contains(p.getName() + ".discord")){
 				
 				new Link().changePlayerIP(p.getName(), main.config.getString(p.getName() + ".discord"), e.getAddress().getHostAddress());
@@ -303,39 +305,30 @@ public class JoinListener implements Listener{
 		p.getInventory().setItem(4, b);
 		
 /////////////////////////////////////////// DISCORD
+
+		EmbedBuilder embed = new EmbedBuilder();
+		embed.setColor(Color.GREEN);
+		embed.setAuthor(e.getPlayer().getName(), "https://minotar.net/avatar/"+e.getPlayer().getName()+"/32.png", "https://minotar.net/avatar/"+e.getPlayer().getName()+"/32.png");
+		embed.setTitle(e.getPlayer().getName() + " a rejoint le serveur");
+		embed.setFooter("Depuis Minecraft", "https://tntgun.fr/img/icon.png");
+		embed.setTimestamp(Instant.now());
 		
-		messages Cmessages = new messages();
+		main.guild.getTextChannelById(452810136319295498L).sendMessage(embed.build()).queue();
 		
-		Cmessages.clearEmbed();
-		Cmessages.setColor(Color.GREEN);
-		Cmessages.setAuthor(e.getPlayer().getName(), "https://minotar.net/avatar/"+e.getPlayer().getName()+"/32.png", "https://minotar.net/avatar/"+e.getPlayer().getName()+"/32.png");
-		Cmessages.setTitle(e.getPlayer().getName() + " a rejoint le serveur");
-		Cmessages.setFooter("Depuis Minecraft", "https://tntgun.fr/img/icon.png");
+		if(Bukkit.getOnlinePlayers().size() <= 1) main.guild.getTextChannelById(452810136319295498L).sendMessage(p.getName() + " vient de rejoindre le serveur " + main.guild.getRolesByName("Notifs connexions", false).get(0).getAsMention()).queue();
 		
-		Cmessages.sendEmbed(452810136319295498L);
-		Cmessages.clearEmbed();
-		
-		if(Bukkit.getOnlinePlayers().size() <= 1) Cmessages.sendMessage(p.getName() + " vient de rejoindre le serveur " + new roles().getRoleMention("Notifs connexions"), 452810136319295498L);
-		
-		Cmessages.setColor(Color.GREEN);
-		Cmessages.setTitle("INFOS MOMENTANÉES :");
+		embed.setColor(Color.GREEN);
+		embed.setTitle("INFOS MOMENTANÉES :");
 		String players = "";
 		for(Player p2 : Bukkit.getOnlinePlayers()){
-			
 			players = players + p2.getName() + ", ";
-			
 		}
-		Cmessages.addfield("Joueurs connectés : " + (Bukkit.getOnlinePlayers().size()), players, false);
-		
-		
-		Cmessages.setFooter("Service d'informations de TntGun", "https://tntgun.fr/img/icon.png");
-		
-		Cmessages.EditEmbed(414143640995102720L, 464808979219087360L);
-		Cmessages.clearEmbed();
-		
-		
-		
-		
+		embed.addField("Joueurs connectés : " + (Bukkit.getOnlinePlayers().size()), players, false);
+		embed.setFooter("Service d'informations de TntGun", "https://tntgun.fr/img/icon.png");
+		embed.setTimestamp(Instant.now());
+
+		main.guild.getTextChannelById(414143640995102720L).editMessageById(464808979219087360L, embed.build()).queue();
+
 	}
 	
 	public boolean isAlphaNum(String text) {

@@ -4,7 +4,9 @@ import java.awt.Color;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.Date;
+import net.dv8tion.jda.api.EmbedBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -16,7 +18,6 @@ import org.bukkit.inventory.ItemStack;
 import fr.themsou.BedWars.getteam;
 import fr.themsou.BedWars.join;
 import fr.themsou.TntWars.TntWarsGameEvents;
-import fr.themsou.diffusion.api.messages;
 import fr.themsou.discord.Counter;
 import fr.themsou.main.main;
 import fr.themsou.methodes.Inventory;
@@ -109,34 +110,30 @@ public class QuitListener implements Listener{
 		
 		
 		if(new getteam().getplayerteam(p) != 0) new join().leaveBedWars(p);
-		
-		messages Cmessages = new messages();
-		
-		Cmessages.clearEmbed();
-		Cmessages.setColor(Color.RED);
-		Cmessages.setAuthor(e.getPlayer().getName(), "https://minotar.net/avatar/"+e.getPlayer().getName()+"/32.png", "https://minotar.net/avatar/"+e.getPlayer().getName()+"/32.png");
-		Cmessages.setTitle(e.getPlayer().getName() + " a quitté le serveur");
-		Cmessages.setFooter("Depuis Minecraft", "https://vignette.wikia.nocookie.net/minecraftproject/images/3/31/311.png/revision/latest?cb=20120726083051");
-		
-		Cmessages.sendEmbed(452810136319295498L);
-		
-		Cmessages.clearEmbed();
-		
-		Cmessages.setColor(Color.GREEN);
-		Cmessages.setTitle("INFOS MOMENTANÉES :");
+
+		EmbedBuilder embed = new EmbedBuilder();
+		embed.setColor(Color.RED);
+		embed.setAuthor(e.getPlayer().getName(), "https://minotar.net/avatar/"+e.getPlayer().getName()+"/32.png", "https://minotar.net/avatar/"+e.getPlayer().getName()+"/32.png");
+		embed.setTitle(e.getPlayer().getName() + " a quitté le serveur");
+		embed.setFooter("Depuis Minecraft", "https://tntgun.fr/img/icon.png");
+		embed.setTimestamp(Instant.now());
+
+		main.guild.getTextChannelById(452810136319295498L).sendMessage(embed.build()).queue();
+
+		embed.setColor(Color.GREEN);
+		embed.setTitle("INFOS MOMENTANÉES :");
 		String players = "";
 		for(Player p2 : Bukkit.getOnlinePlayers()){
 			if(!e.getPlayer().getName().equals(p2.getName())){
 				players = players + p2.getName() + ", ";
 			}
 		}
-		Cmessages.addfield("Joueurs connectées: " + (Bukkit.getOnlinePlayers().size() - 1), players, false);
-		Cmessages.setFooter("Service d'informations de TntGun", "https://lh3.googleusercontent.com/a-/ACSszfGsjQF2ipqu2U0e3kC8Ev09mOCJZKoIApjWEw=s176-c-k-c0x00ffffff-no-rj-mo");
-		Cmessages.EditEmbed(414143640995102720L, 464808979219087360L);
-		Cmessages.clearEmbed();
+		embed.addField("Joueurs connectés : " + (Bukkit.getOnlinePlayers().size()), players, false);
+		embed.setFooter("Service d'informations de TntGun", "https://tntgun.fr/img/icon.png");
+
+		main.guild.getTextChannelById(414143640995102720L).editMessageById(464808979219087360L, embed.build()).queue();
 		
 		main.playersInfos.remove(p);
-		
 	}
 
 }
