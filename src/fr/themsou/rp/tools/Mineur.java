@@ -16,13 +16,28 @@ public class Mineur {
 	
 	private Player p;
 	private String name = "mineur";
-	private double adding = 0.025;
+	private double adding = 0.02; // ans : 0.025
 	private BlockFace face = BlockFace.NORTH;
 	private ItemStack item;
 	
 	public Mineur(Player p){
 		this.p = p;
 	}
+
+
+
+/*		AVANT
+	- 50% > Casse en 1×2
+	- 60% > Casse en 1×3
+	- 70% > Casse en 3×3
+	- 85% > Casse en 3×3×2
+	- 100% > Casse en 5×3×2
+*/
+/*		APRÈS
+	- 50% > Casse en 1×2 	// 0.01  (/2)
+	- 75% > Casse en 1×2×2 	// 0.005 (/4)
+	- 100% > Casse en 3×3
+*/
 	
 	
 	public void useAuto(Location loc, ItemStack item, BlockFace face){
@@ -34,12 +49,8 @@ public class Mineur {
 			int pc = (int) getPC();
 			
 			if(pc >= 100){
-				useLvl5(loc);
-			}else if(pc >= 85){
-				useLvl4(loc);
-			}else if(pc >= 70){
 				useLvl3(loc);
-			}else if(pc >= 60){
+			}else if(pc >= 75){
 				useLvl2(loc);
 			}else{
 				useLvl1(loc);
@@ -54,44 +65,22 @@ public class Mineur {
 		
 	}public void useLvl2(Location loc){
 		useLvl1(loc);
-		
-		breakBlock(loc.getBlock().getRelative(getNorthFace()));
+
+		Location backLoc = loc.getBlock().getRelative(face.getOppositeFace()).getLocation();
+
+		breakBlock(backLoc.getBlock());
+		useLvl1(backLoc);
+
 		
 	}public void useLvl3(Location loc){
-		useLvl2(loc);
-		
+
 		breakBlock(loc.getBlock());
+		breakBlock(loc.getBlock().getRelative(getSouthFace()));
+		breakBlock(loc.getBlock().getRelative(getNorthFace()));
 		
 		breakBlock(loc.getBlock().getRelative(getEastFace()));
 		breakBlock(loc.getBlock().getRelative(getEastFace()).getRelative(getNorthFace()));
 		breakBlock(loc.getBlock().getRelative(getEastFace()).getRelative(getSouthFace()));
-		
-		breakBlock(loc.getBlock().getRelative(getWestFace()));
-		breakBlock(loc.getBlock().getRelative(getWestFace()).getRelative(getNorthFace()));
-		breakBlock(loc.getBlock().getRelative(getWestFace()).getRelative(getSouthFace()));
-		
-	}public void useLvl4(Location loc){
-		useLvl3(loc);
-		
-		useLvl3(loc.getBlock().getRelative(face.getOppositeFace()).getLocation());
-		
-		
-	}public void useLvl5(Location loc){
-		
-		useLvl4(loc);
-		
-		useLvl52(loc);
-		useLvl52(loc.getBlock().getRelative(face.getOppositeFace()).getLocation());
-		
-	}public void useLvl52(Location loc){
-		
-		loc = loc.getBlock().getRelative(getEastFace()).getLocation();
-		
-		breakBlock(loc.getBlock().getRelative(getEastFace()));
-		breakBlock(loc.getBlock().getRelative(getEastFace()).getRelative(getNorthFace()));
-		breakBlock(loc.getBlock().getRelative(getEastFace()).getRelative(getSouthFace()));
-		
-		loc = loc.getBlock().getRelative(getWestFace()).getRelative(getWestFace()).getLocation();
 		
 		breakBlock(loc.getBlock().getRelative(getWestFace()));
 		breakBlock(loc.getBlock().getRelative(getWestFace()).getRelative(getNorthFace()));
@@ -142,10 +131,18 @@ public class Mineur {
 	}
 	
 	public void addPCAuto(){
-		
-		if(getPC() < 100){
+
+		if(getPC() < 50){
 			addPC(adding);
 			title.sendActionBar(p, "§3+" + adding + "% §bpour la compétence §3" + name + " §4" + getPC() + "/100");
+
+		}else if(getPC() < 75){
+			addPC(adding/2);
+			title.sendActionBar(p, "§3+" + (adding/2) + "% §bpour la compétence §3" + name + " §4" + getPC() + "/100");
+
+		}else if(getPC() < 100){
+			addPC(adding/4);
+			title.sendActionBar(p, "§3+" + (adding/4) + "% §bpour la compétence §3" + name + " §4" + getPC() + "/100");
 			
 		}else{
 			setPC(100.0);

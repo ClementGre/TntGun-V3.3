@@ -81,11 +81,7 @@ public class BreakListener implements Listener{
 					}
 				}
 				
-				if(e.getBlock().getType() == Material.OAK_LOG || e.getBlock().getType() == Material.SPRUCE_LOG || e.getBlock().getType() == Material.BIRCH_LOG || e.getBlock().getType() == Material.JUNGLE_LOG || e.getBlock().getType() == Material.ACACIA_LOG || e.getBlock().getType() == Material.DARK_OAK_LOG){
-					
-					new Bucheron(p).addPCAuto();
-				
-				}else if(e.getBlock().getType() == Material.POTATOES || e.getBlock().getType() == Material.CARROTS || e.getBlock().getType() == Material.WHEAT){
+				if(e.getBlock().getType() == Material.POTATOES || e.getBlock().getType() == Material.CARROTS || e.getBlock().getType() == Material.WHEAT){
 					
 					if(e.getBlock().getData() == (byte) 7) new Fermier(p).addPCAuto();
 

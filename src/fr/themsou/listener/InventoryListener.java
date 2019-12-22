@@ -23,7 +23,7 @@ import fr.themsou.rp.inv.RolePlayGameDuelInv;
 import fr.themsou.rp.inv.RolePlayGamePvpBoxInv;
 import fr.themsou.rp.inv.RolePlayGamesInv;
 import fr.themsou.rp.inv.RolePlayMainInv;
-import fr.themsou.rp.inv.RolePlayMetiersInv;
+import fr.themsou.rp.inv.RolePlaySkillsInv;
 import fr.themsou.rp.inv.RolePlayShopInv;
 
 public class InventoryListener implements Listener {
@@ -134,11 +134,11 @@ public class InventoryListener implements Listener {
 			
 		else if(titre.equalsIgnoreCase("§4COMPÉTENCES")){
 			e.setCancelled(true);
-			new RolePlayMetiersInv().itemMainClicked(e);
+			new RolePlaySkillsInv().itemMainClicked(e);
 			
 		}else if(titre.equals("§4MINEUR - CRAFTS") || titre.equals("§4BUCHERON - CRAFTS") || titre.equals("§4FERMIER - CRAFTS") || titre.equals("§4CHASSEUR - CRAFTS") || titre.equals("§4ENCHANTEUR - CRAFTS")){
 			e.setCancelled(true);
-			new RolePlayMetiersInv().itemOtherClicked(e);
+			new RolePlaySkillsInv().itemOtherClicked(e);
 		}
 //////////////////////////////////// SHOP
 		else if(titre.equalsIgnoreCase("§4SHOP")){

@@ -86,10 +86,10 @@ public class Scoreboards {
 						reg.setScore(8);
 					}else{
 						if(claim.isSell()){
-							Score reg = obj.getScore("§bClaim : §2" + claim.getOwner());
+							Score reg = obj.getScore("§bClaim : §2" + claim.getPureOwner());
 							reg.setScore(8);
 						}else{
-							Score reg = obj.getScore("§bClaim : §3" + claim.getOwner());
+							Score reg = obj.getScore("§bClaim : §3" + claim.getPureOwner());
 							reg.setScore(8);
 						}
 					}

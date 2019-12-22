@@ -18,13 +18,25 @@ public class Fermier {
 	
 	private Player p;
 	private String name = "fermier";
-	private double adding = 0.023;
+	private double adding = 0.02; // ans = 0.023
 	private int id = 0;
 	
 	public Fermier(Player p){
 		this.p = p;
 	}
-	
+
+/*		AVANT
+	- 50% > Houe en 3×3
+	- 60% > Houe et place en 3×3
+	- 70% > Houe, place et casse en 3×3
+	- 100% > Houe, place et casse en 5×5
+*/
+/*		APRÈS
+	- 50% > Houe en 3×3  					// 0.02 (base)
+	- 75% > Houe et place en 3×3			// 0.01
+	- 100% > Houe, place et casse en 3×3
+*/
+
 	@SuppressWarnings("deprecation")
 	public void useAuto(Location loc){
 		
@@ -45,19 +57,12 @@ public class Fermier {
 		int pc = (int) getPC();
 		
 		if(pc >= 100){
-			
 			use(get33(loc), false);
-			use(get33(loc.getBlock().getRelative(BlockFace.UP).getLocation()), true);
-			use(get33(loc.getBlock().getRelative(BlockFace.UP).getLocation()), false);
-			
-			use(get55(loc), false);
-			use(get55(loc.getBlock().getRelative(BlockFace.UP).getLocation()), true);
-			use(get55(loc.getBlock().getRelative(BlockFace.UP).getLocation()), false);
-		}else if(pc >= 70){
-			use(get33(loc), false);
-			use(get33(loc.getBlock().getRelative(BlockFace.UP).getLocation()), true);
-			use(get33(loc.getBlock().getRelative(BlockFace.UP).getLocation()), false);
-		}else if(pc >= 60){
+			ArrayList<Block> topBlocs = get33(loc.getBlock().getRelative(BlockFace.UP).getLocation());
+			use(topBlocs, true);
+			use(topBlocs, false);
+
+		}else if(pc >= 75){
 			use(get33(loc), false);
 			use(get33(loc.getBlock().getRelative(BlockFace.UP).getLocation()), false);
 		}else{
@@ -97,7 +102,9 @@ public class Fermier {
 	}
 	@SuppressWarnings("deprecation")
 	public void remove(Block block){
-		if(block.getData() == (byte) 7) block.breakNaturally();
+		if(block.getData() == (byte) 7){
+			block.breakNaturally();
+		}
 	}
 	
 	public ArrayList<Block> get33(Location loc){
@@ -111,50 +118,14 @@ public class Fermier {
 		
 		blocks.add(loc.getBlock().getRelative(BlockFace.NORTH).getRelative(BlockFace.EAST)); blocks.add(loc.getBlock().getRelative(BlockFace.SOUTH).getRelative(BlockFace.EAST));
 		blocks.add(loc.getBlock().getRelative(BlockFace.NORTH).getRelative(BlockFace.WEST)); blocks.add(loc.getBlock().getRelative(BlockFace.SOUTH).getRelative(BlockFace.WEST));
-		
-		addPC(adding / 5);
-		
-		return blocks;
-		
-	}
-	
-	public ArrayList<Block> get55(Location loc){
-		
-		ArrayList<Block> blocks = new ArrayList<>();
-		
-		Block north = loc.getBlock().getRelative(BlockFace.NORTH).getRelative(BlockFace.NORTH);
-		Block south =  loc.getBlock().getRelative(BlockFace.SOUTH).getRelative(BlockFace.SOUTH);
-		Block east = loc.getBlock().getRelative(BlockFace.EAST).getRelative(BlockFace.EAST);
-		Block west =  loc.getBlock().getRelative(BlockFace.WEST).getRelative(BlockFace.WEST);
-		
-		blocks.add(north);
-		blocks.add(north.getRelative(BlockFace.EAST)); blocks.add(north.getRelative(BlockFace.EAST).getRelative(BlockFace.EAST));
-		blocks.add(north.getRelative(BlockFace.WEST)); blocks.add(north.getRelative(BlockFace.WEST).getRelative(BlockFace.WEST));
-		
-		blocks.add(south);
-		blocks.add(south.getRelative(BlockFace.EAST)); blocks.add(south.getRelative(BlockFace.EAST).getRelative(BlockFace.EAST));
-		blocks.add(south.getRelative(BlockFace.WEST)); blocks.add(south.getRelative(BlockFace.WEST).getRelative(BlockFace.WEST));
-		
-		blocks.add(east);
-		blocks.add(east.getRelative(BlockFace.NORTH)); blocks.add(east.getRelative(BlockFace.SOUTH));
-		
-		blocks.add(west);
-		blocks.add(west.getRelative(BlockFace.NORTH)); blocks.add(west.getRelative(BlockFace.SOUTH));
-		
-		for(int i = 0; i < blocks.size(); i++){
-			if(id != new GetZoneId().getIdOfPlayerZone(blocks.get(i).getLocation())){
-				blocks.remove(i);
-			}
-		}
-		
-		
+
 		return blocks;
 		
 	}
 	
 	public int getType(Material m){
 	
-		if(m == Material.GRASS || m == Material.DIRT){
+		if(m == Material.GRASS_BLOCK || m == Material.DIRT){
 			return 1;
 		}if(m == Material.POTATO || m == Material.CARROT || m == Material.WHEAT){
 			return 2;
@@ -166,11 +137,16 @@ public class Fermier {
 	}
 	
 	public void addPCAuto(){
-		
-		if(getPC() < 100){
-			
+
+		if(getPC() < 75){
+
 			addPC(adding);
 			title.sendActionBar(p, "§3+" + adding + "% §bpour la compétence §3" + name + " §4" + getPC() + "/100");
+
+		}else if(getPC() < 100){
+
+			addPC(adding/2);
+			title.sendActionBar(p, "§3+" + (adding/2) + "% §bpour la compétence §3" + name + " §4" + getPC() + "/100");
 			
 		}else{
 			setPC(100.0);

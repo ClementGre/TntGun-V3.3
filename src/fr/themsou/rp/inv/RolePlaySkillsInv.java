@@ -12,7 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import fr.themsou.inv.UtilsInv;
 import fr.themsou.main.main;
 
-public class RolePlayMetiersInv {
+public class RolePlaySkillsInv {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////// GLOBAL //////////////////////////////////////////////
@@ -30,10 +30,8 @@ public class RolePlayMetiersInv {
 				"§7Avantages >§b Vous pourez débloquer une pioche",
 				"§bqui permet de casser plusieurs blocs d'un coup :",
 				"§7-50% >§b Casse en 1×2",
-				"§7-60% >§b Casse en 1×3",
-				"§7-70% >§b Casse en 3×3",
-				"§7-85% >§b Casse en 3×3×2",
-				"§7-100% >§b Casse en 5×3×2")));
+				"§7-75% >§b Casse en 1×2×2",
+				"§7-100% >§b Casse en 3×3")));
 
 ////////////// BUCHERON
 		shop.setItem(22, UtilsInv.makeItem(Material.DIAMOND_AXE, "§3§lBUCHERON",
@@ -53,9 +51,8 @@ public class RolePlayMetiersInv {
 				"§7Gagner des % >§b Vous devez casser des plantes :", "§bpatates, carrotes, blé, melons et pastèques."," ",
 				"§7Avantages >§b Vous pourez débloquer une houe qui", "§bpermet de houer, planter et casser plusieurs blocs.",
 				"§7-50% >§b Houe en 3×3",
-				"§7-60% >§b Houe et place en 3×3",
-				"§7-70% >§b Houe, place et casse en 3×3",
-				"§7-100% >§b Houe, place et casse en 5×5")));
+				"§7-75% >§b Houe et place en 3×3",
+				"§7-100% >§b Houe, place et casse en 3×3")));
 
 ////////////// CHASSEUR
 		shop.setItem(30, UtilsInv.makeItem(Material.DIAMOND_SWORD, "§3§lCHASSEUR",

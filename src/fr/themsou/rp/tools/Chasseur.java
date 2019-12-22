@@ -11,17 +11,26 @@ public class Chasseur {
 	private Player p;
 	private String name = "chasseur";
 	private double adding = 0.08;
-	
+
 	public Chasseur(Player p){
 		this.p = p;
 	}
-	
-	
+
 	public void addPCAuto(){
-		
-		if(getPC() < 100){
+
+		if(getPC() < 50){
+
 			addPC(adding);
 			title.sendActionBar(p, "§3+" + adding + "% §bpour la compétence §3" + name + " §4" + getPC() + "/100");
+
+		}else if(getPC() < 100){
+
+			// D = [50 ; 100] | Di = [0 ; 0.06]
+			double toSub = 0.06 - ((getPC() * (-1.0) + 100.0) / 50.0) / 16.7;
+			double newAdding = new BigDecimal(adding - toSub).setScale(3, BigDecimal.ROUND_DOWN).doubleValue();
+
+			addPC(newAdding);
+			title.sendActionBar(p, "§3+" + newAdding + "% §bpour la compétence §3" + name + " §4" + getPC() + "/100");
 			
 		}else{
 			setPC(100.0);

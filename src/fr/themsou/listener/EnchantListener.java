@@ -18,9 +18,8 @@ public class EnchantListener implements Listener{
 		
 		if(p.getWorld() == Bukkit.getWorld("world") || p.getWorld() == Bukkit.getWorld("world_nether") || p.getWorld() == Bukkit.getWorld("world_the_end")){
 			if(p.getGameMode() == GameMode.SURVIVAL){
-				
+
 				new Enchanteur(p).addPCAuto(e.getExpLevelCost());
-				
 			}
 		}
 		

@@ -89,7 +89,7 @@ public class RolePlayMainInv {
 			
 		}else if(e.getCurrentItem().getType() == Material.DIAMOND_PICKAXE){
 			p.closeInventory();
-			new RolePlayMetiersInv().openMainInv(p);
+			new RolePlaySkillsInv().openMainInv(p);
 			
 		}else if(e.getCurrentItem().getType() == Material.DIAMOND){
 			p.closeInventory();

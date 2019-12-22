@@ -27,13 +27,13 @@ public class CanBuild {
 				if(claim.getEntSalaries().contains(p.getName())){
 					title.sendActionBar(p, "§cVOUS NE POUVEZ PAS FAIRE CETTE ACTION EN TANT QUE SALARIÉ");
 				}else if(claim.isSell() && claim.isEnt()){
-					title.sendActionBar(p, "§cCE TERRAIN APARTIENS À L'ENTREPRISE §4" + claim.getOwner() + "§c ET EST §4À VENDRE");
+					title.sendActionBar(p, "§cCE TERRAIN APARTIENS À L'ENTREPRISE §4" + claim.getPureOwner() + "§c ET EST §4À VENDRE");
 				}else if(claim.isSell()){
-					title.sendActionBar(p, "§cCE TERRAIN APARTIENS À §4" + claim.getOwner() + "§c ET EST §4À VENDRE");
+					title.sendActionBar(p, "§cCE TERRAIN APARTIENS À §4" + claim.getPureOwner() + "§c ET EST §4À VENDRE");
 				}else if(claim.isEnt()) {
-					title.sendActionBar(p, "§cCE TERRAIN APARTIENS À L'ENTREPRISE §4" + claim.getOwner());
+					title.sendActionBar(p, "§cCE TERRAIN APARTIENS À L'ENTREPRISE §4" + claim.getPureOwner());
 				}else{
-					title.sendActionBar(p, "§cCE TERRAIN APARTIENS À §4" + claim.getOwner());
+					title.sendActionBar(p, "§cCE TERRAIN APARTIENS À §4" + claim.getPureOwner());
 				}
 				return false;
 			}

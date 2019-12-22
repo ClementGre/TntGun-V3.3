@@ -13,7 +13,7 @@ public class Bucheron {
 	
 	private Player p;
 	private String name = "bucheron";
-	private double adding = 0.01;
+	private double adding = 0.017;
 	
 	
 	public Bucheron(Player p){
@@ -42,17 +42,35 @@ public class Bucheron {
 	public void breakBlocks(Location loc, int size){
 		
 		Block block = loc.getBlock().getRelative(BlockFace.UP);
-		
+		int defSize = size;
 		while(block.getType() == Material.OAK_LOG || block.getType() == Material.SPRUCE_LOG || block.getType() == Material.BIRCH_LOG || block.getType() == Material.JUNGLE_LOG || block.getType() == Material.ACACIA_LOG || block.getType() == Material.DARK_OAK_LOG){
 			
-			if(size == 0) return;
+			if(size == 0){
+				if(getPC() < 100){
+					double adding = (defSize - size)+1 * 0.006;
+					addPC(adding);
+					title.sendActionBar(p, "§3+" + adding + "% §bpour la compétence §3" + name + " §4" + getPC() + "/100");
+				}else{
+					setPC(100.0);
+					title.sendActionBar(p, "§bVous êtes à §3100% §bde la compétence §3" + name + " !");
+				}
+				return;
+			}
 			
 			block.breakNaturally();
 			block = block.getRelative(BlockFace.UP);
 			size --;
+
 			
 		}
-		
+		if(getPC() < 100){
+			double adding = (defSize - size)+1 * 0.006;
+			addPC(adding);
+			title.sendActionBar(p, "§3+" + adding + "% §bpour la compétence §3" + name + " §4" + getPC() + "/100");
+		}else{
+			setPC(100.0);
+			title.sendActionBar(p, "§bVous êtes à §3100% §bde la compétence §3" + name + " !");
+		}
 	}
 	
 	public void addPCAuto(){

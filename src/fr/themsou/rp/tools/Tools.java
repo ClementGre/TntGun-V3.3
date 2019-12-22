@@ -22,38 +22,31 @@ public class Tools{
 	}
 	
 	public void playerInteract(Player p, Location loc, ItemStack item){
-			
-		if(p.getInventory().getItemInMainHand() != null){
-			if(p.getInventory().getItemInMainHand().getItemMeta() != null){
-				if(p.getInventory().getItemInMainHand().getItemMeta().getDisplayName() != null){
-					if(p.getInventory().getItemInMainHand().getItemMeta().getDisplayName().equals("§3§lSuper Houe")){
 
-						new Fermier(p).useAuto(loc);
-					}
-				}
+		if(p.getInventory().getItemInMainHand().getItemMeta() != null){
+			if(p.getInventory().getItemInMainHand().getItemMeta().getDisplayName().equals("§3§lSuper Houe")){
+
+				new Fermier(p).useAuto(loc);
 			}
 		}
-		
+
 	}
 	
 	public void playerBreak(Player p, Location loc, ItemStack item){
 		
 		if(p.getInventory().getItemInMainHand().getType() != Material.AIR){
 			if(p.getInventory().getItemInMainHand().getItemMeta() != null){
-				if(p.getInventory().getItemInMainHand().getItemMeta().getDisplayName() != null){
-					
+
+				if(loc.getBlock().getType() == Material.OAK_LOG || loc.getBlock().getType() == Material.SPRUCE_LOG || loc.getBlock().getType() == Material.BIRCH_LOG || loc.getBlock().getType() == Material.ACACIA_LOG || loc.getBlock().getType() == Material.JUNGLE_LOG || loc.getBlock().getType() == Material.DARK_OAK_LOG){
 					if(p.getInventory().getItemInMainHand().getItemMeta().getDisplayName().equals("§3§lSuper Hache")){
-						
-						if(loc.getBlock().getType() == Material.OAK_LOG || loc.getBlock().getType() == Material.SPRUCE_LOG || loc.getBlock().getType() == Material.BIRCH_LOG || loc.getBlock().getType() == Material.ACACIA_LOG || loc.getBlock().getType() == Material.JUNGLE_LOG || loc.getBlock().getType() == Material.DARK_OAK_LOG){
-							
-							new Bucheron(p).useAuto(loc);
-						}
-						
-					}if(p.getInventory().getItemInMainHand().getItemMeta().getDisplayName().equals("§3§lSuper Pioche")){
-						
-						new Mineur(p).useAuto(loc, item, faces.get(p.getName()));
-						
-					}
+
+						new Bucheron(p).useAuto(loc);
+
+					}else new Bucheron(p).addPCAuto();
+				}if(p.getInventory().getItemInMainHand().getItemMeta().getDisplayName().equals("§3§lSuper Pioche")){
+
+					new Mineur(p).useAuto(loc, item, faces.get(p.getName()));
+
 				}
 			}
 		}
