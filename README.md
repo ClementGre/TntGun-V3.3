@@ -1,5 +1,7 @@
 ## TntGun-V3.3
 
+![](https://raw.githubusercontent.com/ClementGre/TntGun-V3.3/master/TntGun-blacklogo.png)
+
 **Ce Plugin Minecraft, ajouté à GitHub uniquement en Juin 2019 est un de mes plus gros projets de développement. Ce fut le plugin principal de mon serveur Minecraft TntGun (Juillet 2017 -> 24 Janvier 2020)**
 
 C'est avec l'API Bukkit (Spigot & Paper) que j'ai débuté la programmation, c'est cette API qui m'a motivé et avec laquelle j'ai appris le Java. TntGun V3.3 est le prolongement de cette suite de serveurs que j'ai créé. Il est aussi mon dernier serveur Minecraft.
@@ -70,7 +72,7 @@ Ce plugin a utilisé de nombreuses APIs :
 - ImageOnMap (V3.2)
 - ShopChest (V3.1)
  
- ## Historique des versions
+## Historique des versions
  
  *Ce code date de TntGun V3, les plugins de TntGun V2 et d'avant ne sonts pas ici.*
  
@@ -85,10 +87,16 @@ Ce plugin a utilisé de nombreuses APIs :
   - V3.1 : Juin 2018 -> Août 2018 (Resset + Nouveaux mini-jeux en plus du RP (TntWars et LapWars) -> Création d'un HUB etc.)
   - V3.2 : Août 2018 -> Juillet 2019 Juillet 2019 (Resset dûs à un problème : perte des donnés)
   - V3.3 : Juillet 2019 -> Janvier 2020 (Passage en 1.14.4 sous Paper)
+  
+## Le(s) site(s) internet
+
+Vous pouvez retrouver [ici](https://github.com/ClementGre/TntGun-V3.3-Website) le repository du site internet de TntGun V3.3 qui était hébergé à l'adresse tntgun.fr. Ce repository détail aussi mes debuts en HTML+ avec mes touts premiers sites web, ceux de TntGun V1, V2 et V3.0
  
- ## Discord
+## Discord
  
 Suite à la fermeture du serveur, le serveur Discord est fortement inactif et une partie des salons sont maintenant fermées.
 Vous pouvez cependant le rejoindre, nous serons ravis de vous accueillir !
 
 Lien : [http://discord.gg/zAEAYnN](http://discord.gg/zAEAYnN)
+
+![](https://raw.githubusercontent.com/ClementGre/TntGun-V3.3/master/TntGun-icon.png)
