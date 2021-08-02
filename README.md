@@ -50,8 +50,8 @@ Ce plugin de plus de 20 mille lignes de code gérait la totalité du serveur, il
 ## Les APIs
 
 Ce plugin a utilisé de nombreuses APIs :
-- Paper 1.14.4 Aubligatoire pour créer un serveur Minecraft, TntGun aura aussi tourné sous Spigot 1.12
-- Diffusion qui est un plugin développé par moi même qui permet de contenir l'API JDA (JavaDiscordAPI) en dehors de ce plugin
+- Paper 1.14.4 Obligatoire pour créer un serveur Minecraft, TntGun aura aussi tourné sous Spigot 1.12
+- Diffusion qui est un plugin développé par moi même qui encapsule l'API JDA (JavaDiscordAPI), la rendant accessible sur la plateforme Bukkit (intègre aussi plusieurs fonctions du bot).
 - Vault pour avoir une économie compatible avec d'autres plugins (utile sur TntGun V3.1-2)
 - WorldEdit pour charger des schematics et effectuer des opérations de remplacement de blocs (BedWars)
 - Dynamp pour pouvoir ajouter des régions sur la carte
